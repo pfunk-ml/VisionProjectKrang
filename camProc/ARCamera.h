@@ -3,6 +3,11 @@
 #ifndef ARCAMERA_H
 #define ARCAMERA_H
 
+#include <Eigen/Dense>
+
+using namespace Eigen;
+using namespace std;
+
 class ARCamera
 {
     // Private member variables

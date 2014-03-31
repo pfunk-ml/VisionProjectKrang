@@ -3,7 +3,12 @@
 #ifndef ARMARKER_H
 #define ARMARKER_H
 
-class ARMARKER
+#include <Eigen/Dense>
+
+using namespace Eigen;
+using namespace std;
+
+class ARMarker
 {
     // Private member variables
     private:

@@ -8,7 +8,7 @@
 #include "ARCamera.h"
 #include "ARMarker.h"
 #include <iostream>
-#include <Eigen/Dense>;
+#include <Eigen/Dense>
 
 using namespace Eigen;
 using namespace std;
@@ -25,14 +25,8 @@ class WorldModel
     // Public functions
     public:
         // Constructor
-        WorldModel(ARCamera* arcameras, ARMarker* armarkers, int numcamera, int nummarker)
-        {
-            cameras = arcameras;
-            markers = armarkers;
-            cameraNum = numcamera;
-            markerNum = numMarker;
-        }
-
+        WorldModel(ARCamera* arcameras, ARMarker* armarkers, int numcamera, int nummarker);
+        
         // Method to initialize the first camera to the origin marker
         bool setOrigin(ARCamera camera, ARMarker marker, MatrixXd transform);
 

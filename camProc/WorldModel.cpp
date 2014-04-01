@@ -16,17 +16,26 @@ WorldModel::WorldModel(ARCamera* arcameras, ARMarker* armarkers, int numcamera, 
     markerNum = nummarker;
 }
 
-bool WorldModel::setOrigin(ARCamera camera, ARMarker marker, MatrixXd transform)
+bool WorldModel::setOrigin(ARCamera camera, ARMarker marker, Matrix4d transform)
+{
+    // Keep track of success
+    bool success = true;
+
+    // Initialize camera with World to Camera transform (given in input)
+    success &= camera.initializeCamera(transform);
+
+    // Set marker as "world" marker
+    worldMarker = marker;
+
+    return false;
+}
+
+bool WorldModel::initCamera(ARCamera cam2Init, ARCamera camAlready, ARMarker commonMark, Matrix4d transNewtoM, Matrix4d transOldtoM)
 {
     return false;
 }
 
-bool WorldModel::initCamera(ARCamera cam2Init, ARCamera camAlready, ARMarker commonMark, MatrixXd transNewtoM, Matrix4d transOldtoM)
-{
-    return false;
-}
-
-bool WorldModel::setMarkerLoc(ARCamera camera, ARMarker marker, MatrixXd transform)
+bool WorldModel::setMarkerLoc(ARCamera camera, ARMarker marker, Matrix4d transform)
 {
     return false;
 }

@@ -17,6 +17,17 @@ class ARCamera
     
         Matrix4d Cam2World; // Matrix projects point in camera frame to point in world frame    
         Matrix4d World2Cam; // Matrix projects point in world frame to point in camera frame
+
+    public:
+        // Constructor
+        ARCamera(int itsid);
+        
+        // Initialize the camera by giving it the World2Cam matrix
+        bool initializeCamera(Matrix4d world2camMeasured);
+
+        // Getters and setters
+        int getID() { return id; };
+        bool isInitialized() { return initialized; };
 };
 
 #endif

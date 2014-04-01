@@ -19,7 +19,7 @@ class WorldModel
     private:
         ARCamera* cameras;      // Cameras in world
         ARMarker* markers;      // Markers in world
-        ARMarker worldMarker;   // Keep track of the world marker (also in markers)
+        int worldMarkerID;      // Keep track of the world marker (also in markers)
         int cameraNum;          // Number of cameras
         int markerNum;          // Number of markers
     
@@ -29,16 +29,24 @@ class WorldModel
         WorldModel(ARCamera* arcameras, ARMarker* armarkers, int numcamera, int nummarker);
         
         // Method to initialize the first camera to the origin marker
-        bool setOrigin(ARCamera camera, ARMarker marker, Matrix4d transform);
+        bool setOrigin(int cameraID, int markerID, Matrix4d transform);
 
         // Method to initialize a camera to the world frame
-        bool initCamera(ARCamera cam2Init, ARCamera camAlready, ARMarker commonMark, Matrix4d transNewtoM, Matrix4d transOldtoM);
+        bool initCamera(int cam2InitID, int camAlreadyID, Matrix4d transNewtoM, Matrix4d transOldtoM);
 
         // Method to set a marker's location in the world frame
-        bool setMarkerLoc(ARCamera camera, ARMarker marker, Matrix4d transform);
+        bool setMarkerLoc(int cameraID, int markerID, Matrix4d transform);
 
         // Method to get the location of a marker relative to the world marker
-        Vector3d getMarkerLoc(ARMarker marker);
+        Vector3d getMarkerLoc(int markerID);
+
+    // Private functions
+    private:
+        // Method to get the position of a particular camera
+        int getCamInd(int ID);
+
+        // Method to get the position of a particular marker
+        int getMarkInd(int ID);
 };
 
 #endif

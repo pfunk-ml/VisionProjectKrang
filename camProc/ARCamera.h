@@ -28,6 +28,9 @@ class ARCamera
         // Getters and setters
         int getID() { return id; };
         bool isInitialized() { return initialized; };
+        Matrix4d getCam2World() { return Cam2World; };
+        Matrix4d getWorld2Cam() { return World2Cam; };
+
 };
 
 #endif

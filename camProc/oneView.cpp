@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
   init();
   
   arVideoCapStart();
-  argMainLoop( NULL, keyEvent, mainLoop );
+  argMainLoop( NULL, &keyEvent, &mainLoop );
   return (0);
 }
 

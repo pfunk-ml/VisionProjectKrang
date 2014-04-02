@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
   return (0);
 }
 
-static void   keyEvent( unsigned char key, int x, int y)
+static void keyEvent( unsigned char key, int x, int y)
 {
     /* quit if the ESC key is pressed */
     if( key == 0x1b ) {
@@ -73,7 +73,7 @@ static void mainLoop(void)
     int             marker_num;
     int             j, k;
 
-    /* grab a vide frame */
+    /* grab a video frame */
     if( (dataPtr = (ARUint8 *)arVideoGetImage()) == NULL ) {
         arUtilSleep(2);
         return;

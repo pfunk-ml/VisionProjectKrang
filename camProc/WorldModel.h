@@ -9,6 +9,7 @@
 #include "ARMarker.h"
 #include <iostream>
 #include <Eigen/Dense>
+#include <vector>
 
 using namespace Eigen;
 using namespace std;
@@ -17,16 +18,14 @@ class WorldModel
 {
     // Private member variables
     private:
-        ARCamera* cameras;      // Cameras in world
-        ARMarker* markers;      // Markers in world
-        int worldMarkerID;      // Keep track of the world marker (also in markers)
-        int cameraNum;          // Number of cameras
-        int markerNum;          // Number of markers
+        vector<ARCamera> cameras;   // Cameras in world
+        vector<ARMarker> markers;   // Markers in world
+        int worldMarkerID;          // Keep track of the world marker (also in markers)
     
     // Public functions
     public:
         // Constructor
-        WorldModel(ARCamera* arcameras, ARMarker* armarkers, int numcamera, int nummarker);
+        WorldModel(vector<ARCamera> arcameras, vector<ARMarker> armarkers);
         
         // Method to initialize the first camera to the origin marker
         bool setOrigin(int cameraID, int markerID, Matrix4d transform);

@@ -5,15 +5,174 @@
 #include "ARMarker.h"
 #include "ARCamera.h"
 #include "WorldModel.h"
+#include <vector>
 
 int main(int argc, char **argv) 
 {
     // Let's make up some markers and cameras
-    ARMarker markglobal = new ARMarker(0);
-    ARMarker markc1c2 = new ARMarker(1);
-    ARMarker markc2c3 = new ARMarker(2);
-    ARMarker move1 = new ARMarker(6);
-    ARMarker move2 = new ARMarker(9);
+    ARMarker markglobal(0);
+    ARMarker markc1c2(1);
+    ARMarker markc2c3(2);
+    ARMarker move1(6);
+    ARMarker move2(9);
+    ARMarker move3(19);
+    ARCamera cam1(1);
+    ARCamera cam2(2);
+    ARCamera cam3(3);
+    vector<ARMarker> markers;
+    markers.push_back(markglobal);
+    markers.push_back(markc1c2);
+    markers.push_back(markc2c3);
+    markers.push_back(move1);
+    markers.push_back(move2);
+    markers.push_back(move3);
+    vector<ARCamera> cameras;
+    cameras.push_back(cam1);
+    cameras.push_back(cam2);
+    cameras.push_back(cam3);
+
+    // Initialize WorldModel
+    WorldModel world = WorldModel(cameras, markers);
+
+    // Make up some transforms
+    Matrix4d W2C1;
+    W2C1(0,0) = 1;
+    W2C1(0,1) = 0;
+    W2C1(0,2) = 0;
+    W2C1(0,3) = -50;
+    W2C1(1,0) = 0;
+    W2C1(1,1) = 1;
+    W2C1(1,2) = 0;
+    W2C1(1,3) = 0;
+    W2C1(2,0) = 0;
+    W2C1(2,1) = 0;
+    W2C1(2,2) = 1;
+    W2C1(2,3) = 100;
+    W2C1(3,0) = 0;
+    W2C1(3,1) = 0;
+    W2C1(3,2) = 0;
+    W2C1(3,3) = 1;
+    Matrix4d MB12C1;
+    MB12C1(0,0) = 1;
+    MB12C1(0,1) = 0;
+    MB12C1(0,2) = 0;
+    MB12C1(0,3) = 0;
+    MB12C1(1,0) = 0;
+    MB12C1(1,1) = 1;
+    MB12C1(1,2) = 0;
+    MB12C1(1,3) = 100;
+    MB12C1(2,0) = 0;
+    MB12C1(2,1) = 0;
+    MB12C1(2,2) = 1;
+    MB12C1(2,3) = 100;
+    MB12C1(3,0) = 0;
+    MB12C1(3,1) = 0;
+    MB12C1(3,2) = 0;
+    MB12C1(3,3) = 1;
+    Matrix4d MB12C2;
+    MB12C2(0,0) = 1;
+    MB12C2(0,1) = 0;
+    MB12C2(0,2) = 0;
+    MB12C2(0,3) = 0;
+    MB12C2(1,0) = 0;
+    MB12C2(1,1) = 1;
+    MB12C2(1,2) = 0;
+    MB12C2(1,3) = 0;
+    MB12C2(2,0) = 0;
+    MB12C2(2,1) = 0;
+    MB12C2(2,2) = 1;
+    MB12C2(2,3) = 100;
+    MB12C2(3,0) = 0;
+    MB12C2(3,1) = 0;
+    MB12C2(3,2) = 0;
+    MB12C2(3,3) = 1;
+    Matrix4d MB22C2;
+    MB22C2(0,0) = 1;
+    MB22C2(0,1) = 0;
+    MB22C2(0,2) = 0;
+    MB22C2(0,3) = 0;
+    MB22C2(1,0) = 0;
+    MB22C2(1,1) = 1;
+    MB22C2(1,2) = 0;
+    MB22C2(1,3) = 100;
+    MB22C2(2,0) = 0;
+    MB22C2(2,1) = 0;
+    MB22C2(2,2) = 1;
+    MB22C2(2,3) = 100;
+    MB22C2(3,0) = 0;
+    MB22C2(3,1) = 0;
+    MB22C2(3,2) = 0;
+    MB22C2(3,3) = 1;
+    Matrix4d MB22C3;
+    MB22C3(0,0) = 1;
+    MB22C3(0,1) = 0;
+    MB22C3(0,2) = 0;
+    MB22C3(0,3) = 0;
+    MB22C3(1,0) = 0;
+    MB22C3(1,1) = 1;
+    MB22C3(1,2) = 0;
+    MB22C3(1,3) = 0;
+    MB22C3(2,0) = 0;
+    MB22C3(2,1) = 0;
+    MB22C3(2,2) = 1;
+    MB22C3(2,3) = 100;
+    MB22C3(3,0) = 0;
+    MB22C3(3,1) = 0;
+    MB22C3(3,2) = 0;
+    MB22C3(3,3) = 1;
+    Matrix4d M12C1;
+    M12C1(0,0) = 1;
+    M12C1(0,1) = 0;
+    M12C1(0,2) = 0;
+    M12C1(0,3) = 25;
+    M12C1(1,0) = 0;
+    M12C1(1,1) = 1;
+    M12C1(1,2) = 0;
+    M12C1(1,3) = 50;
+    M12C1(2,0) = 0;
+    M12C1(2,1) = 0;
+    M12C1(2,2) = 1;
+    M12C1(2,3) = 100;
+    M12C1(3,0) = 0;
+    M12C1(3,1) = 0;
+    M12C1(3,2) = 0;
+    M12C1(3,3) = 1;
+    Matrix4d M32C2;    
+    M32C2(0,0) = 1;
+    M32C2(0,1) = 0;
+    M32C2(0,2) = 0;
+    M32C2(0,3) = -50;
+    M32C2(1,0) = 0;
+    M32C2(1,1) = 1;
+    M32C2(1,2) = 0;
+    M32C2(1,3) = 0;
+    M32C2(2,0) = 0;
+    M32C2(2,1) = 0;
+    M32C2(2,2) = 1;
+    M32C2(2,3) = 100;
+    M32C2(3,0) = 0;
+    M32C2(3,1) = 0;
+    M32C2(3,2) = 0;
+    M32C2(3,3) = 1;
+    Matrix4d M22C3;
+    M22C3(0,0) = 1;
+    M22C3(0,1) = 0;
+    M22C3(0,2) = 0;
+    M22C3(0,3) = 25;
+    M22C3(1,0) = 0;
+    M22C3(1,1) = 1;
+    M22C3(1,2) = 0;
+    M22C3(1,3) = -50;
+    M22C3(2,0) = 0;
+    M22C3(2,1) = 0;
+    M22C3(2,2) = 1;
+    M22C3(2,3) = 100;
+    M22C3(3,0) = 0;
+    M22C3(3,1) = 0;
+    M22C3(3,2) = 0;
+    M22C3(3,3) = 1;
+
+    // Now initialize world correctly
     
 }
 

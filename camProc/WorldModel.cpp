@@ -8,12 +8,10 @@ using namespace Eigen;
 using namespace std;
 
 // Constructor
-WorldModel::WorldModel(ARCamera* arcameras, ARMarker* armarkers, int numcamera, int nummarker)
+WorldModel::WorldModel(vector<ARCamera> arcameras, vector<ARMarker> armarkers)
 {
     cameras = arcameras;
     markers = armarkers;
-    cameraNum = numcamera;
-    markerNum = nummarker;
 }
 
 bool WorldModel::setOrigin(int cameraID, int markerID, Matrix4d transform)
@@ -64,7 +62,7 @@ Vector3d WorldModel::getMarkerLoc(int markerID)
 
 int WorldModel::getCamInd(int ID)
 {
-    for (int i = 0; i < cameraNum; i++)
+    for (int i = 0; i < cameras.size(); i++)
     {
         if (cameras[i].getID() == ID)
             return i;
@@ -76,7 +74,7 @@ int WorldModel::getCamInd(int ID)
 
 int WorldModel::getMarkInd(int ID)
 {
-    for (int i = 0; i < markerNum; i++)
+    for (int i = 0; i < markers.size(); i++)
     {
         if (markers[i].getID() == ID)
             return i;

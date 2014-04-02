@@ -41,12 +41,12 @@ int main(int argc, char **argv)
     W2C1(0,2) = 0;
     W2C1(0,3) = -50;
     W2C1(1,0) = 0;
-    W2C1(1,1) = 1;
+    W2C1(1,1) = -1;
     W2C1(1,2) = 0;
     W2C1(1,3) = 0;
     W2C1(2,0) = 0;
     W2C1(2,1) = 0;
-    W2C1(2,2) = 1;
+    W2C1(2,2) = -1;
     W2C1(2,3) = 100;
     W2C1(3,0) = 0;
     W2C1(3,1) = 0;
@@ -58,12 +58,12 @@ int main(int argc, char **argv)
     MB12C1(0,2) = 0;
     MB12C1(0,3) = 0;
     MB12C1(1,0) = 0;
-    MB12C1(1,1) = 1;
+    MB12C1(1,1) = -1;
     MB12C1(1,2) = 0;
-    MB12C1(1,3) = 100;
+    MB12C1(1,3) = -100;
     MB12C1(2,0) = 0;
     MB12C1(2,1) = 0;
-    MB12C1(2,2) = 1;
+    MB12C1(2,2) = -1;
     MB12C1(2,3) = 100;
     MB12C1(3,0) = 0;
     MB12C1(3,1) = 0;
@@ -75,12 +75,12 @@ int main(int argc, char **argv)
     MB12C2(0,2) = 0;
     MB12C2(0,3) = 0;
     MB12C2(1,0) = 0;
-    MB12C2(1,1) = 1;
+    MB12C2(1,1) = -1;
     MB12C2(1,2) = 0;
     MB12C2(1,3) = 0;
     MB12C2(2,0) = 0;
     MB12C2(2,1) = 0;
-    MB12C2(2,2) = 1;
+    MB12C2(2,2) = -1;
     MB12C2(2,3) = 100;
     MB12C2(3,0) = 0;
     MB12C2(3,1) = 0;
@@ -92,12 +92,12 @@ int main(int argc, char **argv)
     MB22C2(0,2) = 0;
     MB22C2(0,3) = 0;
     MB22C2(1,0) = 0;
-    MB22C2(1,1) = 1;
+    MB22C2(1,1) = -1;
     MB22C2(1,2) = 0;
-    MB22C2(1,3) = 100;
+    MB22C2(1,3) = -100;
     MB22C2(2,0) = 0;
     MB22C2(2,1) = 0;
-    MB22C2(2,2) = 1;
+    MB22C2(2,2) = -1;
     MB22C2(2,3) = 100;
     MB22C2(3,0) = 0;
     MB22C2(3,1) = 0;
@@ -109,12 +109,12 @@ int main(int argc, char **argv)
     MB22C3(0,2) = 0;
     MB22C3(0,3) = 0;
     MB22C3(1,0) = 0;
-    MB22C3(1,1) = 1;
+    MB22C3(1,1) =-1;
     MB22C3(1,2) = 0;
     MB22C3(1,3) = 0;
     MB22C3(2,0) = 0;
     MB22C3(2,1) = 0;
-    MB22C3(2,2) = 1;
+    MB22C3(2,2) =-1;
     MB22C3(2,3) = 100;
     MB22C3(3,0) = 0;
     MB22C3(3,1) = 0;
@@ -126,12 +126,12 @@ int main(int argc, char **argv)
     M12C1(0,2) = 0;
     M12C1(0,3) = 25;
     M12C1(1,0) = 0;
-    M12C1(1,1) = 1;
+    M12C1(1,1) = -1;
     M12C1(1,2) = 0;
-    M12C1(1,3) = 50;
+    M12C1(1,3) = -50;
     M12C1(2,0) = 0;
     M12C1(2,1) = 0;
-    M12C1(2,2) = 1;
+    M12C1(2,2) = -1;
     M12C1(2,3) = 100;
     M12C1(3,0) = 0;
     M12C1(3,1) = 0;
@@ -143,12 +143,12 @@ int main(int argc, char **argv)
     M32C2(0,2) = 0;
     M32C2(0,3) = -50;
     M32C2(1,0) = 0;
-    M32C2(1,1) = 1;
+    M32C2(1,1) = -1;
     M32C2(1,2) = 0;
     M32C2(1,3) = 0;
     M32C2(2,0) = 0;
     M32C2(2,1) = 0;
-    M32C2(2,2) = 1;
+    M32C2(2,2) = -1;
     M32C2(2,3) = 100;
     M32C2(3,0) = 0;
     M32C2(3,1) = 0;
@@ -160,12 +160,12 @@ int main(int argc, char **argv)
     M22C3(0,2) = 0;
     M22C3(0,3) = 25;
     M22C3(1,0) = 0;
-    M22C3(1,1) = 1;
+    M22C3(1,1) = -1;
     M22C3(1,2) = 0;
-    M22C3(1,3) = -50;
+    M22C3(1,3) = 50;
     M22C3(2,0) = 0;
     M22C3(2,1) = 0;
-    M22C3(2,2) = 1;
+    M22C3(2,2) = -1;
     M22C3(2,3) = 100;
     M22C3(3,0) = 0;
     M22C3(3,1) = 0;
@@ -173,6 +173,25 @@ int main(int argc, char **argv)
     M22C3(3,3) = 1;
 
     // Now initialize world correctly
-    
+    bool success = world.setOrigin(1, 0, W2C1);
+    success &= world.initCamera(2, 1, MB12C2, MB12C1);
+    success &= world.initCamera(3, 2, MB22C3, MB22C2);
+    success &= world.setMarkerLoc(1, 0, W2C1);
+    success &= world.setMarkerLoc(1, 1, MB12C1);
+    success &= world.setMarkerLoc(2, 2, MB22C2);
+    success &= world.setMarkerLoc(1, 6, M12C1);
+    success &= world.setMarkerLoc(3, 9, M22C3);
+    success &= world.setMarkerLoc(2, 19, M32C2);
+
+    if (!success)
+        cout << "Error Will Robenson!" << endl;
+
+    // Now print out locations
+    cout << "World at: " << world.getMarkerLoc(0) << "\n";
+    cout << "Marker between C1C2 at: " << world.getMarkerLoc(1) << "\n";
+    cout << "Marker between C2C3 at: " << world.getMarkerLoc(2) << "\n";
+    cout << "Marker move1 at: " << world.getMarkerLoc(6) << "\n";
+    cout << "Marker move2 at: " << world.getMarkerLoc(9) << "\n";
+    cout << "Marker move3 at: " << world.getMarkerLoc(19) << "\n";
 }
 

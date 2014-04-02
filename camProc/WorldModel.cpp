@@ -16,6 +16,10 @@ WorldModel::WorldModel(vector<ARCamera> arcameras, vector<ARMarker> armarkers)
 
 bool WorldModel::setOrigin(int cameraID, int markerID, Matrix4d transform)
 {
+    // Debug
+    /*cout << "Calling setOrigin with camera " << cameraID << " and marker " << markerID
+        << " and transform " << endl << transform << endl;*/
+
     // Initialize camera with World to Camera transform (given in input)
     bool success = cameras[getCamInd(cameraID)].initializeCamera(transform);
 
@@ -27,12 +31,20 @@ bool WorldModel::setOrigin(int cameraID, int markerID, Matrix4d transform)
 
 bool WorldModel::initCamera(int cam2InitID, int camAlreadyID, Matrix4d transMtoNew, Matrix4d transMtoOld)
 {
+    // Debug
+    /*cout << "Calling initCamera with uninit camera " << cam2InitID << " init camera "  
+        << camAlreadyID << " and transform MtoNew " << endl << transMtoNew 
+        << " and transform MtoOld " << endl << transMtoOld << endl;*/
+
     // Make sure camera is initialized
     if (!cameras[getCamInd(camAlreadyID)].isInitialized())
         return false;
 
     // Get world to camera transform for new camera
     Matrix4d world2new = cameras[getCamInd(camAlreadyID)].getWorld2Cam() * transMtoOld.inverse() * transMtoNew;
+
+    // Debut
+    //cout << "Creating matrix world2new " << endl << world2new << endl;
 
     // Initialize camera with that transform
     bool success = cameras[getCamInd(cam2InitID)].initializeCamera(world2new);
@@ -42,12 +54,16 @@ bool WorldModel::initCamera(int cam2InitID, int camAlreadyID, Matrix4d transMtoN
 
 bool WorldModel::setMarkerLoc(int cameraID, int markerID, Matrix4d transform)
 {
+    // Debug
+    /*cout << "Calling setMarkerLoc with camera " << cameraID << " marker " 
+        << markerID << " and transform " << endl << transform << endl; */
+
     // Check that camera is initialized
     if (!cameras[getCamInd(cameraID)].isInitialized())
         return false;
 
     // Get world to marker matrix
-    Matrix4d world2mark = cameras[getCamInd(cameraID)].getWorld2Cam() * transform.inverse();
+    Matrix4d world2mark = cameras[getCamInd(cameraID)].getCam2World() * transform;
 
     // Set marker
     bool success = markers[getMarkInd(markerID)].setMarker(world2mark);

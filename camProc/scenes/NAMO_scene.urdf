@@ -1,0 +1,20 @@
+<world name="NAMO_scene">
+
+  <include filename="chair.urdf" model_name="chair"/>
+  <include filename="table.urdf" model_name="table"/>
+  <include filename="origin.urdf" model_name="origin"/>
+
+  <entity model="origin" name="origin">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="chair" name="chair1">
+    <origin xyz="0.60 0.70 0.40" rpy="0 0 0"/>
+  </entity>
+
+
+  <entity model="table" name="table1">
+    <origin xyz="0.0 -0.5 0.02" rpy="0 0 0"/>
+  </entity>
+
+</world>

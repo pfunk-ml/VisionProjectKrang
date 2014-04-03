@@ -1,54 +1,35 @@
 /**
- * @file cameraProcess.h
- * @brief
+ * @file CameraProcess.h
  */
 #pragma once
 
+#include <GL/gl.h>
+#include <GL/glut.h>
+
+#include <AR/gsub.h>
+#include <AR/video.h>
 #include <AR/param.h>
+#include <AR/ar.h>
 
-#include <Eigen/Geometry>
-#include <string>
-#include <vector>
-
+#include "globalData.h"
+#include "Object.h"
 
 /**
- * @class cameraProcess
+ * @struct CamData
  */
-class CameraProcess {
-  
- public:
-  CameraProcess();
-  ~CameraProcess();
-  bool setup( const std::string &_ARTK_CONFIG );
-  bool init();  
-  bool start();
-  void keyEvent( unsigned char _key,
-			int _x,
-			int _y );
-  
-  void mainLoop();
-  void cleanup();
-  void draw();
+struct CamData {
 
-  bool getTfs();
-  
- protected:
-  std::string mPatternName;
-  int mPatternId;
-  std::string mParam_filename;
-  Eigen::Isometry3d mTcam_obj;
-  std::string mARTK_VariableName;
-  int mDimX; int mDimY;
-  int mThresh;
-  int mCount;
+    /**< Camera configuration */    
+    int dimX; int dimY;
+    int thresh;
+    int count;
+    char* cparam_name;
+    ARParam cparam;    
+    
+    /**< Pattern information */
+    ObjectData_t data[NUM_OBJECTS];
 
-  ARParam mCParam;
-
-  double mPattern_center[2];
-  double mPattern_width;
-  double mPattern_trans[3][4];
-
- public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW; /** For fixed-sized Eigen members */
-
+    /** Env info */
+    char* artoolkit_config;
 };
+

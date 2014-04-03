@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 
-
+set( CMAKE_CXX_FLAGS "-lm" )
+set(CMAKE_C_FLAGS "-lm" )
 # Find OpenGL
 find_package( OpenGL REQUIRED)
 if( OPENGL_FOUND )
@@ -24,21 +25,20 @@ endif()
 
 # Find AR
 pkg_check_modules( ARToolkit REQUIRED AR )
-if( AR_FOUND )
+if( ARToolkit_FOUND )
+  message( "AR FOUND YEAH!")
     include_directories( ${ARToolkit_INCLUDE_DIRS} )
     link_directories( ${ARToolkit_LIBRARY_DIRS} )
+else()
+  message("AR NOT FOUND ARGH!")
 endif()
 
 # Find Eigen
 pkg_check_modules( EIGEN REQUIRED eigen3 )
   include_directories( ${EIGEN_INCLUDE_DIRS} )
 
-
-
 # Find ACH
 set( ACH_LIBS ach )
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # Create binary (put libraries in order!)
 add_executable( twoViews twoView.c )
@@ -53,15 +53,15 @@ target_link_libraries( oneView ${ARToolkit_LIBRARIES}
 set_target_properties( oneView PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
-add_executable( achTest achtest.c ) # achTest.cpp
-target_link_libraries( achTest ${ACH_LIBS} ${ARToolkit_LIBRARIES} 
-  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
-set_target_properties( achTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+
+
+# camCentralProcess  - multiple markers
+add_executable( camProcess camProcess.cpp CameraProcess.h Object.h globalData.h  )
+target_link_libraries( camProcess ${ARToolkit_LIBRARIES} 
+  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS})
+set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
-# cameraProcessMain
-add_executable( camProcessMain camProcessMain.cpp CameraProcess.cpp CameraProcess.h )
-target_link_libraries( camProcessMain ${ARToolkit_LIBRARIES} 
-  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
-set_target_properties( camProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
-  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+# Interface for Vision
+add_subdirectory( cameraController )

@@ -193,5 +193,28 @@ int main(int argc, char **argv)
     cout << "Marker move1 at: " << world.getMarkerLoc(6) << "\n";
     cout << "Marker move2 at: " << world.getMarkerLoc(9) << "\n";
     cout << "Marker move3 at: " << world.getMarkerLoc(19) << "\n";
+
+    // Test other functions
+    double testMatrix[3][4];
+    testMatrix[0][0] = 0;
+    testMatrix[0][1] = -1;
+    testMatrix[0][2] = 0;
+    testMatrix[0][3] = 10;
+    testMatrix[1][0] = 1;
+    testMatrix[1][1] = 0;
+    testMatrix[1][2] = 0;
+    testMatrix[1][3] = 20;
+    testMatrix[2][0] = 0;
+    testMatrix[2][1] = 0;
+    testMatrix[2][2] = 1;
+    testMatrix[2][3] = 30;
+
+    Matrix4d transformMat = world.getDoubleArrAsMat(testMatrix);
+    cout << "Transformed: " << endl << transformMat << endl;
+    
+    double x, y, ang;
+    world.getXYangTriple(transformMat, x, y, ang);
+
+    cout << "x: " << x << " y: " << y << " ang: " << ang << endl;
 }
 

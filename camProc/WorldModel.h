@@ -41,6 +41,12 @@ class WorldModel
 
         Matrix4d getMarkerPose(int markerID);
 
+        double** getMatAsDouble(Matrix4d mat);
+        Matrix4d getDoubleArrAsMat(double trans[3][4]);
+
+        void getXYangTriple(Matrix4d mat, double& x, double& y, double& ang);
+        
+
     // Private functions
     private:
         // Method to get the position of a particular camera

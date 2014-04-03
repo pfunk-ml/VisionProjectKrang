@@ -39,6 +39,8 @@ class WorldModel
         // Method to get the location of a marker relative to the world marker
         Vector3d getMarkerLoc(int markerID);
 
+        Matrix4d getMarkerPose(int markerID);
+
     // Private functions
     private:
         // Method to get the position of a particular camera

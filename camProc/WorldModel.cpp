@@ -76,6 +76,11 @@ Vector3d WorldModel::getMarkerLoc(int markerID)
     return markers[getMarkInd(markerID)].getLocInWorld();
 }
 
+Matrix4d WorldModel::getMarkerPose(int markerID)
+{
+    return markers[getMarkInd(markerID)].getMarkerPose();
+} 
+
 int WorldModel::getCamInd(int ID)
 {
     for (int i = 0; i < cameras.size(); i++)

@@ -28,6 +28,7 @@ class ARMarker
         // Getters and setters
         int getID() { return id; };
         Vector3d getLocInWorld() { return LocInWorld; };
+        Matrix4d getMarkerPose() { return World2Marker; };
 };
 
 #endif

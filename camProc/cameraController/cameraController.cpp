@@ -237,20 +237,38 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	// Get objects location
 	size_t fs;
 	int r; 
+	ObjectData_t tempObj[NUM_OBJECTS];
 	for( int i = 0; i < mCam_Channels.size(); ++i ) {
-	    r = ach_get( &mCam_Channels[i],
-			 mObjects, sizeof( mObjects ),
-			 &fs,
-			 NULL, ACH_O_WAIT );
-	    assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
-		    sizeof(mObjects) == fs );
-     
-	    std::cout << "Received channel :"<< i<< " \n"<< std::endl;
+	  r = ach_get( &mCam_Channels[i],
+		       tempObj, sizeof( tempObj ),
+		       &fs,
+		       NULL, ACH_O_WAIT );
+	  assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
+		  sizeof(tempObj) == fs );
+	  
+	  if( i == 0 ) { 
+	    for( int j = 0; j < NUM_OBJECTS; ++j ) { 
+	      mObjects[j] = tempObj[i]; 
+	    }
+	  }
+	
+	  else {
+	   
+	    for( int j = 0; j < NUM_OBJECTS; ++j ) {	      
+	      if( mObjects[j].visible == -1 &&
+		  tempObj[j].visible >= 0 ) { 
+		mObjects[j] = tempObj[j]; 
+	      }
+	      
+	    }
+	  } 
+	  
+	  std::cout << "Received channel :"<< i<< " \n"<< std::endl;
 	}
-
+	  
 	for( int i = 0; i < NUM_OBJECTS; ++i ) {
 	    
-	    if( mObjects[i].visible == -1 ) { continue; }
+	    if( tempObj[i].visible == -1 ) { continue; }
 
 	    Eigen::Isometry3d Tf = Eigen::Isometry3d::Identity();
 	    for( int j = 0; j <3; ++j ) {
@@ -260,31 +278,31 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	    }
 	    Tf.translation() = Tf.translation() / 1000.0;	    
 
-	    // Set cube is hiro
-	    if( i == 0 ) {
-		if( mObjects[i].visible >= 0 ) {
-		    mWorld->getSkeleton("origin")->setConfig( dart::math::logMap(Tf) );
-		}
-	    }
-	    
-	    
-	    // Set chair is kanji
-	    if( i == 1 ) {
-		if( mObjects[i].visible >= 0 ) {
-		    mWorld->getSkeleton("chair1")->setConfig( dart::math::logMap(Tf) );
-		}
-	    }
-
-	    // Set table is sample1
-	    if( i == 2 ) {
-		if( mObjects[i].visible >= 0 ) {
-		    mWorld->getSkeleton("table1")->setConfig( dart::math::logMap(Tf) );
-		}
-	    }
 
 
 	}
 
+	if( mObjects[0].visible >= 0 && mObjects[1].visible >= 0 ) {
+	  
+	  
+	  Eigen::Isometry3d Tf0 = Eigen::Isometry3d::Identity();
+	  Eigen::Isometry3d Tf1 = Eigen::Isometry3d::Identity();
+	  for( int j = 0; j <3; ++j ) {
+	    for( int k = 0; k < 4; ++k ) {
+	      Tf0.matrix()(j,k) = mObjects[0].trans[j][k];
+	      Tf1.matrix()(j,k) = mObjects[1].trans[j][k];
+	    }
+	  }
+	  Tf0.translation() = Tf0.translation() / 1000.0;	    
+	  Tf1.translation() = Tf1.translation() / 1000.0;	    
+
+	  Eigen::Isometry3d Ttable = Tf0.inverse()*Tf1;
+	  mWorld->getSkeleton("origin")->setConfig( dart::math::logMap(Eigen::Isometry3d::Identity() ) );
+	  mWorld->getSkeleton("table1")->setConfig( dart::math::logMap(Ttable ) );
+	  
+	} else {
+	  std::cout << "Not both of them detected"<< std::endl;
+	}
 	
     } break;
 

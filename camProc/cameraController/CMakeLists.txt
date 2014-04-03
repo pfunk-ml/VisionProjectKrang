@@ -10,10 +10,10 @@ set(CMAKE_INSTALL_PREFIX /usr/local )
 
 # DART
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_INSTALL_PREFIX}/share/dart")
-find_package(DARTExt REQUIRED)
+#find_package(DARTExt REQUIRED)
 find_package(DART REQUIRED CONFIG)
 
-include_directories(${DARTExt_INCLUDE_DIRS})
+#include_directories(${DARTExt_INCLUDE_DIRS})
 include_directories(${DART_INCLUDE_DIRS})
 link_directories(${DART_LIBRARY_DIRS})
 
@@ -41,7 +41,7 @@ if (wxWidgets_FOUND)
   
   add_executable ( cameraController ${cameraController_src} ${cameraController_hdr})
   
-  target_link_libraries ( cameraController ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${DARTExt_LIBRARIES} ${wxWidgets_LIBRARIES}  ${Boost_LIBRARIES}  ${ACH_LIBS} )
+  target_link_libraries ( cameraController ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${wxWidgets_LIBRARIES}  ${Boost_LIBRARIES}  ${ACH_LIBS} ) # ${DARTExt_LIBRARIES}
   set_target_properties( cameraController PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 else (wxWidgets_FOUND)

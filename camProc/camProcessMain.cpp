@@ -64,7 +64,7 @@ int main( int argc, char* argv[] ) {
 
     /** Set ENVIRONMENT variable for ARToolkit */
     char arg[400];
-    sprintf( arg, "v4l2src device=/dev/video%d use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=320,height=240 ! identity name=artoolkit ! fakesink", gCamIndex );
+    sprintf( arg, "v4l2src device=/dev/video%d use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink", gCamIndex );
     
     std::cout << "ARTOOLKIT CONFIG: "<< arg << std::endl;
 

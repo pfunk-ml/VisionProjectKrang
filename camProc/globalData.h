@@ -6,8 +6,8 @@
 
 #include "Object.h"
 
-#define OBJ0_PATT_NAME "Data/patt.hiro"
-#define OBJ1_PATT_NAME "Data/patt.kanji"
+#define OBJ0_PATT_NAME "Data/4x4_23.patt"
+#define OBJ1_PATT_NAME "Data/4x4_87.patt"
 #define OBJ2_PATT_NAME "Data/patt.sample1"
 #define OBJ3_PATT_NAME "Data/patt.sample2"
 
@@ -26,6 +26,7 @@
 #define CAM2_CHANNEL "cam2_channel"
 #define CAM3_CHANNEL "cam3_channel"
 
+#define NUM_CAMERAS 1
 
 #define NUM_OBJECTS 4
 

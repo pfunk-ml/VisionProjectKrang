@@ -40,7 +40,7 @@
 
 #include <Tabs/GRIPTab.h>
 #include <Tabs/GRIPThread.h>
-#include <dynamics/SkeletonDynamics.h>
+#include <dart/dynamics/Skeleton.h>
 #include <Eigen/Geometry>
 #include <list>
 
@@ -71,7 +71,7 @@ class cameraController : public GRIPTab {
     // *************************************  
     // Dynamic Simulation Variables
     
-    dynamics::SkeletonDynamics* mRobot;
+    dart::dynamics::Skeleton* mRobot;
     int mGroundIndex;
     std::string robotFilename;
     int mCurrentFrame;

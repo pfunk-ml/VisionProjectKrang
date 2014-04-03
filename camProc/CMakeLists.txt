@@ -40,25 +40,11 @@ pkg_check_modules( EIGEN REQUIRED eigen3 )
 # Find ACH
 set( ACH_LIBS ach )
 
-# Create binary (put libraries in order!)
-add_executable( twoViews twoView.c )
-target_link_libraries( twoViews ${ARToolkit_LIBRARIES} 
-  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
-set_target_properties( twoViews PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
-  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
-
-add_executable( oneView oneView.cpp )
-target_link_libraries( oneView ${ARToolkit_LIBRARIES} 
-  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
-set_target_properties( oneView PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
-  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
-
-
 
 # camCentralProcess  - multiple markers
-add_executable( camProcess camProcess.cpp CameraProcess.h Object.h globalData.h  )
+add_executable( camProcess camProcessMain.cpp CameraProcess.h Object.h globalData.h  )
 target_link_libraries( camProcess ${ARToolkit_LIBRARIES} 
-  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS})
+  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS} m)
 set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 

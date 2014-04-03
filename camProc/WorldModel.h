@@ -31,7 +31,7 @@ class WorldModel
         bool setOrigin(int cameraID, int markerID, Matrix4d transform);
 
         // Method to initialize a camera to the world frame
-        bool initCamera(int cam2InitID, int camAlreadyID, Matrix4d transNewtoM, Matrix4d transOldtoM);
+        bool initCamera(int cam2InitID, int camAlreadyID, Matrix4d transMtoNew, Matrix4d transMtoOld);
 
         // Method to set a marker's location in the world frame
         bool setMarkerLoc(int cameraID, int markerID, Matrix4d transform);

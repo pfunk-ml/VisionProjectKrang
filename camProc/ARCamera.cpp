@@ -2,6 +2,7 @@
 
 #include "ARCamera.h"
 #include "ARMarker.h"
+#include <iostream>
 
 using namespace Eigen;
 using namespace std;
@@ -15,6 +16,10 @@ ARCamera::ARCamera(int itsid)
 
 bool ARCamera::initializeCamera(Matrix4d world2camMeasured)
 {
+    // Debug
+    /*cout << "initializeCamera on camera " << id << " with world2cam " << endl 
+        << world2camMeasured << endl;*/
+
     // Set the World2Cam
     World2Cam = world2camMeasured;
 

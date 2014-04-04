@@ -23,10 +23,10 @@
 
 /** Global variable declaration */
 ObjectData_t gObjects[4] = {
-    { OBJ0_PATT_NAME, -1, OBJ0_MODEL_ID, 0, OBJ0_SIZE, {0.0,0.0} },
-    { OBJ1_PATT_NAME, -1, OBJ1_MODEL_ID, 0, OBJ1_SIZE, {0.0,0.0} }, 
-    { OBJ2_PATT_NAME, -1, OBJ2_MODEL_ID, 0, OBJ2_SIZE, {0.0,0.0} },
-    { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0} }
+    { OBJ0_PATT_NAME, -1, OBJ0_MODEL_ID, 0, OBJ0_SIZE, {0.0,0.0}, 0 },
+    { OBJ1_PATT_NAME, -1, OBJ1_MODEL_ID, 0, OBJ1_SIZE, {0.0,0.0}, 0 }, 
+    { OBJ2_PATT_NAME, -1, OBJ2_MODEL_ID, 0, OBJ2_SIZE, {0.0,0.0}, 0 },
+    { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0}, 0 }
 };
 
 /**< Camera details */
@@ -69,6 +69,12 @@ int main( int argc, char* argv[] ) {
     std::cout << "ARTOOLKIT CONFIG: "<< arg << std::endl;
 
     setenv( "ARTOOLKIT_CONFIG", arg, 1 );
+
+    /**< Set the camera index in the objects to be send over ACH */
+    for( int i = 0; i < NUM_OBJECTS; ++i ) {
+	gObjects[i].cam_id = gCamIndex;
+    }
+
 
     /**< Call this first */
     glutInit( &argc, argv );

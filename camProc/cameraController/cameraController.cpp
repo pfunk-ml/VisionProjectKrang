@@ -59,10 +59,8 @@ std::vector<ach_channel_t> mCam_Channels;
 
 /** Events */
 enum cameraControllerEvents {
-    id_button_openCam0 = 8345,
-    id_button_openCam1,
-    id_button_openCam2,
-    id_button_openCam3,
+    id_button_initCamProcess = 8345,
+    id_button_openCams,
     id_button_startConnection,
     id_button_getInfo
 };
@@ -102,14 +100,10 @@ GRIPTab( parent, id, pos, size, style ) {
     //ss1BoxS->Add( mSlider_A, 0, wxALL, 1 );
 
     // SS2BoxS
-    ss2BoxS->Add( new wxButton( this, id_button_openCam0, 
-				wxT("Open Camera 0")), 0, wxALL, 1 );
-    ss2BoxS->Add( new wxButton( this, id_button_openCam1, 
-				wxT("Open Camera 1")), 0, wxALL, 1 );
-    ss2BoxS->Add( new wxButton( this, id_button_openCam2, 
-				wxT("Open Camera 2")), 0, wxALL, 1 );
-    ss2BoxS->Add( new wxButton( this, id_button_openCam3, 
-				wxT("Open Camera 3")), 0, wxALL, 1 );
+    ss2BoxS->Add( new wxButton( this, id_button_initCamProcess, 
+				wxT("Init cam process")), 0, wxALL, 1 );
+    ss2BoxS->Add( new wxButton( this, id_button_openCams, 
+				wxT("Open Cameras")), 0, wxALL, 1 );
 
     // SS3BoxS
     ss3BoxS->Add( new wxButton( this, id_button_startConnection, 
@@ -134,28 +128,6 @@ GRIPTab( parent, id, pos, size, style ) {
 }
 
 
-/**< Fork and exec a subprocess running the camera program */
-int cameraController::spawnCamera( char* _camProgram,
-				   char** _argList ) {
-    pid_t child_pid;
-    
-    /** Duplicate this process */
-    child_pid = fork();
-    
-    /**< Parent process */
-    if( child_pid != 0 ) {
-	return child_pid;
-    }
-
-    /**< Child process */
-    else {
-	execvp( _camProgram, _argList);
-	/**< execvp only comes back if an error*/
-	fprintf( stderr, "An error occurred in execvp %s calling the program \n", _camProgram );
-	abort();
-    }
-}
-
 
 /**
  * @function GRIPEventSceneLoaded
@@ -174,114 +146,29 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
     int slnum = _evt.GetId();
     
     switch( slnum ) {
+
+	// Init cam process
+    case id_button_initCamProcess : {
+	mCc.initSetup();
+    } break;
+
 	
-	// Open Cam 0
-    case id_button_openCam0 : {
-	char* arg_list[] = {"camProcess", "0", NULL };
-	spawnCamera( "./camProcess", arg_list );
-	std::cout << "Done calling cam 0"<< std::endl;
+	// Open Cams
+    case id_button_openCams : {
+	mCc.startCamProcesses();
     } break;
 
-	// Open Cam 1
-    case id_button_openCam1 : {
-	char* arg_list[] = {"camProcess", "1", NULL };
-	spawnCamera( "./camProcess", arg_list );
-	std::cout << "Done calling cam 1"<< std::endl;
-    } break;
 
-	// Open Cam 2
-    case id_button_openCam2 : {
-	std::cout << "Not implemented yet" << std::endl;	
-    } break;
-
-	// Open Cam 3
-    case id_button_openCam3 : {
-	std::cout << "Not implemented yet" << std::endl;
-    } break;
 
 	// Start connection
     case id_button_startConnection : {
-	std::cout << "Attempt to start connection" << std::endl;
-	int r;
-	int counter;
-	std::string name;
-
-	counter = 0;
-	for( int i = 0; i < NUM_OBJECTS; ++i ) {
-
-	    switch(i) {
-	    case 0 : name = CAM0_CHANNEL; break;
-	    case 1 : name = CAM1_CHANNEL; break;
-	    case 2 : name = CAM2_CHANNEL; break;
-	    case 3 : name = CAM3_CHANNEL; break;
-	    };
-	    
-	    ach_channel_t chan;
-	    r = ach_open( &chan, name.c_str(), NULL );
-	    if( ACH_OK == r ) {
-		mCam_Channels.push_back( chan );
-		counter++; 
-		std::cout << "Opened successfully channel "<<name << std::endl;
-	    } else {
-		std::cout << "Channel "<< name << " not opened "<< std::endl;
-	    }	    
-	}
-
-
-
+	mCc.setupChannels();
     } break;
 
 	// Get info
     case id_button_getInfo : {
 
-	// Get objects location
-	size_t fs;
-	int r; 
-	ObjectData_t tempObj[NUM_OBJECTS];
-	for( int i = 0; i < mCam_Channels.size(); ++i ) {
-	  r = ach_get( &mCam_Channels[i],
-		       tempObj, sizeof( tempObj ),
-		       &fs,
-		       NULL, ACH_O_WAIT );
-	  assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
-		  sizeof(tempObj) == fs );
-	  
-	  if( i == 0 ) { 
-	    for( int j = 0; j < NUM_OBJECTS; ++j ) { 
-	      mObjects[j] = tempObj[i]; 
-	    }
-	  }
-	
-	  else {
-	   
-	    for( int j = 0; j < NUM_OBJECTS; ++j ) {	      
-	      if( mObjects[j].visible == -1 &&
-		  tempObj[j].visible >= 0 ) { 
-		mObjects[j] = tempObj[j]; 
-	      }
-	      
-	    }
-	  } 
-	  
-	  std::cout << "Received channel :"<< i<< " \n"<< std::endl;
-	}
-	  
-	for( int i = 0; i < NUM_OBJECTS; ++i ) {
-	    
-	    if( tempObj[i].visible == -1 ) { continue; }
-
-	    Eigen::Isometry3d Tf = Eigen::Isometry3d::Identity();
-	    for( int j = 0; j <3; ++j ) {
-		for( int k = 0; k < 4; ++k ) {
-		    Tf.matrix()(j,k) = mObjects[i].trans[j][k];
-		}
-	    }
-	    Tf.translation() = Tf.translation() / 1000.0;	    
-
-
-
-	}
-
+	/*
 	if( mObjects[0].visible >= 0 && mObjects[1].visible >= 0 ) {
 	  
 	  
@@ -303,7 +190,7 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	} else {
 	  std::cout << "Not both of them detected"<< std::endl;
 	}
-	
+	*/
     } break;
 
 	

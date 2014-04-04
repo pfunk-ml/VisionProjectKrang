@@ -4,7 +4,23 @@
 #pragma once
 #include <Eigen/Geometry>
 #include <vector>
+#include <stdint.h>
+#include <ach.h>
 
+#include "globalData.h"
+#include "Object.h"
+
+class ARMarker;
+class ARCamera;
+class WorldModel;
+
+/*** Planning output */
+struct Planning_output{
+ 
+    int marker_id;
+    double Tworld_marker[3][4];
+    bool visible;
+};
 
 /**
  * @class CameraCentralProcess
@@ -13,40 +29,38 @@ class CameraCentralProcess {
   
  public:
 
-  CameraCentralProcess();
-  ~CameraCentralProcess();
-  bool initChannels();
-  void mainLoop();
-  void grabChannelsInfo();
-  void getWorldTransform();
-  void sendMessage();
-  
+    CameraCentralProcess();
+    ~CameraCentralProcess();
+    
+    void initSetup();
+    bool startCamProcesses();
+    bool startCamProcess( const int &_i );
+    int spawnCamera( char* _camProgram,
+		     char** _argList );
+
+    bool setupChannels();
+
+    void mainLoop();
+    void grabChannelsInfo();
+    void getWorldTransforms();
+    void createMessage();
+    void sendMessage();
+    
   
  private:
 
-  /** Information from each channel */
-  std::vector<CamChannelData> mCamChannelData;
+  /**< Environemnt */
+  WorldModel* mWorldModel;
+  std::vector<ARCamera> mCameras;
+  std::vector<ARMarker> mMarkers;
 
-  /** Tf from world to markers */
-  std::vector<Eigen::Isometry3d> mTworld_marker;
- 
-  /** Channels */
-  std::vector<ach_channel_t> mChannels;
-  
+  std::vector<ach_channel_t> mInput_channels;
+  ach_channel_t mOutput_channel;
+  ObjectData_t mObjects[NUM_OBJECTS];
+  Planning_output mMsg[NUM_OBJECTS];
+
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 };
 
-/**
- * @structure CamChannelData
- */
-struct CamChannelData {
-
-  Eigen::Isometry3d mTw_cam;
-  int mID;
-  std::vector<Eigen::Isometry3d> mTcam_marker;
-  std::vector<int> mMarker_visible;
-
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-};

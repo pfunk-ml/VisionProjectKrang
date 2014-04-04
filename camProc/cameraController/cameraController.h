@@ -44,6 +44,7 @@
 #include <Eigen/Geometry>
 #include <list>
 
+#include "../CameraCentralProcess.h"
 
 /**
  * @class cameraController
@@ -59,9 +60,6 @@ class cameraController : public GRIPTab {
 	    long style = wxTAB_TRAVERSAL);
     virtual ~cameraController(){};
     
-    /**< Fork and exec a subprocess running the camera program */
-    int spawnCamera( char* _camProgram,
-		     char** arg_list );
 
     wxSizer* sizerFull;
     
@@ -72,6 +70,7 @@ class cameraController : public GRIPTab {
     // Dynamic Simulation Variables
     
     dart::dynamics::Skeleton* mRobot;
+    CameraCentralProcess mCc;
     int mGroundIndex;
     std::string robotFilename;
     int mCurrentFrame;

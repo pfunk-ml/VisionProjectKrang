@@ -32,3 +32,4 @@
 
 extern ObjectData_t gObjects[4];
 
+#define PERCEPTION_CHANNEL "perception_channel"

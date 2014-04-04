@@ -11,7 +11,7 @@ struct ObjectData_t {
     double width;
     double center[2];
     double trans[3][4];
-
+    int cam_id;
 };
 
 ObjectData_t* read_ObjectData( char *_name,

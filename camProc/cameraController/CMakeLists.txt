@@ -41,7 +41,7 @@ if (wxWidgets_FOUND)
   
   add_executable ( cameraController ${cameraController_src} ${cameraController_hdr})
   
-  target_link_libraries ( cameraController ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${wxWidgets_LIBRARIES}  ${Boost_LIBRARIES}  ${ACH_LIBS} ) # ${DARTExt_LIBRARIES}
+  target_link_libraries ( cameraController PerceptionModule ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${wxWidgets_LIBRARIES}  ${Boost_LIBRARIES}  ${ACH_LIBS} ) # ${DARTExt_LIBRARIES}
   set_target_properties( cameraController PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 else (wxWidgets_FOUND)

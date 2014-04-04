@@ -49,20 +49,17 @@
 #include <Tabs/AllTabs.h>
 #include <GRIPApp.h>
 
+#include "../CameraCentralProcess.h"
 #include "../globalData.h"
-#include "../Object.h"
 #include <ach.h>
 
-ObjectData_t mObjects[NUM_OBJECTS];
-std::vector<ach_channel_t> mCam_Channels;
+ach_channel_t mSim_Channel;
 
 
 /** Events */
 enum cameraControllerEvents {
-    id_button_initCamProcess = 8345,
-    id_button_openCams,
-    id_button_startConnection,
-    id_button_getInfo
+    id_button_startConnection = 8345,
+    id_button_querySim
 };
 
 /** Handler for events **/
@@ -100,16 +97,12 @@ GRIPTab( parent, id, pos, size, style ) {
     //ss1BoxS->Add( mSlider_A, 0, wxALL, 1 );
 
     // SS2BoxS
-    ss2BoxS->Add( new wxButton( this, id_button_initCamProcess, 
-				wxT("Init cam process")), 0, wxALL, 1 );
-    ss2BoxS->Add( new wxButton( this, id_button_openCams, 
-				wxT("Open Cameras")), 0, wxALL, 1 );
 
     // SS3BoxS
     ss3BoxS->Add( new wxButton( this, id_button_startConnection, 
 				wxT("Start Connection")), 0, wxALL, 1 );
-    ss3BoxS->Add( new wxButton( this, id_button_getInfo, 
-				wxT("Get information")), 0, wxALL, 1 );
+    ss3BoxS->Add( new wxButton( this, id_button_querySim, 
+				wxT("Query periodically")), 0, wxALL, 1 );
 
         
     // Add the boxes to their respective sizers
@@ -147,28 +140,56 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
     
     switch( slnum ) {
 
-	// Init cam process
-    case id_button_initCamProcess : {
-	mCc.initSetup();
-    } break;
-
-	
-	// Open Cams
-    case id_button_openCams : {
-	mCc.startCamProcesses();
-    } break;
-
-
-
 	// Start connection
     case id_button_startConnection : {
-	mCc.setupChannels();
+
+	// Start our own channel to read
+	int r;
+	r = ach_open( &mSim_Channel, PERCEPTION_CHANNEL, NULL );
+	assert( ACH_OK == r );
+
+	std::cout << "Opened successfully channel"<< PERCEPTION_CHANNEL << std::endl;
     } break;
 
-	// Get info
-    case id_button_getInfo : {
 
-	/*
+	// Query sim
+    case id_button_querySim : {
+	
+	Planning_output po[NUM_OBJECTS];
+	size_t fs; int r; 
+
+	r = ach_get( &mSim_Channel, 
+		     po,
+		     sizeof(po),
+		     &fs,
+		     NULL, ACH_O_WAIT );
+	assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
+		sizeof( po ) == fs );
+	
+	std::cout << "Reading..." << std::endl;
+	for( int i = 0; i < NUM_OBJECTS; ++i ) {
+	    
+	    if( po[i].visible == false ) { 
+		std::cout << "Object"<< i << " not visible" << std::endl;
+		continue;
+	    }
+	    
+	    Eigen::Matrix4d Tf = Eigen::Matrix4d::Identity();
+	    
+	    for( int j = 0; j < 3; ++j ) {
+		for( int k = 0; k < 4; ++k ) {
+		    Tf(j,k) = po[i].Tworld_marker[j][k];
+		}
+	    }
+	    
+	    std::cout << "Obj "<<i<<": "<<std::endl;
+	    std::cout << Tf << std::endl;		
+	    
+	}
+	
+	std::cout << "Read message. Getting out "<<std::endl;
+
+		/*
 	if( mObjects[0].visible >= 0 && mObjects[1].visible >= 0 ) {
 	  
 	  
@@ -191,7 +212,11 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	  std::cout << "Not both of them detected"<< std::endl;
 	}
 	*/
+
+
+
     } break;
+	
 
 	
     }

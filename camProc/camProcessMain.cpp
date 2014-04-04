@@ -240,7 +240,11 @@ static void mainLoop(void) {
             }
         }
 	
-        gObjects[i].visible = k;
+	if( k >= 0 ) { 
+	    gObjects[i].visible = true; 
+	}
+	else { gObjects[i].visible = false; }
+        
 
         if( k >= 0 ) {
             arGetTransMat(&marker_info[k],
@@ -254,6 +258,7 @@ static void mainLoop(void) {
     
 
     /**< Send objects state to channel */
+    std::cout << "Sending message from camera"<< std::endl;
     ach_put( &gChan_output,
 	     gObjects,
 	     sizeof( gObjects ) );
@@ -270,6 +275,12 @@ static void cleanup(void) {
     arVideoCapStop();
     arVideoClose();
     argCleanup();
+
+    int r;
+    // Close channel
+    r = ach_close( &gChan_output );
+    // Delete channel
+    r = ach_unlink( gChannelName.c_str() );
 }
 
 /**

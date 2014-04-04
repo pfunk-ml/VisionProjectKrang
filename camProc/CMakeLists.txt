@@ -49,6 +49,7 @@ set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 
+
 # Integrated Perception Module
 set( PerceptionModel_src CameraCentralProcess.cpp WorldModel.cpp ARCamera.cpp ARMarker.cpp globalTransforms.cpp )
 set( PerceptionModel_hdr CameraCentralProcess.h WorldModel.h ARCamera.h ARMarker.h globalTransforms.h )
@@ -57,6 +58,14 @@ add_library( PerceptionModule ${PerceptionModel_src} ${PerceptionModel_hdr} )
 target_link_libraries( PerceptionModule ${ACH_LIBS} m)
 set_target_properties( PerceptionModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/lib ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib )
+
+
+# camCentralProcessMain
+add_executable( camCentralProcessMain 
+  camCentralProcessMain.cpp )
+target_link_libraries( camCentralProcessMain PerceptionModule ${ACH_LIBS} m)
+set_target_properties( camCentralProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 
 # Interface for Vision

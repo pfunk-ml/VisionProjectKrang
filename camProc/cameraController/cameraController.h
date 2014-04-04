@@ -44,8 +44,6 @@
 #include <Eigen/Geometry>
 #include <list>
 
-#include "../CameraCentralProcess.h"
-
 /**
  * @class cameraController
  * @brief Test Tab ready for you to test whatever you want
@@ -70,7 +68,6 @@ class cameraController : public GRIPTab {
     // Dynamic Simulation Variables
     
     dart::dynamics::Skeleton* mRobot;
-    CameraCentralProcess mCc;
     int mGroundIndex;
     std::string robotFilename;
     int mCurrentFrame;

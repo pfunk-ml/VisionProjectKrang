@@ -113,7 +113,7 @@ int CameraCentralProcess::spawnCamera( char* _camProgram,
     /**< Parent process */
     if( child_pid != 0 ) {
 	return child_pid;
-    }
+   } 
 
     /**< Child process */
     else {
@@ -165,7 +165,7 @@ bool CameraCentralProcess::setupChannels() {
   r = ach_unlink( PERCEPTION_CHANNEL );
   assert( ACH_OK == r || ACH_ENOENT == r );
   // TODO : CHECK THESE 10 AND 256 NUMBERS
-  r = ach_create( PERCEPTION_CHANNEL, 10ul, 256ul, NULL );
+  r = ach_create( PERCEPTION_CHANNEL, 30ul, 256ul, NULL );
   assert( ACH_OK == r );
 
   /**< Open the channel */
@@ -195,9 +195,7 @@ void CameraCentralProcess::mainLoop() {
 
 	// Send the message
 	this->sendMessage();
-
-	// Sleep for some time
-	sleep( 0.1*1e6 ); // 10Hz
+       
     }
 
 }
@@ -213,11 +211,15 @@ void CameraCentralProcess::grabChannelsInfo() {
 
     for( int i = 0; i < NUM_CAMERAS; ++i ) {
 	r = ach_get( &mInput_channels[i],
-		     tempObj,
+		     &tempObj,
 		     sizeof(tempObj),
 		     &fs, 
-		     NULL, ACH_O_WAIT );
+		     NULL, ACH_O_LAST );
 
+	if( r == ACH_OK ) { std::cout << "ACH IS OK " << std::endl; }
+	if( r == ACH_MISSED_FRAME ) { std::cout << "ACH IS MISSED FRAME " << std::endl; }
+	if( sizeof(tempObj) != fs ) { std::cout<<"FS:"<< fs<< " and size: "<< sizeof(tempObj)<< std::endl; }
+	if( r == ACH_OK ) { std::cout << "ACH IS OK " << std::endl; }
 	assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
 		sizeof(tempObj) == fs );
 
@@ -243,10 +245,16 @@ void CameraCentralProcess::grabChannelsInfo() {
  */
 void CameraCentralProcess::getWorldTransforms() {
 
-    for( int i = 0; i < NUM_OBJECTS; ++i ) {	
+    for( int i = 0; i < NUM_OBJECTS; ++i ) {
+	Eigen::Matrix4d Tf = getDoubleArrAsMat(mObjects[i].trans);
+	
+	Tf(0,3) = Tf(0,3) / 1000.0;
+	Tf(1,3) = Tf(1,3) / 1000.0;
+	Tf(2,3) = Tf(2,3) / 1000.0;
+
 	mWorldModel->setMarkerLoc( mObjects[i].cam_id,
 				   mObjects[i].patt_id,
-				   getDoubleArrAsMat(mObjects[i].trans) );	
+				   Tf );	
     }
 }
 

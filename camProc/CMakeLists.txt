@@ -40,11 +40,22 @@ pkg_check_modules( EIGEN REQUIRED eigen3 )
 # Find ACH
 set( ACH_LIBS ach )
 
+# Find YAML
+pkg_check_modules( YAML_CPP REQUIRED yaml-cpp )
+if( YAML_CPP_FOUND )
+  message( "YAML-CPP FOUND YEAH!")
+    include_directories( ${YAML_CPP_INCLUDE_DIRS} )
+    link_directories( ${YAML_CPP_LIBRARY_DIRS} )    
+else()
+  message("YAML-CPP NOT FOUND ARGH!")
+endif()
 
-# camCentralProcess  - multiple markers
-add_executable( camProcess camProcessMain.cpp CameraProcess.h Object.h globalData.h  )
+
+
+# cam Main process (run for each camera)
+add_executable( camProcess camProcessMain.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h  )
 target_link_libraries( camProcess ${ARToolkit_LIBRARIES} 
-  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS} m)
+  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS} ${YAML_CPP_LIBRARIES} m)
 set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 

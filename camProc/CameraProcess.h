@@ -11,6 +11,8 @@
 #include <AR/param.h>
 #include <AR/ar.h>
 
+#include <string>
+
 #include "globalData.h"
 #include "Object.h"
 
@@ -33,3 +35,10 @@ struct CamData {
     char* artoolkit_config;
 };
 
+/**
+ * @file parseYAMLCalibration
+ * @brief Parse a _filename (.yaml) file and obtains a 
+ * ARParam object with the information for ARTookit to use 
+ */
+bool parseYAMLCalibration( std::string _filename,
+			   ARParam &_cparam );

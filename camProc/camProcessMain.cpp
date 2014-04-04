@@ -22,11 +22,14 @@
 #include <iostream>
 
 /** Global variable declaration */
-ObjectData_t gObjects[4] = {
+ObjectData_t gObjects[NUM_OBJECTS] = {
     { OBJ0_PATT_NAME, -1, OBJ0_MODEL_ID, 0, OBJ0_SIZE, {0.0,0.0}, 0 },
     { OBJ1_PATT_NAME, -1, OBJ1_MODEL_ID, 0, OBJ1_SIZE, {0.0,0.0}, 0 }, 
     { OBJ2_PATT_NAME, -1, OBJ2_MODEL_ID, 0, OBJ2_SIZE, {0.0,0.0}, 0 },
-    { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0}, 0 }
+    { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0}, 0 },
+    { OBJ4_PATT_NAME, -1, OBJ4_MODEL_ID, 0, OBJ4_SIZE, {0.0,0.0}, 0 },
+    { OBJ5_PATT_NAME, -1, OBJ5_MODEL_ID, 0, OBJ5_SIZE, {0.0,0.0}, 0 },
+    { OBJ6_PATT_NAME, -1, OBJ6_MODEL_ID, 0, OBJ6_SIZE, {0.0,0.0}, 0 }
 };
 
 /**< Camera details */
@@ -64,7 +67,7 @@ int main( int argc, char* argv[] ) {
 
     /** Set ENVIRONMENT variable for ARToolkit */
     char arg[400];
-    sprintf( arg, "v4l2src device=/dev/video%d use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink", gCamIndex );
+    sprintf( arg, ARTOOLKIT_DEFAULT_CONFIG, gCamIndex );
     
     std::cout << "ARTOOLKIT CONFIG: "<< arg << std::endl;
 
@@ -104,7 +107,7 @@ int main( int argc, char* argv[] ) {
 void initCam() {
     gCam.thresh = 100;
     gCam.count = 0;
-    gCam.cparam_name = "Data/camera_para.dat";
+    gCam.cparam_name = "Data/cam1_calib.yaml";
 }
 
 /**
@@ -152,10 +155,13 @@ static void init( void ) {
     printf( "Image size (x,y) = (%d,%d)\n", gCam.dimX, gCam.dimY );
 
     /* set the initial camera parameters */
-    if( arParamLoad( gCam.cparam_name, 1, &wparam) < 0 ) {
-        printf("Camera parameter load error !!\n");
-        exit(0);
+    // Load the parameters
+    if( !parseYAMLCalibration( gCam.cparam_name,
+			       wparam ) ) {
+      std::cout << "Camera parameters YAML Load error"<<std::endl;
+      exit(0);
     }
+
 
     arParamChangeSize( &wparam, gCam.dimX, gCam.dimY, &gCam.cparam );
     arInitCparam( &gCam.cparam );
@@ -163,12 +169,12 @@ static void init( void ) {
     arParamDisp( &gCam.cparam );
 
     for( i = 0; i < NUM_OBJECTS; i++ ) {
-        if( ( gObjects[i].patt_id = arLoadPatt(gObjects[i].patt_name) ) < 0 ) {
-            printf("Pattern load error: %s\n", gObjects[i].patt_name);
-            exit(0);
-        }
+      if( ( gObjects[i].patt_id = arLoadPatt(gObjects[i].patt_name) ) < 0 ) {
+	printf("Pattern load error: %s\n", gObjects[i].patt_name);
+	exit(0);
+      }
     }
-
+    
     /* Open the graphics window */
     argInit( &gCam.cparam, 1.0, 0, 0, 0, 0 );
 }
@@ -181,13 +187,13 @@ static void init( void ) {
  */
 static void   keyEvent( unsigned char key, 
 			int x, int y ) {
-
-    /* Quit if the ESC key is pressed */
-    if( key == 0x1b ) {
-        printf("*** %f (frame/sec)\n", (double) gCam.count/arUtilTimer());
-        cleanup();
-        exit(0);
-    }
+  
+  /* Quit if the ESC key is pressed */
+  if( key == 0x1b ) {
+    printf("*** %f (frame/sec)\n", (double) gCam.count/arUtilTimer());
+    cleanup();
+    exit(0);
+  }
 }
 
 /**
@@ -258,7 +264,7 @@ static void mainLoop(void) {
     
 
     /**< Send objects state to channel */
-    std::cout << "Sending message from camera"<< std::endl;
+    //std::cout << "Sending message from camera"<< std::endl;
     ach_put( &gChan_output,
 	     gObjects,
 	     sizeof( gObjects ) );
@@ -306,6 +312,37 @@ static void draw( int _object, double _trans[3][4] ) {
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixd( gl_para );
 
+    switch( _object ) {
+      case 0:
+	mat_ambient[0] = 0.0; mat_ambient[1] = 0.0; mat_ambient[2] = 1.0;
+	mat_flash[0] = 0.0; mat_flash[1] = 0.0; mat_flash[2] = 1.0;
+        break;
+      case 1:
+	mat_ambient[0] = 1.0; mat_ambient[1] = 0.0; mat_ambient[2] = 0.0;
+	mat_flash[0] = 1.0; mat_flash[1] = 0.0; mat_flash[2] = 0.0;
+        break;
+      case 2:
+	mat_ambient[0] = 0.0; mat_ambient[1] = 1.0; mat_ambient[2] = 0.0;
+	mat_flash[0] = 0.0; mat_flash[1] = 1.0; mat_flash[2] = 0.0;
+        break;
+      case 3:
+	mat_ambient[0] = 1.0; mat_ambient[1] = 1.0; mat_ambient[2] = 0.0;
+	mat_flash[0] = 1.0; mat_flash[1] = 1.0; mat_flash[2] = 0.0;
+        break;
+      case 4:
+	mat_ambient[0] = 0.0; mat_ambient[1] = 1.0; mat_ambient[2] = 1.0;
+	mat_flash[0] = 0.0; mat_flash[1] = 1.0; mat_flash[2] = 1.0;
+        break;
+      case 5:
+	mat_ambient[0] = 1.0; mat_ambient[1] = 0.0; mat_ambient[2] = 1.0;
+	mat_flash[0] = 1.0; mat_flash[1] = 0.0; mat_flash[2] = 1.0;
+        break;
+      case 6:
+	mat_ambient[0] = 1.0; mat_ambient[1] = 1.0; mat_ambient[2] = 1.0;
+	mat_flash[0] = 1.0; mat_flash[1] = 1.0; mat_flash[2] = 1.0;
+        break;
+    }
+
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -316,23 +353,9 @@ static void draw( int _object, double _trans[3][4] ) {
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
     glMatrixMode(GL_MODELVIEW);
 
-    switch( _object ) {
-      case 0:
-        glTranslatef( 0.0, 0.0, 25.0 );
-        glutSolidCube(50.0);
-        break;
-      case 1:
-        glTranslatef( 0.0, 0.0, 40.0 );
-        glutSolidSphere(40.0, 24, 24);
-        break;
-      case 2:
-        glutSolidCone(25.0, 100.0, 20, 24);
-        break;
-      case 3:
-        glTranslatef( 0.0, 0.0, 10.0 );
-        glutSolidTorus(10.0, 40.0, 24, 24);
-        break;
-    }
+
+    glTranslatef( 0.0, 0.0, 25.0 );
+    glutSolidCube(50.0);
 
     glDisable( GL_LIGHTING );
     glDisable( GL_DEPTH_TEST );

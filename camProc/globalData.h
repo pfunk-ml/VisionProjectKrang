@@ -8,9 +8,9 @@
 
 #define ARTOOLKIT_DEFAULT_CONFIG "v4l2src device=/dev/video%d use-fixed-fps=false ! ffmpegcolorspace ! capsfilter caps=video/x-raw-rgb,bpp=24,width=640,height=480 ! identity name=artoolkit ! fakesink"
 
-#define OBJ0_PATT_NAME "Data/4x4_23.patt"
+#define OBJ0_PATT_NAME "Data/4x4_18.patt"
 #define OBJ1_PATT_NAME "Data/4x4_87.patt"
-#define OBJ2_PATT_NAME "Data/4x4_18.patt"
+#define OBJ2_PATT_NAME "Data/4x4_23.patt"
 #define OBJ3_PATT_NAME "Data/4x4_83.patt"
 #define OBJ4_PATT_NAME "Data/4x4_1.patt"
 #define OBJ5_PATT_NAME "Data/4x4_16.patt"

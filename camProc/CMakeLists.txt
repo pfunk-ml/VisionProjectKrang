@@ -51,6 +51,14 @@ else()
 endif()
 
 
+# cam Reader (user to customize and get Transformation from Cam w.r.t. world)
+add_executable( camReader camReader.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h  )
+target_link_libraries( camReader ${ARToolkit_LIBRARIES} 
+  ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS} ${YAML_CPP_LIBRARIES} m)
+set_target_properties( camReader PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+
 
 # cam Main process (run for each camera)
 add_executable( camProcess camProcessMain.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h  )

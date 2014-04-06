@@ -45,32 +45,32 @@ pkg_check_modules( YAML_CPP REQUIRED yaml-cpp )
 if( YAML_CPP_FOUND )
   message( "YAML-CPP FOUND YEAH!")
     include_directories( ${YAML_CPP_INCLUDE_DIRS} )
-    link_directories( ${YAML_CPP_LIBRARY_DIRS} )    
+    link_directories( ${YAML_CPP_LIBRARY_DIRS} )
 else()
   message("YAML-CPP NOT FOUND ARGH!")
 endif()
 
 
 # cleanup
-add_executable( cleanup cleanup.cpp  )
+add_executable( cleanup cleanup.cpp )
 target_link_libraries( cleanup ${ACH_LIBS} m)
-set_target_properties( cleanup PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+set_target_properties( cleanup PROPERTIES RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 # cam Reader (user to customize and get Transformation from Cam w.r.t. world)
-add_executable( camReader camReader.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h  )
-target_link_libraries( camReader ${ARToolkit_LIBRARIES} 
+add_executable( camReader camReader.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h )
+target_link_libraries( camReader ${ARToolkit_LIBRARIES}
   ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS} ${YAML_CPP_LIBRARIES} m)
-set_target_properties( camReader PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+set_target_properties( camReader PROPERTIES RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 
 
 # cam Main process (run for each camera)
-add_executable( camProcess camProcessMain.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h  )
-target_link_libraries( camProcess ${ARToolkit_LIBRARIES} 
+add_executable( camProcess camProcessMain.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h )
+target_link_libraries( camProcess ${ARToolkit_LIBRARIES}
   ${Gst_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} ${ACH_LIBS} ${YAML_CPP_LIBRARIES} m)
-set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 
@@ -81,15 +81,15 @@ set( PerceptionModel_hdr CameraCentralProcess.h WorldModel.h ARCamera.h ARMarker
 
 add_library( PerceptionModule ${PerceptionModel_src} ${PerceptionModel_hdr} )
 target_link_libraries( PerceptionModule ${ACH_LIBS} m)
-set_target_properties( PerceptionModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY 
+set_target_properties( PerceptionModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/lib ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib )
 
 
 # camCentralProcessMain
-add_executable( camCentralProcessMain 
+add_executable( camCentralProcessMain
   camCentralProcessMain.cpp )
 target_link_libraries( camCentralProcessMain PerceptionModule ${ACH_LIBS} m)
-set_target_properties( camCentralProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+set_target_properties( camCentralProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 

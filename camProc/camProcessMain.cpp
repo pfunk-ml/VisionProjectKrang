@@ -28,7 +28,8 @@ ObjectData_t gObjects[NUM_OBJECTS] = {
     { OBJ2_PATT_NAME, -1, OBJ2_MODEL_ID, 0, OBJ2_SIZE, {0.0,0.0} },
     { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0} },
     { OBJ4_PATT_NAME, -1, OBJ4_MODEL_ID, 0, OBJ4_SIZE, {0.0,0.0} },
-    { OBJ5_PATT_NAME, -1, OBJ5_MODEL_ID, 0, OBJ5_SIZE, {0.0,0.0} }
+    { OBJ5_PATT_NAME, -1, OBJ5_MODEL_ID, 0, OBJ5_SIZE, {0.0,0.0} },
+    { OBJ6_PATT_NAME, -1, OBJ6_MODEL_ID, 0, OBJ6_SIZE, {0.0,0.0} }
 };
 
 /**< Marker messages to be sent */
@@ -191,7 +192,7 @@ static void init( void ) {
     
     for( i = 0; i < NUM_OBJECTS; i++ ) {
 	if( ( gObjects[i].patt_id = arLoadPatt(gObjects[i].patt_name) ) < 0 ) {
-	    std::cout<<"[X] PATTER LOAD ERROR - "<<gObjects[i].patt_name<<std::endl;
+	    std::cout<<"[X] PATTERN LOAD ERROR - "<<gObjects[i].patt_name<<std::endl;
 	    exit(0);
       }
     }
@@ -281,18 +282,14 @@ static void mainLoop(void) {
         }
 
 	gMarkerMsgs[i].id = gObjects[i].patt_id;
-        std::cout << "Object "<<i<< std::endl;
-	std::cout << "Tf: \n"<< std::endl;
 	for( int a = 0; a <3; ++a ) {
 	    for( int b = 0; b < 4; ++b ) {
 		gMarkerMsgs[i].trans[a][b] = gObjects[i].trans[a][b];
-                std::cout << gMarkerMsgs[i].trans[a][b]<<" ";
-	    } std::cout << std::endl;
-	} std::cout << std::endl;
+	    } 
+	} 
 
 	gMarkerMsgs[i].cam_id = gObjects[i].cam_id;
 	gMarkerMsgs[i].visible = gObjects[i].visible;
-	std::cout << "Visibility: "<< gMarkerMsgs[i].visible << std::endl;
     }
 
     argSwapBuffers();

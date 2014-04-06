@@ -19,8 +19,9 @@ struct Planning_output{
  
     int marker_id;
     double Tworld_marker[3][4];
-    bool visible;
+    int visible;
 };
+
 
 /**
  * @class CameraCentralProcess
@@ -58,6 +59,7 @@ class CameraCentralProcess {
   ach_channel_t mOutput_channel;
   MarkerMsg_t mMarkerMsgs[NUM_OBJECTS];
   Planning_output mMsg[NUM_OBJECTS];
+  double finalMsg[NUM_OBJECTS][4]; // visible,x,y,angle
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

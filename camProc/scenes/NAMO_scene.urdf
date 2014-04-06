@@ -22,6 +22,10 @@
     <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
+  <entity model="cam" name="cam4">
+    <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
+  </entity>
+
 
   <entity model="cube" name="marker1">
     <origin xyz="-1.0 -1.0 0.0" rpy="0 0 0"/>
@@ -36,11 +40,21 @@
   </entity>
 
   <entity model="cube" name="marker4">
-    <origin xyz="1.0 -1.0 0.0" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
   <entity model="cube" name="marker5">
-    <origin xyz="1.0 0.0 0.0" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+
+  <entity model="cube" name="marker6">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+
+  <entity model="cube" name="marker7">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
 

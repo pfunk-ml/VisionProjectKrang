@@ -41,7 +41,7 @@ class CameraCentralProcess {
     bool setupChannels();
 
     void mainLoop();
-    void grabChannelsInfo();
+    bool grabChannelsInfo();
     void getWorldTransforms();
     void createMessage();
     void sendMessage();
@@ -56,7 +56,7 @@ class CameraCentralProcess {
 
   std::vector<ach_channel_t> mInput_channels;
   ach_channel_t mOutput_channel;
-  ObjectData_t mObjects[NUM_OBJECTS];
+  MarkerMsg_t mMarkerMsgs[NUM_OBJECTS];
   Planning_output mMsg[NUM_OBJECTS];
 
  public:

@@ -23,17 +23,21 @@
 
 /** Global variable declaration */
 ObjectData_t gObjects[NUM_OBJECTS] = {
-    { OBJ0_PATT_NAME, -1, OBJ0_MODEL_ID, 0, OBJ0_SIZE, {0.0,0.0}, 0 },
-    { OBJ1_PATT_NAME, -1, OBJ1_MODEL_ID, 0, OBJ1_SIZE, {0.0,0.0}, 0 }, 
-    { OBJ2_PATT_NAME, -1, OBJ2_MODEL_ID, 0, OBJ2_SIZE, {0.0,0.0}, 0 },
-    { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0}, 0 },
-    { OBJ4_PATT_NAME, -1, OBJ4_MODEL_ID, 0, OBJ4_SIZE, {0.0,0.0}, 0 },
-    { OBJ5_PATT_NAME, -1, OBJ5_MODEL_ID, 0, OBJ5_SIZE, {0.0,0.0}, 0 },
-    { OBJ6_PATT_NAME, -1, OBJ6_MODEL_ID, 0, OBJ6_SIZE, {0.0,0.0}, 0 }
+    { OBJ0_PATT_NAME, -1, OBJ0_MODEL_ID, 0, OBJ0_SIZE, {0.0,0.0} },
+    { OBJ1_PATT_NAME, -1, OBJ1_MODEL_ID, 0, OBJ1_SIZE, {0.0,0.0} }, 
+    { OBJ2_PATT_NAME, -1, OBJ2_MODEL_ID, 0, OBJ2_SIZE, {0.0,0.0} },
+    { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0} },
+    { OBJ4_PATT_NAME, -1, OBJ4_MODEL_ID, 0, OBJ4_SIZE, {0.0,0.0} },
+    { OBJ5_PATT_NAME, -1, OBJ5_MODEL_ID, 0, OBJ5_SIZE, {0.0,0.0} }
 };
+
+/**< Marker messages to be sent */
+MarkerMsg_t gMarkerMsgs[NUM_OBJECTS];
+
 
 /**< Camera details */
 CamData gCam;
+int gDevIndex;
 int gCamIndex;
 std::string gChannelName;
 
@@ -56,23 +60,25 @@ static void draw( int object,
  */
 int main( int argc, char* argv[] ) {
 
-    if( argc > 1 ) { 
-	gCamIndex = atoi( argv[1]);
-	std::cout << "Cam index: "<< gCamIndex << std::endl;
+    if( argc > 2 ) { 
+	gDevIndex = atoi( argv[1] );
+	gCamIndex = atoi( argv[2] );
+	std::cout << "\t Device index (/dev/video"<< gDevIndex<<")" << std::endl;
+	std::cout << "\t Camera connected: "<< gCamIndex <<std::endl;
     }
     else { 
-	std::cout << "Give me the camera index.Exit"<< std::endl; 
+	std::cout << "[X] Need the device and cam index.Exit"<< std::endl; 
 	return 1;
     }
 
     /** Set ENVIRONMENT variable for ARToolkit */
     char arg[400];
-    sprintf( arg, ARTOOLKIT_DEFAULT_CONFIG, gCamIndex );
+    sprintf( arg, ARTOOLKIT_DEFAULT_CONFIG, gDevIndex );
     
-    std::cout << "ARTOOLKIT CONFIG: "<< arg << std::endl;
-
+    std::cout << "\t Set ARTOOLKIT CONFIG: \n"<< arg << std::endl;
+    
     setenv( "ARTOOLKIT_CONFIG", arg, 1 );
-
+    
     /**< Set the camera index in the objects to be send over ACH */
     for( int i = 0; i < NUM_OBJECTS; ++i ) {
 	gObjects[i].cam_id = gCamIndex;
@@ -107,7 +113,18 @@ int main( int argc, char* argv[] ) {
 void initCam() {
     gCam.thresh = 100;
     gCam.count = 0;
-    gCam.cparam_name = "Data/cam1_calib.yaml";
+    switch( gCamIndex ) {
+    case 1 : gCam.cparam_name = CAM1_CALIB_NAME; break;
+    case 2 : gCam.cparam_name = CAM2_CALIB_NAME; break;
+    case 3 : gCam.cparam_name = CAM3_CALIB_NAME; break;
+    case 4 : gCam.cparam_name = CAM4_CALIB_NAME; break;
+    default : {
+	gCam.cparam_name = CAM1_CALIB_NAME;
+	std::cout << "[X] Using default calib. THIS MIGHT BE BAD"<< std::endl;
+    } break;
+    
+    }
+
 }
 
 /**
@@ -118,24 +135,29 @@ void initAchChannel() {
     int r;
     /**< Create output channel, try deleting in case it exists */
     switch( gCamIndex ) {
-    case 0: gChannelName = CAM0_CHANNEL; break;
     case 1: gChannelName = CAM1_CHANNEL; break;
     case 2: gChannelName = CAM2_CHANNEL; break;
-    case 3: gChannelName = CAM3_CHANNEL; break;	
-    default: std::cout << "No more than 4 channels" << std::endl; break;
+    case 3: gChannelName = CAM3_CHANNEL; break;
+    case 4: gChannelName = CAM4_CHANNEL; break;	
+    default: {
+	gChannelName = CAM1_CHANNEL;
+	std::cout<<"[X] Using default cam1_channel. THIS MIGHT BE BAD"<<std::endl;
+    }
+	break;
     }
 
     r = ach_unlink( gChannelName.c_str() );
     assert( ACH_OK == r || ACH_ENOENT == r );
+
     // TODO : CHECK THESE 10 AND 256 NUMBERS
-    r = ach_create( gChannelName.c_str(), 10ul, 256ul, NULL );
+    r = ach_create( gChannelName.c_str(), 30ul, 256ul, NULL );
     assert( ACH_OK == r );
 
     /**< Open the channel */
     r = ach_open( &gChan_output, gChannelName.c_str(), NULL );
     assert( ACH_OK == r );
 
-    std::cout << "Created channel"<< gChannelName<< std::endl;
+    std::cout << "\t Created channel: "<< gChannelName<< std::endl;
 }
 
 /**
@@ -152,26 +174,25 @@ static void init( void ) {
 
     /**< find the size of the window */
     if( arVideoInqSize(&gCam.dimX, &gCam.dimY) < 0 ) exit(0);
-    printf( "Image size (x,y) = (%d,%d)\n", gCam.dimX, gCam.dimY );
 
     /* set the initial camera parameters */
     // Load the parameters
     if( !parseYAMLCalibration( gCam.cparam_name,
 			       wparam ) ) {
-      std::cout << "Camera parameters YAML Load error"<<std::endl;
+      std::cout << "[X] Camera parameters YAML Load error"<<std::endl;
       exit(0);
     }
 
 
     arParamChangeSize( &wparam, gCam.dimX, gCam.dimY, &gCam.cparam );
     arInitCparam( &gCam.cparam );
-    printf("*** Camera Parameter ***\n");
+    std::cout << "\n *** Camera Parameters ***"<<std::endl;
     arParamDisp( &gCam.cparam );
-
+    
     for( i = 0; i < NUM_OBJECTS; i++ ) {
-      if( ( gObjects[i].patt_id = arLoadPatt(gObjects[i].patt_name) ) < 0 ) {
-	printf("Pattern load error: %s\n", gObjects[i].patt_name);
-	exit(0);
+	if( ( gObjects[i].patt_id = arLoadPatt(gObjects[i].patt_name) ) < 0 ) {
+	    std::cout<<"[X] PATTER LOAD ERROR - "<<gObjects[i].patt_name<<std::endl;
+	    exit(0);
       }
     }
     
@@ -185,12 +206,12 @@ static void init( void ) {
  * @function keyEvent
  * @brief Stop camera stream if ESC is pressed
  */
-static void   keyEvent( unsigned char key, 
-			int x, int y ) {
-  
-  /* Quit if the ESC key is pressed */
-  if( key == 0x1b ) {
-    printf("*** %f (frame/sec)\n", (double) gCam.count/arUtilTimer());
+static void  keyEvent( unsigned char key, 
+		       int x, int y ) {
+    
+    /* Quit if the ESC key is pressed */
+    if( key == 0x1b ) {
+	std::cout<<"* "<<(double) gCam.count/arUtilTimer()<<" frames/sec."<<std::endl;
     cleanup();
     exit(0);
   }
@@ -247,9 +268,9 @@ static void mainLoop(void) {
         }
 	
 	if( k >= 0 ) { 
-	    gObjects[i].visible = true; 
+	    gObjects[i].visible = 1; 
 	}
-	else { gObjects[i].visible = false; }
+	else { gObjects[i].visible = -1; }
         
 
         if( k >= 0 ) {
@@ -258,16 +279,29 @@ static void mainLoop(void) {
                           gObjects[i].trans);
             draw( gObjects[i].model_id, gObjects[i].trans );
         }
+
+	gMarkerMsgs[i].id = gObjects[i].patt_id;
+        std::cout << "Object "<<i<< std::endl;
+	std::cout << "Tf: \n"<< std::endl;
+	for( int a = 0; a <3; ++a ) {
+	    for( int b = 0; b < 4; ++b ) {
+		gMarkerMsgs[i].trans[a][b] = gObjects[i].trans[a][b];
+                std::cout << gMarkerMsgs[i].trans[a][b]<<" ";
+	    } std::cout << std::endl;
+	} std::cout << std::endl;
+
+	gMarkerMsgs[i].cam_id = gObjects[i].cam_id;
+	gMarkerMsgs[i].visible = gObjects[i].visible;
+	std::cout << "Visibility: "<< gMarkerMsgs[i].visible << std::endl;
     }
 
     argSwapBuffers();
     
 
     /**< Send objects state to channel */
-    //std::cout << "Sending message from camera"<< std::endl;
     ach_put( &gChan_output,
-	     gObjects,
-	     sizeof( gObjects ) );
+	     gMarkerMsgs,
+	     sizeof( gMarkerMsgs ) );
 
 }
 

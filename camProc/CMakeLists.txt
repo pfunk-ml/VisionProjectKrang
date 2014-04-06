@@ -51,6 +51,12 @@ else()
 endif()
 
 
+# cleanup
+add_executable( cleanup cleanup.cpp  )
+target_link_libraries( cleanup ${ACH_LIBS} m)
+set_target_properties( cleanup PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
 # cam Reader (user to customize and get Transformation from Cam w.r.t. world)
 add_executable( camReader camReader.cpp CameraProcess.cpp CameraProcess.h Object.h globalData.h  )
 target_link_libraries( camReader ${ARToolkit_LIBRARIES} 

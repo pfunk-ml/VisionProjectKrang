@@ -9,8 +9,6 @@ int main( int argc, char* argv ) {
     CameraCentralProcess mCc;
     std::cout << "Init setup" <<std::endl;
     mCc.initSetup();
-    //std::cout << "Start Cam Processes" <<std::endl;
-    //mCc.startCamProcesses();
     std::cout << "Setup channels" <<std::endl;
     mCc.setupChannels();
     std::cout << "Sleep 3 seconds before starting loop"<< std::endl;

@@ -14,17 +14,15 @@ ARCamera::ARCamera(int itsid)
     initialized = false;
 }
 
-bool ARCamera::initializeCamera(Matrix4d world2camMeasured)
+bool ARCamera::initializeCamera(Matrix4d _Tworld_cam )
 {
-    // Debug
-    /*cout << "initializeCamera on camera " << id << " with world2cam " << endl 
-        << world2camMeasured << endl;*/
 
     // Set the World2Cam
-    World2Cam = world2camMeasured;
+    Cam2World = _Tworld_cam;
+    
 
     // Set the Cam2World as the inverse
-    Cam2World = world2camMeasured.inverse();
+    World2Cam = Cam2World.inverse();
 
     // Set as initialized
     initialized = true;

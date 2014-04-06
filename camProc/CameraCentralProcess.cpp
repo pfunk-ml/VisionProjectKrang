@@ -36,7 +36,7 @@ void CameraCentralProcess::initSetup() {
 
     /** Cameras */
     mCameras.clear();
-    for( int i = 0; i < NUM_CAMERAS; ++i ) {
+    for( int i = 1; i <= NUM_CAMERAS; ++i ) {
 	ARCamera cam(i);
 	mCameras.push_back( cam );
     }
@@ -51,7 +51,7 @@ void CameraCentralProcess::initSetup() {
 
     /**< Set hard-coded values for cameras */
     // And this is WHY YOU ALWAYS START WITH INDEX 0 IN C++!!!!
-    for( int i = 1; i < NUM_CAMERAS; ++i ) {
+    for( int i = 1; i <= NUM_CAMERAS; ++i ) {
 	mCameras[i-1].initializeCamera( gTworld_cam[i-1] );
 	
     }

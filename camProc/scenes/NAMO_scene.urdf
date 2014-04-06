@@ -2,19 +2,46 @@
 
   <include filename="chair.urdf" model_name="chair"/>
   <include filename="table.urdf" model_name="table"/>
-  <include filename="origin.urdf" model_name="origin"/>
+  <include filename="rodPad.urdf" model_name="cube"/>
+  <include filename="bicolorRod.urdf" model_name="cam"/>
+  <!--<include filename="redBall.urdf" model_name="cam"/> -->
 
-  <entity model="origin" name="origin">
+  <entity model="cam" name="marker0">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="chair" name="chair1">
-    <origin xyz="0.60 0.70 0.40" rpy="0 0 0"/>
+  <entity model="cam" name="cam1">
+    <origin xyz="-1.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cam" name="cam2">
+    <origin xyz="1.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cam" name="cam3">
+    <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
 
-  <entity model="table" name="table1">
-    <origin xyz="0.0 -0.5 0.02" rpy="0 0 0"/>
+  <entity model="cube" name="marker1">
+    <origin xyz="-1.0 -1.0 0.0" rpy="0 0 0"/>
   </entity>
+
+  <entity model="cube" name="marker2">
+    <origin xyz="-1.0 1.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cube" name="marker3">
+    <origin xyz="1.0 -1.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cube" name="marker4">
+    <origin xyz="1.0 -1.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cube" name="marker5">
+    <origin xyz="1.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
 
 </world>

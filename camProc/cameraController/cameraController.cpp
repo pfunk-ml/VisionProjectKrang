@@ -51,6 +51,7 @@
 
 #include "../CameraCentralProcess.h"
 #include "../globalData.h"
+#include "../globalTransforms.h"
 #include <ach.h>
 
 ach_channel_t mSim_Channel;
@@ -140,15 +141,33 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
     
     switch( slnum ) {
 
-	// Start connection
+	// Start connection && SET HARD CODED VALUES
     case id_button_startConnection : {
-
+         setHardCodedValues();
 	// Start our own channel to read
 	int r;
 	r = ach_open( &mSim_Channel, PERCEPTION_CHANNEL, NULL );
 	assert( ACH_OK == r );
 
 	std::cout << "Opened successfully channel"<< PERCEPTION_CHANNEL << std::endl;
+
+        // Set cameras  
+	Eigen::Isometry3d Transf;
+         std::cout << "Setting cam 1 "<< std::endl;
+        Transf.matrix() = gTworld_cam[0];
+        mWorld->getSkeleton("cam1")->setConfig( dart::math::logMap( Transf ) ); 
+
+         std::cout << "Setting cam 2 "<< std::endl;
+        Transf.matrix() = gTworld_cam[1];
+        mWorld->getSkeleton("cam2")->setConfig( dart::math::logMap( Transf ) ); 
+
+         std::cout << "Setting cam 3 "<< std::endl;
+        Transf.matrix() = gTworld_cam[2];
+        mWorld->getSkeleton("cam3")->setConfig( dart::math::logMap( Transf ) ); 
+        
+	std::cout <<"SET CAMERAS CORRECTLY" << std::endl;
+
+
     } break;
 
 
@@ -162,12 +181,12 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 		     po,
 		     sizeof(po),
 		     &fs,
-		     NULL, ACH_O_WAIT );
+		     NULL, ACH_O_LAST );
 	assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
 		sizeof( po ) == fs );
 	
-	std::cout << "Reading..." << std::endl;
-	for( int i = 0; i < NUM_OBJECTS; ++i ) {
+	std::cout << "Reading objects less the first (origin) one" << std::endl;
+	for( int i = 1; i < NUM_OBJECTS; ++i ) {
 	    
 	    if( po[i].visible == false ) { 
 		std::cout << "Object"<< i << " not visible" << std::endl;
@@ -184,35 +203,19 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	    
 	    std::cout << "Obj "<<i<<": "<<std::endl;
 	    std::cout << Tf << std::endl;		
+
+
+           switch( i ) {
+             case 1 : mWorld->getSkeleton("marker1")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 2 : mWorld->getSkeleton("marker2")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 3 : mWorld->getSkeleton("marker3")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 4 : mWorld->getSkeleton("marker4")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 5 : mWorld->getSkeleton("marker5")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+           }
 	    
 	}
 	
 	std::cout << "Read message. Getting out "<<std::endl;
-
-		/*
-	if( mObjects[0].visible >= 0 && mObjects[1].visible >= 0 ) {
-	  
-	  
-	  Eigen::Isometry3d Tf0 = Eigen::Isometry3d::Identity();
-	  Eigen::Isometry3d Tf1 = Eigen::Isometry3d::Identity();
-	  for( int j = 0; j <3; ++j ) {
-	    for( int k = 0; k < 4; ++k ) {
-	      Tf0.matrix()(j,k) = mObjects[0].trans[j][k];
-	      Tf1.matrix()(j,k) = mObjects[1].trans[j][k];
-	    }
-	  }
-	  Tf0.translation() = Tf0.translation() / 1000.0;	    
-	  Tf1.translation() = Tf1.translation() / 1000.0;	    
-
-	  Eigen::Isometry3d Ttable = Tf0.inverse()*Tf1;
-	  mWorld->getSkeleton("origin")->setConfig( dart::math::logMap(Eigen::Isometry3d::Identity() ) );
-	  mWorld->getSkeleton("table1")->setConfig( dart::math::logMap(Ttable ) );
-	  
-	} else {
-	  std::cout << "Not both of them detected"<< std::endl;
-	}
-	*/
-
 
 
     } break;

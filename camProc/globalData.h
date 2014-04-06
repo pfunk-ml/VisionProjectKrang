@@ -64,14 +64,12 @@
 #define CAM3_CHANNEL "cam3_channel"
 #define CAM4_CHANNEL "cam4_channel"
 
-
 #define CAM1_CALIB_NAME "Data/cam1_calib.yaml"
-#define CAM2_CALIB_NAME "Data/cam2_calib.yaml"
-#define CAM3_CALIB_NAME "Data/cam3_calib.yaml"
-#define CAM4_CALIB_NAME "Data/cam4_calib.yaml"
+#define CAM2_CALIB_NAME "Data/cam1_calib.yaml"
+#define CAM3_CALIB_NAME "Data/cam1_calib.yaml"
+#define CAM4_CALIB_NAME "Data/cam1_calib.yaml"
 
-
-#define NUM_CAMERAS 4
+#define NUM_CAMERAS 3
 
 #define NUM_OBJECTS 6
 

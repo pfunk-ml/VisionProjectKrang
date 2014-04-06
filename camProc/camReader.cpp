@@ -34,11 +34,10 @@ ObjectData_t gObjects[NUM_OBJECTS] = {
 
 ///******************////
 // SET BEFORE USING
-int gVIDEO_CHANNEL = 1;
-int gCAMERA_INDEX = 1;
+int gVIDEO_CHANNEL = 2;
 char gCAMERA_CALIB_NAME[200] = "Data/cam1_calib.yaml";
 int gOBJECT_OBSERVED_INDEX = 0;
-
+///******************////
 
 /**< Camera details */
 CamData gCam;
@@ -66,11 +65,6 @@ int main( int argc, char* argv[] ) {
   std::cout << "ARTOOLKIT CONFIG: "<< arg << std::endl;
   
   setenv( "ARTOOLKIT_CONFIG", arg, 1 );
-  
-  /**< Set the camera index in the objects to be send over ACH */
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    gObjects[i].cam_id = gCAMERA_INDEX;
-  }
 
 
     /**< Call this first */

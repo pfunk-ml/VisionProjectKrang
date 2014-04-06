@@ -23,7 +23,7 @@ class ARCamera
         ARCamera(int itsid);
         
         // Initialize the camera by giving it the World2Cam matrix
-        bool initializeCamera(Matrix4d world2camMeasured);
+        bool initializeCamera(Matrix4d _Tworld_cam );
 
         // Getters and setters
         int getID() { return id; };

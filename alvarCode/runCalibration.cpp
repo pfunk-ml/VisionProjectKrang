@@ -11,7 +11,7 @@
 
 
 // Number of captures needed to perform the calibration
-const int gCalib_count_max=50;
+const int gCalib_count_max=75;
 
 // Size of marker's edge in cm.
 const int gEtalon_square_size = 2.5;
@@ -56,8 +56,8 @@ void videocallback( IplImage *_img ) {
         // - We are ready to end the capture loop
         // - Calibrate
         // - Save the calibration file
-        if ( calib_count >= calib_count_max ) {
-            std::cout<<"*** Start calibrating process, please wait ***"<<endl;
+        if ( calib_count >= gCalib_count_max ) {
+            std::cout<<"*** Start calibrating process, please wait ***"<<std::endl;
             calib_count = 0;
             cam.Calibrate(pp);
             pp.Reset(); 
@@ -74,7 +74,7 @@ void videocallback( IplImage *_img ) {
 						 gEtalon_rows, gEtalon_columns, true)) {
                     prev_tick = tick;
                     calib_count++;
-		    std::cout << "Calibration captures: "<< calib_count << "/" << calib_count_max << std::endl;
+		    std::cout << "Calibration captures: "<< calib_count << "/" << gCalib_count_max << std::endl;
                 }
             }
         }
@@ -106,6 +106,12 @@ void videocallback( IplImage *_img ) {
  */
 int main( int argc, char *argv[] )
 {
+
+  int gDevIndex = 0;
+  if( argc > 1 ) {
+    gDevIndex = atoi( argv[1] );
+  }
+
     try {
 
         // Initialise CvTestbed
@@ -114,15 +120,15 @@ int main( int argc, char *argv[] )
         // Enumerate possible capture plugins
         CaptureFactory::CapturePluginVector plugins = CaptureFactory::instance()->enumeratePlugins();
         if (plugins.size() < 1) {
-            std::cout << "Could not find any capture plugins." << std::endl;
+            std::cout << "[FATAL] Could not find any capture plugins." << std::endl;
             return 0;
         }
 
         // Display capture plugins
-        std::cout << "Available Plugins: ";
+        std::cout << "[DEBUG] Available Plugins: " << std::endl;
         outputEnumeratedPlugins(plugins);
         std::cout << std::endl;
-
+	
         // Enumerate possible capture devices
         CaptureFactory::CaptureDeviceVector devices = CaptureFactory::instance()->enumerateDevices();
         if (devices.size() < 1) {
@@ -130,19 +136,22 @@ int main( int argc, char *argv[] )
             return 0;
         }
 
-        // Check command line argument for which device to use
-        int selectedDevice = defaultDevice(devices);
-        if (argc > 1) {
-            selectedDevice = atoi(argv[1]);
-        }
-        if (selectedDevice >= (int)devices.size()) {
-            selectedDevice = defaultDevice(devices);
-        }
         
-        // Display capture devices
-        std::cout << "Enumerated Capture Devices:" << std::endl;
-        outputEnumeratedDevices(devices, selectedDevice);
-        std::cout << std::endl;
+        // Display capture device (refers to /dev/videoX)
+	int selectedDevice;
+	std::cout << "NUm available devices: "<< devices.size() << std::endl;
+	for( int i = 0; i < devices.size(); ++i ) {
+	  std::cout << "Device ["<<i<<"] ID: "<< devices[i].id() << 
+	    " name:"<< devices[i].uniqueName() << std::endl;
+	}
+	if( gDevIndex < devices.size() ) {
+	  selectedDevice = gDevIndex;
+	  std::cout << "Selected device ["<<gDevIndex<<"] ID: "<< devices[gDevIndex].id() << 
+	    " name:"<< devices[gDevIndex].uniqueName() << std::endl;
+	} else {
+	  selectedDevice = 0;
+	  std::cout << "Setting default device to ZERO. Probably wrong"<< std::endl;
+	}
         
         // Create capture object from camera
         Capture *cap = CaptureFactory::instance()->createCapture(devices[selectedDevice]);
@@ -153,7 +162,7 @@ int main( int argc, char *argv[] )
         if (cap) {
             std::stringstream settingsFilename;
             settingsFilename << "camera_settings_" << uniqueName << ".xml";
-            calibrationFilename << "camera_calibration_" << uniqueName << ".xml";
+            gCalibrationFilename << "camera_calibration_" << uniqueName << ".xml";
             
             cap->start();
             cap->setResolution(640, 480);
@@ -183,7 +192,7 @@ int main( int argc, char *argv[] )
         return 0;
     }
     catch (const std::exception &e) {
-        std::cout << "Exception: " << e.what() << endl;
+      std::cout << "Exception: " << e.what() << std::endl;
     }
     catch (...) {
         std::cout << "Exception: unknown" << std::endl;

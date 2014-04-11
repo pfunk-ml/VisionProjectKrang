@@ -29,13 +29,13 @@ ObjectData_t gObjects[NUM_OBJECTS] = {
     { OBJ3_PATT_NAME, -1, OBJ3_MODEL_ID, 0, OBJ3_SIZE, {0.0,0.0}, 0 },
     { OBJ4_PATT_NAME, -1, OBJ4_MODEL_ID, 0, OBJ4_SIZE, {0.0,0.0}, 0 },
     { OBJ5_PATT_NAME, -1, OBJ5_MODEL_ID, 0, OBJ5_SIZE, {0.0,0.0}, 0 },
-    //{ OBJ6_PATT_NAME, -1, OBJ6_MODEL_ID, 0, OBJ6_SIZE, {0.0,0.0}, 0 }
+    { OBJ6_PATT_NAME, -1, OBJ6_MODEL_ID, 0, OBJ6_SIZE, {0.0,0.0}, 0 }
 };
 
 ///******************////
 // SET BEFORE USING
-int gVIDEO_CHANNEL = 2;
-char gCAMERA_CALIB_NAME[200] = "Data/cam1_calib.yaml";
+int gVIDEO_CHANNEL = 0;
+char gCAMERA_CALIB_NAME[200] = "Data/cam2_calib.yaml";
 int gOBJECT_OBSERVED_INDEX = 0;
 ///******************////
 

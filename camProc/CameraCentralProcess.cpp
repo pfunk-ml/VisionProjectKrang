@@ -1,6 +1,6 @@
 /**
- * @file CameraCentralProcess.h
- */
+* @file CameraCentralProcess.h
+*/
 #include "CameraCentralProcess.h"
 
 #include "ARCamera.h"
@@ -13,47 +13,47 @@
 
 
 /**
- * @function CameraCentralProcess
- * @brief
- */
+* @function CameraCentralProcess
+* @brief
+*/
 CameraCentralProcess::CameraCentralProcess() {
 
     setHardCodedValues();
 }
 
 /**
- * @function 
- * @brief
- */
+* @function
+* @brief
+*/
 CameraCentralProcess::~CameraCentralProcess() {
 }
 
 /**
- * @function initSetup
- * @brief Initialize hard-coded stuff
- */
+* @function initSetup
+* @brief Initialize hard-coded stuff
+*/
 void CameraCentralProcess::initSetup() {
 
     /** Cameras */
     mCameras.clear();
     for( int i = 1; i <= NUM_CAMERAS; ++i ) {
-	ARCamera cam(i);
-	mCameras.push_back( cam );
+ARCamera cam(i);
+mCameras.push_back( cam );
     }
 
     /** Markers */
     mMarkers.clear();
     for( int i = 0; i < NUM_OBJECTS; ++i ) {
-	ARMarker marker(i);
-	mMarkers.push_back( marker );
+ARMarker marker(i);
+mMarkers.push_back( marker );
     }
 
 
     /**< Set hard-coded values for cameras */
     // And this is WHY YOU ALWAYS START WITH INDEX 0 IN C++!!!!
     for( int i = 1; i <= NUM_CAMERAS; ++i ) {
-	mCameras[i-1].initializeCamera( gTworld_cam[i-1] );
-	
+mCameras[i-1].initializeCamera( gTworld_cam[i-1] );
+
     }
 
 
@@ -66,29 +66,29 @@ void CameraCentralProcess::initSetup() {
 }
 
 /**
- * @function startCamProcesses
- * @brief Starts all cameras  DO NOT USE IF DEV IS NOT THE SAME AS CAM
- */
+* @function startCamProcesses
+* @brief Starts all cameras DO NOT USE IF DEV IS NOT THE SAME AS CAM
+*/
 bool CameraCentralProcess::startCamProcesses() {
 
     for( int i = 0; i < NUM_CAMERAS; ++i ) {
-	if( !startCamProcess( i ) ) {
-	    return false;
-	}
+if( !startCamProcess( i ) ) {
+return false;
+}
     }
 
     return true;
 }
 
 /**
- * @function startCamProcess
- * @brief Start camera _i DO NOT USE IF DEV IS NOT THE SAME AS CAM
- */
+* @function startCamProcess
+* @brief Start camera _i DO NOT USE IF DEV IS NOT THE SAME AS CAM
+*/
 bool CameraCentralProcess::startCamProcess( const int &_i ) {
 
     if( _i < 0 || _i >= NUM_CAMERAS ) {
-	std::cout << "[X] Could not start cam process "<<_i<< std::endl;
-	return false; 
+std::cout << "[X] Could not start cam process "<<_i<< std::endl;
+return false;
     }
 
     char num[2];
@@ -101,11 +101,11 @@ bool CameraCentralProcess::startCamProcess( const int &_i ) {
 }
 
 /**
- * @function spawnCamera
- * @brief Fork and exec a subprocess running the camera program 
- */
+* @function spawnCamera
+* @brief Fork and exec a subprocess running the camera program
+*/
 int CameraCentralProcess::spawnCamera( char* _camProgram,
-				       char** _argList ) {
+char** _argList ) {
     pid_t child_pid;
     
     /** Duplicate this process */
@@ -113,22 +113,22 @@ int CameraCentralProcess::spawnCamera( char* _camProgram,
     
     /**< Parent process */
     if( child_pid != 0 ) {
-	return child_pid;
-   } 
+return child_pid;
+   }
 
     /**< Child process */
     else {
-	execvp( _camProgram, _argList);
-	/**< execvp only comes back if an error*/
-	fprintf( stderr, "An error occurred in execvp %s calling the program \n", _camProgram );
-	abort();
+execvp( _camProgram, _argList);
+/**< execvp only comes back if an error*/
+fprintf( stderr, "An error occurred in execvp %s calling the program \n", _camProgram );
+abort();
     }
 }
 
 /**
- * @function setupChannels
- * @brief Open camera channels and output channel
- */
+* @function setupChannels
+* @brief Open camera channels and output channel
+*/
 bool CameraCentralProcess::setupChannels() {
 
     mInput_channels.resize(0);
@@ -149,15 +149,15 @@ bool CameraCentralProcess::setupChannels() {
       ach_channel_t chan;
       r = ach_open( &chan, name.c_str(), NULL );
       if( ACH_OK == r ) {
-	  mInput_channels.push_back( chan ); 
-	  std::cout << "Channel "<<name<<" opened successfully."<<std::endl;
+mInput_channels.push_back( chan );
+std::cout << "Channel "<<name<<" opened successfully."<<std::endl;
       }
 
   }
 
-  if( mInput_channels.size() == 0 ) { 
+  if( mInput_channels.size() == 0 ) {
       std::cout << "\t No a single channel opened. ERROR" << std::endl;
-      return false; 
+      return false;
   }
 
   // OUTPUT CHANNEL
@@ -177,139 +177,154 @@ bool CameraCentralProcess::setupChannels() {
 }
 
 /**
- * @function mainLoop
- * @brief Send messages at 10 Hz
- */
+* @function mainLoop
+* @brief Send messages at 10 Hz
+*/
 void CameraCentralProcess::mainLoop() {
 
     while( true ) {
 
-	// Get info from channels
-	if( !this->grabChannelsInfo() ) { break; }
+// Get info from channels
+if( !this->grabChannelsInfo() ) { break; }
 
-	// Calculate the markers transformation
-	this->getWorldTransforms();
+// Calculate the markers transformation
+this->getWorldTransforms();
 
-	// Create the message
-	this->createMessage();
+// Create the message
+this->createMessage();
 
-	// Send the message
-	this->sendMessage();
+// Send the message
+this->sendMessage();
        
-	usleep(0.1*1e6);
+usleep(0.1*1e6);
     }
 
 }
 
 /**
- * @function grabChannelsInfo
- * @brief Grab information from camera channels
- */
+* @function grabChannelsInfo
+* @brief Grab information from camera channels
+*/
 bool CameraCentralProcess::grabChannelsInfo() {
 
     MarkerMsg_t tempMm[NUM_OBJECTS];
     int r; size_t fs;
     
     for( int i = 0; i < mInput_channels.size(); ++i ) {
-	r = ach_get( &mInput_channels[i],
-		     &tempMm,
-		     sizeof(tempMm),
-		     &fs, 
-		     NULL, ACH_O_LAST );
-	
-        if( ACH_OK != r && ACH_MISSED_FRAME != r ) {
-           std::cout << "ACH status bad. EXITING MAIN LOOP" << std::endl;
-           return false;
-        }
-        if( sizeof(tempMm) != fs ) {
-           std::cout << "Frame size and message received are not the same. EXITING MAIN LOOP"<< std::endl;
-           return false;
-        }
-      //////////////////
-        for( int c = 0; c < NUM_OBJECTS; ++c ) {
-	        std::cout << "RECEIVED Object "<<c<< std::endl;
-		std::cout << "Tf: \n"<< std::endl;
-		for( int a = 0; a <3; ++a ) {
-	    		for( int b = 0; b < 4; ++b ) {
-                		std::cout << tempMm[c].trans[a][b]<<" ";
-	    		} std::cout << std::endl;
-		} std::cout << std::endl;
-		std::cout << "Visibility: "<< tempMm[c].visible << std::endl;
-     }
-   //////////////////////
+      r = ach_get( &mInput_channels[i],
+		   &tempMm,
+		   sizeof(tempMm),
+		   &fs,
+		   NULL, ACH_O_LAST );
+      
+      if( ACH_OK != r && ACH_MISSED_FRAME != r ) {
+	std::cout << "ACH status bad. EXITING MAIN LOOP" << std::endl;
+	return false;
+      }
+      if( sizeof(tempMm) != fs ) {
+	std::cout << "Frame size and message received are not the same. EXITING MAIN LOOP"<< std::endl;
+	return false;
+      }
+      
+      
+      
+      if( i == 0 ) {
+	for( int j = 0; j < NUM_OBJECTS; ++j ) {
+	  mMarkerMsgs[j] = tempMm[j];
+	}
+      } // end if i == 0
+      else {
+	for( int j = 0; j < NUM_OBJECTS; ++j ) {
+	  if( mMarkerMsgs[j].visible == -1 && tempMm[j].visible >= 0 ) {
+	    mMarkerMsgs[j] = tempMm[j];
+	    }
+	}
+      } // end else i == 0
 
-	
-	if( i == 0 ) {
-	    for( int j = 0; j < NUM_OBJECTS; ++j ) {
-		mMarkerMsgs[j] = tempMm[j];
-	    }
-	} // end if i == 0
-	else {
-	    for( int j = 0; j < NUM_OBJECTS; ++j ) {
-		if( mMarkerMsgs[j].visible == -1 && tempMm[j].visible >= 0 ) {
-		    mMarkerMsgs[j] = tempMm[j];
-		}
-	    }
-	} // end else i == 0
-    }
+    } // end for
+    
 
     return true;
 }
 
 /**
- * @function getWorldTransforms
- * @brief Read message information stored in mObjects and fills the transform info
- */
+* @function getWorldTransforms
+* @brief Read message information stored in mObjects and fills the transform info
+*/
 void CameraCentralProcess::getWorldTransforms() {
 
     for( int i = 0; i < NUM_OBJECTS; ++i ) {
-	Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i].trans);
-	
-	Tf(0,3) = Tf(0,3) / 1000.0;
-	Tf(1,3) = Tf(1,3) / 1000.0;
-	Tf(2,3) = Tf(2,3) / 1000.0;
+      Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i].trans);
 
-	mWorldModel->setMarkerLoc( mMarkerMsgs[i].cam_id,
-				   mMarkerMsgs[i].id,
-				   Tf );	
+      Tf(0,3) = Tf(0,3) / 1000.0;
+      Tf(1,3) = Tf(1,3) / 1000.0;
+      Tf(2,3) = Tf(2,3) / 1000.0;
+      
+      mWorldModel->setMarkerLoc( mMarkerMsgs[i].cam_id,
+				 mMarkerMsgs[i].id,
+				 Tf );	
     }
 }
 
 
 /**
- * @function createMessage
- * @brief Create message, by now just send transformation
- * (Que tipo de individuo quiere solo informacion planar?)
- */
+* @function createMessage
+* @brief Create message, by now just send transformation
+* (Que tipo de individuo quiere solo informacion planar?)
+*/
 void CameraCentralProcess::createMessage() {
 
-    for( int i = 0; i < NUM_OBJECTS; ++i ) {
-	Planning_output p;
-	p.marker_id = mMarkerMsgs[i].id;
+  /*for( int i = 0; i < NUM_OBJECTS; ++i ) {
+    Planning_output p;
+    p.marker_id = mMarkerMsgs[i].id;
+    
+    Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose(i);
+    for( int j = 0; j < 3; ++j ) {
+      for( int k = 0; k < 4; ++k ) {
+	p.Tworld_marker[j][k] = Tmarker(j,k);
+      }
+    }
+    
+    p.visible = mMarkerMsgs[i].visible;
+    
+    mMsg[i] = p;
+  }*/
 
-	Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose(i);
-	for( int j = 0; j < 3; ++j ) {
-	    for( int k = 0; k < 4; ++k ) {
-		p.Tworld_marker[j][k] = Tmarker(j,k);
-	    }
-	}
-	p.visible = mMarkerMsgs[i].visible;
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+    
+    Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose(i);
+    double x, y, theta;
+    getXYangTriple(Tmarker, x, y, theta);
+    
+    // Visible
+    finalMsg[i][0] = mMarkerMsgs[i].visible;
+    //X
+    finalMsg[i][1] = x;
+    //Y
+    finalMsg[i][2] = y;
+    //angle
+    finalMsg[i][3] = theta;
 
-	mMsg[i] = p;
+    // If object is not visible, set x,y,theta to 0 by default
+    if( finalMsg[i][0] = mMarkerMsgs[i].visible == -1 ) {
+          finalMsg[i][1] = 0;
+	  finalMsg[i][2] = 0;
+	  finalMsg[i][3] = 0;
     }
 
+  }
 }
 
 
 
 /**
- * @function sendMessage
- * @brief Send message with objects locations over PERCEPTION_CHANNEL
- */
+* @function sendMessage
+* @brief Send message with objects locations over PERCEPTION_CHANNEL
+*/
 void CameraCentralProcess::sendMessage() {
-
-    ach_put( &mOutput_channel,
-	     mMsg,
-	     sizeof( mMsg ) );
+  
+  ach_put( &mOutput_channel,
+	   finalMsg,
+	   sizeof( finalMsg ) );
 
 }

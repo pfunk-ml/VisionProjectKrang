@@ -3,10 +3,11 @@
   <include filename="chair.urdf" model_name="chair"/>
   <include filename="table.urdf" model_name="table"/>
   <include filename="rodPad.urdf" model_name="cube"/>
+  <include filename="goldenPad.urdf" model_name="golden"/>
   <include filename="bicolorRod.urdf" model_name="cam"/>
   <!--<include filename="redBall.urdf" model_name="cam"/> -->
 
-  <entity model="cam" name="marker0">
+  <entity model="golden" name="marker0">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
@@ -19,6 +20,10 @@
   </entity>
 
   <entity model="cam" name="cam3">
+    <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cam" name="cam4">
     <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
@@ -36,11 +41,21 @@
   </entity>
 
   <entity model="cube" name="marker4">
-    <origin xyz="1.0 -1.0 0.0" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
   <entity model="cube" name="marker5">
-    <origin xyz="1.0 0.0 0.0" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+
+  <entity model="cube" name="marker6">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+
+  <entity model="cube" name="marker7">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
 

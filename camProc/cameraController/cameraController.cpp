@@ -165,6 +165,10 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
         Transf.matrix() = gTworld_cam[2];
         mWorld->getSkeleton("cam3")->setConfig( dart::math::logMap( Transf ) ); 
         
+         std::cout << "Setting cam 4 "<< std::endl;
+        Transf.matrix() = gTworld_cam[3];
+        mWorld->getSkeleton("cam4")->setConfig( dart::math::logMap( Transf ) ); 
+
 	std::cout <<"SET CAMERAS CORRECTLY" << std::endl;
 
 
@@ -174,7 +178,7 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	// Query sim
     case id_button_querySim : {
 	
-	Planning_output po[NUM_OBJECTS];
+	/*Planning_output po[NUM_OBJECTS];
 	size_t fs; int r; 
 
 	r = ach_get( &mSim_Channel, 
@@ -188,22 +192,21 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
 	std::cout << "Reading objects less the first (origin) one" << std::endl;
 	for( int i = 1; i < NUM_OBJECTS; ++i ) {
 	    
-	    if( po[i].visible == false ) { 
-		std::cout << "Object"<< i << " not visible" << std::endl;
-		continue;
-	    }
-	    
 	    Eigen::Matrix4d Tf = Eigen::Matrix4d::Identity();
-	    
-	    for( int j = 0; j < 3; ++j ) {
-		for( int k = 0; k < 4; ++k ) {
-		    Tf(j,k) = po[i].Tworld_marker[j][k];
-		}
+	    if( po[i].visible == -1 ) { 
+		std::cout << "Object"<< i << " not visible" << std::endl;
 	    }
-	    
-	    std::cout << "Obj "<<i<<": "<<std::endl;
-	    std::cout << Tf << std::endl;		
+	    else
+	    {
+                std::cout << "Object "<< i <<" is visible" << std::endl;
 
+		for( int j = 0; j < 3; ++j ) {
+			for( int k = 0; k < 4; ++k ) {
+				Tf(j,k) = po[i].Tworld_marker[j][k];
+			}
+		}
+	        std::cout << Tf << std::endl;
+	    }
 
            switch( i ) {
              case 1 : mWorld->getSkeleton("marker1")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
@@ -211,11 +214,63 @@ void cameraController::OnButton(wxCommandEvent & _evt) {
              case 3 : mWorld->getSkeleton("marker3")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
              case 4 : mWorld->getSkeleton("marker4")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
              case 5 : mWorld->getSkeleton("marker5")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 6 : mWorld->getSkeleton("marker6")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 7 : mWorld->getSkeleton("marker7")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
            }
 	    
 	}
 	
-	std::cout << "Read message. Getting out "<<std::endl;
+	std::cout << "Finished setting objects "<<std::endl;*/
+
+	double po[NUM_OBJECTS][4];
+	size_t fs; int r; 
+
+	r = ach_get( &mSim_Channel, 
+		     po,
+		     sizeof(po),
+		     &fs,
+		     NULL, ACH_O_LAST );
+	assert( (ACH_OK == r || ACH_MISSED_FRAME == r ) &&
+		sizeof( po ) == fs );
+	
+	std::cout << "Reading objects less the first (origin) one" << std::endl;
+	for( int i = 0; i < NUM_OBJECTS; ++i ) {
+	    
+	    Eigen::Matrix4d Tf = Eigen::Matrix4d::Identity();
+	    if( po[i][0] == -1 ) { 
+		std::cout << "Object"<< i << " not visible" << std::endl;
+	    }
+	    else
+	    {
+                std::cout << "Object "<< i <<" is visible" << std::endl;
+
+		double x, y, theta;
+		x = po[i][1];
+		y = po[i][2];
+		theta = po[i][3];	
+
+		Eigen::Matrix3d rotation;
+		rotation = Eigen::AngleAxisd(theta, Eigen::Vector3d::UnitZ());
+		Tf.block(0,0,3,3) = rotation;
+		Tf.block(0,3,3,1) = Eigen::Vector3d(x, y, 0);
+
+	        std::cout << Tf << std::endl;
+	    }
+
+           switch( i ) {
+             case 0 : mWorld->getSkeleton("marker0")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 1 : mWorld->getSkeleton("marker1")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 2 : mWorld->getSkeleton("marker2")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 3 : mWorld->getSkeleton("marker3")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 4 : mWorld->getSkeleton("marker4")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 5 : mWorld->getSkeleton("marker5")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 6 : mWorld->getSkeleton("marker6")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+             case 7 : mWorld->getSkeleton("marker7")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+           }
+	    
+	}
+	
+	std::cout << "Finished setting objects "<<std::endl;
 
 
     } break;

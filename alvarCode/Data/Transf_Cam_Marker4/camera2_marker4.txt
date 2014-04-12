@@ -1,0 +1,177 @@
+Detected marker with id:4
+-0.999493 0.0240174 0.0209166 76.3796 
+0.01086 0.8744 -0.485083 43.9029 
+-0.0299399 -0.48461 -0.874218 272.998 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999459 0.0251892 0.0211469 76.4692 
+0.0117621 0.874208 -0.485409 43.9589 
+-0.0307139 -0.484897 -0.874032 273.274 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999366 0.0263549 0.0239237 76.4067 
+0.0113664 0.873235 -0.487167 43.9225 
+-0.0337302 -0.486586 -0.872981 273.05 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999461 0.0245401 0.0217858 76.2681 
+0.0107897 0.872734 -0.488077 43.8447 
+-0.0309906 -0.487579 -0.872529 272.64 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999493 0.0240174 0.0209166 76.3796 
+0.01086 0.8744 -0.485083 43.9029 
+-0.0299399 -0.48461 -0.874218 272.998 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999564 0.0238067 0.017449 76.459 
+0.0123426 0.874116 -0.48556 43.9597 
+-0.026812 -0.485134 -0.874029 273.28 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999564 0.0238067 0.017449 76.459 
+0.0123426 0.874116 -0.48556 43.9597 
+-0.026812 -0.485134 -0.874029 273.28 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999564 0.0238067 0.017449 76.459 
+0.0123426 0.874116 -0.48556 43.9597 
+-0.026812 -0.485134 -0.874029 273.28 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999492 0.026041 0.0183608 76.4555 
+0.0140548 0.877471 -0.479423 43.959 
+-0.0285957 -0.478922 -0.877392 273.267 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999456 0.0272137 0.0186074 76.5453 
+0.0149548 0.877273 -0.479759 44.015 
+-0.0293798 -0.47922 -0.877203 273.543 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999459 0.0251892 0.0211469 76.4692 
+0.0117621 0.874208 -0.485409 43.9589 
+-0.0307139 -0.484897 -0.874032 273.274 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999564 0.0238067 0.017449 76.459 
+0.0123426 0.874116 -0.48556 43.9597 
+-0.026812 -0.485134 -0.874029 273.28 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999273 0.0265534 0.0273415 76.326 
+0.00989361 0.873497 -0.486729 43.865 
+-0.036807 -0.486105 -0.873125 272.763 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999196 0.027331 0.0293264 76.1889 
+0.0093874 0.870741 -0.491652 43.7784 
+-0.0389731 -0.490982 -0.870298 272.235 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999556 0.0258337 0.0148292 76.5355 
+0.0155517 0.877194 -0.479884 44.0162 
+-0.0254053 -0.47944 -0.877207 273.551 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999456 0.0272137 0.0186074 76.5453 
+0.0149548 0.877273 -0.479759 44.015 
+-0.0293798 -0.47922 -0.877203 273.543 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999366 0.0263549 0.0239237 76.4067 
+0.0113664 0.873235 -0.487167 43.9225 
+-0.0337302 -0.486586 -0.872981 273.05 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999493 0.0240174 0.0209166 76.3796 
+0.01086 0.8744 -0.485083 43.9029 
+-0.0299399 -0.48461 -0.874218 272.998 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999456 0.0272137 0.0186074 76.5453 
+0.0149548 0.877273 -0.479759 44.015 
+-0.0293798 -0.47922 -0.877203 273.543 
+0 0 0 1 
+
+Detected marker with id: 2
+Detected marker with id: 3
+Detected marker with id: 4
+Detected marker with id:4
+-0.999564 0.0238067 0.017449 76.459 
+0.0123426 0.874116 -0.48556 43.9597 
+-0.026812 -0.485134 -0.874029 273.28 
+0 0 0 1 
+

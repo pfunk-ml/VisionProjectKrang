@@ -139,7 +139,7 @@ int main( int argc, char *argv[] )
         
         // Display capture device (refers to /dev/videoX)
 	int selectedDevice;
-	std::cout << "NUm available devices: "<< devices.size() << std::endl;
+	std::cout << "Num available devices: "<< devices.size() << std::endl;
 	for( int i = 0; i < devices.size(); ++i ) {
 	  std::cout << "Device ["<<i<<"] ID: "<< devices[i].id() << 
 	    " name:"<< devices[i].uniqueName() << std::endl;

@@ -19,6 +19,14 @@ find_package( PkgConfig REQUIRED)
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
+
+# Find Eigen
+pkg_check_modules( EIGEN REQUIRED eigen3 )
+  include_directories( ${EIGEN_INCLUDE_DIRS} )
+
+# Find ACH
+set( ACH_LIBS ach )
+
 # Find ALVAR
 pkg_check_modules( alvar REQUIRED ALVAR )
 if( alvar_FOUND )
@@ -61,12 +69,46 @@ target_link_libraries( generateMarkers SharedSamples SharedGlutViewer ${alvar_LI
 set_target_properties( generateMarkers PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
+# Get camera transform
+add_executable( getCameraTransform getCameraTransform.cpp globalData.cpp )
+target_link_libraries( getCameraTransform SharedSamples SharedGlutViewer ${alvar_LIBRARIES} ${OpenCV_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
 
+set_target_properties( getCameraTransform PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+# cleanup
+add_executable( cleanup cleanup.cpp globalData.cpp )
+target_link_libraries( cleanup ${ACH_LIBS} m)
+set_target_properties( cleanup PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 # Add sample marker detector
-add_executable( sampleMarkerDetector markerDetector.cpp )
-target_link_libraries( sampleMarkerDetector SharedSamples SharedGlutViewer ${alvar_LIBRARIES} ${OpenCV_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
+add_executable( markerDetector markerDetector.cpp globalData.cpp )
+target_link_libraries( markerDetector SharedSamples SharedGlutViewer ${ACH_LIBS} ${alvar_LIBRARIES} ${OpenCV_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
 
-set_target_properties( sampleMarkerDetector PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+set_target_properties( markerDetector PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+
+
+# Integrated Perception Module
+set( PerceptionModel_src CameraCentralProcess.cpp WorldModel.cpp ARCamera.cpp ARMarker.cpp globalTransforms.cpp globalData.cpp )
+set( PerceptionModel_hdr CameraCentralProcess.h WorldModel.h ARCamera.h ARMarker.h globalTransforms.h globalData.h )
+
+add_library( PerceptionModule ${PerceptionModel_src} ${PerceptionModel_hdr} )
+target_link_libraries( PerceptionModule ${ACH_LIBS} m)
+set_target_properties( PerceptionModule PROPERTIES LIBRARY_OUTPUT_DIRECTORY
+  ${CMAKE_SOURCE_DIR}/lib ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib )
+
+
+# camCentralProcessMain
+add_executable( camCentralProcessMain
+  camCentralProcessMain.cpp )
+target_link_libraries( camCentralProcessMain PerceptionModule ${ACH_LIBS} m)
+set_target_properties( camCentralProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+
+# Interface for Vision
+add_subdirectory( cameraController )
 

@@ -13,4 +13,4 @@ extern int gCamera_Origin_ID;
 extern std::vector<Eigen::Matrix4d> gTworld_cam;
 
 
-void setHardCodedValues();
+void setGlobalTransforms();

@@ -1,5 +1,8 @@
-#include "MultiMarker.h"
-#include "highgui.h"
+/**
+ * @file generateMarkers.cpp
+ */
+#include <MultiMarker.h>
+#include <highgui.h>
 using namespace std;
 using namespace alvar;
 

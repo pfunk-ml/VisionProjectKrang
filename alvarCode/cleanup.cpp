@@ -1,4 +1,7 @@
-
+/**
+ * @file cleanup.cpp
+ * @brief Close/Delete any ACH channel that might have been left opened from before
+ */
 
 #include <stdlib.h>
 #include <errno.h>
@@ -18,7 +21,7 @@
 #include <ach.h>
 #include <iostream>
 
-#include "globalData.h"
+#include "globalStuff/globalData.h"
 
 
 int main( int argc, char* argv[] ) {
@@ -38,5 +41,7 @@ int main( int argc, char* argv[] ) {
     
 
   }
+
+  return 0;
   
 }

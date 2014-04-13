@@ -7,8 +7,8 @@
 #include <stdint.h>
 #include <ach.h>
 
-#include "globalData.h"
-#include "Object.h"
+#include "globalStuff/globalData.h"
+#include "globalStuff/Object.h"
 
 class ARMarker;
 class ARCamera;

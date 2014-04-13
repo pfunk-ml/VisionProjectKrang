@@ -7,56 +7,41 @@
   <include filename="bicolorRod.urdf" model_name="cam"/>
   <!--<include filename="redBall.urdf" model_name="cam"/> -->
 
-  <entity model="golden" name="marker0">
+  <entity model="golden" name="origin">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cam" name="cam1">
+  <entity model="cam" name="cam0">
     <origin xyz="-1.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cam" name="cam2">
+  <entity model="cam" name="cam1">
     <origin xyz="1.0 0.0 0.0" rpy="0 0 0"/>
+  </entity>
+
+  <entity model="cam" name="cam2">
+    <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
   <entity model="cam" name="cam3">
     <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cam" name="cam4">
-    <origin xyz="0.0 1.0 0.0" rpy="0 0 0"/>
-  </entity>
 
-
-  <entity model="cube" name="marker1">
+  <entity model="cube" name="marker0">
     <origin xyz="-1.0 -1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cube" name="marker2">
+  <entity model="cube" name="marker1">
     <origin xyz="-1.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cube" name="marker3">
+  <entity model="cube" name="marker2">
     <origin xyz="1.0 -1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cube" name="marker4">
+  <entity model="cube" name="marker3">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
   </entity>
-
-  <entity model="cube" name="marker5">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-  </entity>
-
-
-  <entity model="cube" name="marker6">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-  </entity>
-
-
-  <entity model="cube" name="marker7">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-  </entity>
-
 
 </world>

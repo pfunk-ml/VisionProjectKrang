@@ -15,7 +15,7 @@ std::vector<Eigen::Matrix4d> gTworld_cam;
  * @function setHardCodedValues
  * @brief Set hard-coded values calculated offline
  */
-void setHardCodedValues() {
+void setGlobalTransforms() {
     
     gTworld_origin = Eigen::Matrix4d::Identity();
     Eigen::Matrix4d Ttemp = Eigen::Matrix4d::Identity();

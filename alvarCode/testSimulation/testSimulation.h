@@ -45,18 +45,18 @@
 #include <list>
 
 /**
- * @class cameraController
+ * @class testSimulation
  * @brief Test Tab ready for you to test whatever you want
  */
-class cameraController : public GRIPTab {
+class testSimulation : public GRIPTab {
     
  public:
-    cameraController(){};
-    cameraController(wxWindow * parent, wxWindowID id = -1,
+    testSimulation(){};
+    testSimulation(wxWindow * parent, wxWindowID id = -1,
 	    const wxPoint & pos = wxDefaultPosition,
 	    const wxSize & size = wxDefaultSize,
 	    long style = wxTAB_TRAVERSAL);
-    virtual ~cameraController(){};
+    virtual ~testSimulation(){};
     
 
     wxSizer* sizerFull;
@@ -87,7 +87,7 @@ class cameraController : public GRIPTab {
     // void Thread();
     // void onCompleteThread();
     
-    DECLARE_DYNAMIC_CLASS(cameraController)
+    DECLARE_DYNAMIC_CLASS(testSimulation)
 	DECLARE_EVENT_TABLE()
 	};
 

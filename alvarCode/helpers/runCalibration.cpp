@@ -5,8 +5,8 @@
 #include <Camera.h>
 
 #include <iostream>
-#include "CvTestbed.h"
-#include "Shared.h"
+#include "viz/CvTestbed.h"
+#include "viz/Shared.h"
 
 
 

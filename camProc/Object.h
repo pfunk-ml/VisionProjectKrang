@@ -23,5 +23,3 @@ struct MarkerMsg_t {
     int cam_id;
 };
 
-ObjectData_t* read_ObjectData( char *_name,
-			       int *_objectNum );

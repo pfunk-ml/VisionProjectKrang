@@ -1,57 +1,77 @@
 /**
- * @function markerDetector.cpp
+ * @function camProcess.cpp
  */
+#include <stdlib.h>
+#include <errno.h>
+#include <time.h>
+#include <stdint.h>
+#include <assert.h>
+#include <ach.h>
+
 #include <MarkerDetector.h>
 
-#include "CvTestbed.h"
-#include "GlutViewer.h"
-#include "Shared.h"
+#include "viz/CvTestbed.h"
+#include "viz/Shared.h"
 
-#include "globalData.h"
+#include "globalStuff/globalData.h"
+#include "globalStuff/Object.h"
 
 const int gMarker_size = 20; // 20.3 cm
 alvar::Camera gCam;
-Drawable d[32];
 
 int gWidth = 640;
 int gHeight = 480;
 
-int gObjID;
+/**< Camera details */
 std::string gCalibFilename;
+
+
+/**< Marker messages to be sent */
+MarkerMsg_t gMarkerMsgs[NUM_OBJECTS];
+
+/**< Channel to send info */
+ach_channel_t gChan_output;
+std::string gChannelName;
 
 /** Function declarations */
 void videocallback( IplImage *_img );
 bool init( int _devIndex, 
 	   int _camIndex,
 	   alvar::Capture **_cap ); 
+void initAchChannel( int _camIndex );
 
 /**
  * @function main
  */
 int main(int argc, char *argv[]) {
   
-  if( argc < 4 ) {
-    std::cout << "Syntax: "<< argv[0] << " devX camX  OBJ_ID"<< std::endl;
+  if( argc < 3 ) {
+    std::cout << "Syntax: "<< argv[0] << " devX camX "<< std::endl;
     return 1;
   }
+
+  /** Get device and camera indices from terminal */
+  int devIndex = atoi( argv[1] );
+  int camIndex = atoi( argv[2] );
 
   /** Setting global data */
   setGlobalData();
   std::cout << "\t * Setting global data done." << std::endl;
 
+  /** Set the camera index for this process */
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+    gObjects[i].cam_id = camIndex;
+  }
+
   /** Initialise GlutViewer and CvTestbed */
-  GlutViewer::Start( argc, argv, gWidth, gHeight );
   CvTestbed::Instance().SetVideoCallback(videocallback);
   std::cout << "\t * Initialized GlutViewer and CvTestbed "<< std::endl;
 
-  /** Get device and camera indices from terminal */
-  int devIndex = atoi( argv[1] );
-  int camIndex = atoi( argv[2] );
-  gObjID = atoi( argv[3] );
-
+  
   /** Init parameters and camera */
   alvar::Capture *cap;
   init( devIndex, camIndex, &cap);
+  initAchChannel( camIndex );
 
 
   // Handle capture lifecycle and start video capture
@@ -98,56 +118,80 @@ void videocallback( IplImage *_img ) {
 
   // Perform detection
   marker_detector.Detect(_img, &gCam, true, true);
-  
-  // Draw recognized markers
-  GlutViewer::DrawableClear();
+
 
   bool detected;
-  detected = false;
-  for( size_t j=0; j< marker_detector.markers->size(); j++ ) {
-    int id = (*(marker_detector.markers))[j].GetId();   
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {
 
-    std::cout << "Detected marker with id: "<< id << std::endl;
+      gMarkerMsgs[i].marker_id = gObjects[i].marker_id;
+      gMarkerMsgs[i].cam_id = gObjects[i].cam_id;
 
-    if( gObjID == id ) {
-      
-      std::cout << "Detected marker with id:"<<gObjID<< std::endl;
-      alvar::Pose p = (*(marker_detector.markers))[j].pose;
-      double transf[16];
-      p.GetMatrixGL( transf, false);
-      
-      for( int col = 0; col < 4; ++col ) {
-	for( int row = 0; row < 4; ++row ) {
-	  std::cout << transf[col+row*4] << " ";
-	}
+    detected = false;
+    for( size_t j=0; j< marker_detector.markers->size(); j++ ) {
+      int id = (*(marker_detector.markers))[j].GetId();   
+
+      if( gObjects[i].marker_id == id ) {
+
+	std::cout << "Detected marker with id:"<<id<< " ("<< gObjects[j].obj_name <<")"<< std::endl;
+	alvar::Pose p = (*(marker_detector.markers))[j].pose;
+	double transf[16];
+	p.GetMatrixGL( transf, false);
+
+
+	// Set message
+	gMarkerMsgs[i].trans[0][0] = transf[0];
+	gMarkerMsgs[i].trans[0][1] = transf[4];
+	gMarkerMsgs[i].trans[0][2] = transf[8];
+	gMarkerMsgs[i].trans[0][3] = transf[12];
+
+	gMarkerMsgs[i].trans[1][0] = transf[1];
+	gMarkerMsgs[i].trans[1][1] = transf[5];
+	gMarkerMsgs[i].trans[1][2] = transf[9];
+	gMarkerMsgs[i].trans[1][3] = transf[13];
+
+	gMarkerMsgs[i].trans[2][0] = transf[2];
+	gMarkerMsgs[i].trans[2][1] = transf[6];
+	gMarkerMsgs[i].trans[2][2] = transf[10];
+	gMarkerMsgs[i].trans[2][3] = transf[14];
+
+	for( int row = 0; row < 3; ++row ) {
+	  for( int col = 0; col <4; ++col ) {
+	    std::cout << gMarkerMsgs[i].trans[row][col] << " "; 
+	  }  std::cout << std::endl;
+	} 
+	std::cout << transf[3] << " "<< transf[7]<<" "<< transf[11]<< " "<< transf[15] << std::endl;
 	std::cout << std::endl;
+	gMarkerMsgs[i].visible = 1;
+ 
+	detected = true;
+	break;
       }
       
-      std::cout << std::endl;
-      
-      double r = 1.0 - double(id+1)/32.0;
-      double g = 1.0 - double(id*3%32+1)/32.0;
-      double b = 1.0 - double(id*7%32+1)/32.0;
-      d[j].SetColor(r, g, b);
-      
-      GlutViewer::DrawableAdd(&(d[j]));
-      detected = true;
-      break;
-    }
-      
-  } // end of all markers checked
+    } // end of all markers checked
 
     if( detected == false ) {
-      std::cout << "NO detected marker with id "<< gObjID<<"("<<std::endl;
+      std::cout << "NO detected marker with id "<< gObjects[i].marker_id<<"("<< gObjects[i].obj_name << ")"<<std::endl;
+      for( int a = 0; a < 3; ++a ) {
+        for( int b = 0; b < 4; ++b ) {
+          gMarkerMsgs[i].trans[a][b] = 0;
+        }
+      }
+      gMarkerMsgs[i].visible = -1;
     }
 
-    // Put image back if it was flipped
-    if (flip_image) {
-      cvFlip(_img);
-      _img->origin = !_img->origin;
-    }
+  } // end for all objects
 
-    usleep(1.0*1e6);
+  // Put image back if it was flipped
+  if (flip_image) {
+    cvFlip(_img);
+    _img->origin = !_img->origin;
+  }
+
+    /**< Send objects state to channel */
+    ach_put( &gChan_output,
+	     gMarkerMsgs,
+	     sizeof( gMarkerMsgs ) );
+
 }
 
 
@@ -171,19 +215,6 @@ bool init( int _devIndex,
     gCam.SetRes( gWidth, gHeight );
     std::cout<<"\t Failed to load camera calibration file"<<std::endl;
   }
-  
-  /** Set camera matrix into the viewer */
-  double p[16];
-  gCam.GetOpenglProjectionMatrix( p,
-				  gWidth,
-				  gHeight );
-  
-  GlutViewer::SetGlProjectionMatrix(p);
-  for (int i=0; i<32; i++) {
-    d[i].SetScale( gMarker_size);
-  }
-  std::cout << "\t * Set Viewer with camera matrix"<<std::endl;
-  
 
   /** Create capture object from camera */
   
@@ -225,5 +256,30 @@ bool init( int _devIndex,
    *_cap = CaptureFactory::instance()->createCapture( devices[selectedDevice] );
 
   return true;
+}
+
+
+/**
+ * @function initAchChannel
+ */
+void initAchChannel( int _camIndex ) {
+    
+    int r;
+
+    /**< Create output channel, try deleting in case it exists */
+    gChannelName = CAM_CHANNEL_NAME[ _camIndex ];
+
+    r = ach_unlink( gChannelName.c_str() );
+    assert( ACH_OK == r || ACH_ENOENT == r );
+
+    // TODO : CHECK THESE 10 AND 256 NUMBERS
+    r = ach_create( gChannelName.c_str(), 30ul, 256ul, NULL );
+    assert( ACH_OK == r );
+
+    /**< Open the channel */
+    r = ach_open( &gChan_output, gChannelName.c_str(), NULL );
+    assert( ACH_OK == r );
+
+    std::cout << "\t Created channel: "<< gChannelName<< std::endl;
 }
 

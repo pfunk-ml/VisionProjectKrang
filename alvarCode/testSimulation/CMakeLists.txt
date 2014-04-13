@@ -25,10 +25,10 @@ link_directories(${GRIP_LIBRARY_DIRS})
 
 
 # Search all header and source files
-set ( cameraController_src cameraController.cpp 
-  cameraControllerApp.cpp )
+set ( testSimulation_src testSimulation.cpp 
+  testSimulationApp.cpp )
 
-set ( cameraController_hdr cameraController.h )
+set ( testSimulation_hdr testSimulation.h )
 
 # wxWidgets
 set (wxWidgets_USE_LIBS base core gl)
@@ -39,10 +39,10 @@ if (wxWidgets_FOUND)
   include_directories(${WXWIDGETS_SHARED_INCLUDE_DIRS})
   link_directories(${WXWIDGETS_SHARED_LIBRARY_DIRS})
   
-  add_executable ( cameraController ${cameraController_src} ${cameraController_hdr})
+  add_executable ( testSimulation ${testSimulation_src} ${testSimulation_hdr})
   
-  target_link_libraries ( cameraController PerceptionModule ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${wxWidgets_LIBRARIES}  ${Boost_LIBRARIES}  ${ACH_LIBS} ) # ${DARTExt_LIBRARIES}
-  set_target_properties( cameraController PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+  target_link_libraries ( testSimulation globalStuff ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${wxWidgets_LIBRARIES}  ${Boost_LIBRARIES}  ${ACH_LIBS} )
+  set_target_properties( testSimulation PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 else (wxWidgets_FOUND)
   message ("wxWidgets not found!")

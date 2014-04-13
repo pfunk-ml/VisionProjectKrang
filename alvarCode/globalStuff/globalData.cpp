@@ -51,9 +51,9 @@ void setGlobalData() {
 
   MARKER_ID.resize(0);
   MARKER_ID.push_back( 4 );
-  MARKER_ID.push_back( 3 );
-  MARKER_ID.push_back( 2 );
   MARKER_ID.push_back( 1 );
+  MARKER_ID.push_back( 2 );
+  MARKER_ID.push_back( 3 );
 
   if( MARKER_ID.size() != NUM_OBJECTS ) {
     std::cout << "[X] Error initializing MARKER_ID!"<< std::endl;

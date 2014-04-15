@@ -9,7 +9,7 @@
 #include "Object.h"
 
 #define NUM_CAMERAS 4
-#define NUM_OBJECTS 4
+#define NUM_OBJECTS 3
 
 extern std::vector<std::string> OBJECT_NAME;
 extern std::vector<int> MARKER_ID;
@@ -22,7 +22,7 @@ extern ObjectData_t gObjects[NUM_OBJECTS];
 
 
 
-#define PERCEPTION_CHANNEL "perception_channel"
+#define PERCEPTION_CHANNEL "krang_vision"
 
 /** Set values to global data */
 void setGlobalData();

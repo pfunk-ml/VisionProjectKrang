@@ -42,25 +42,22 @@ void setGlobalData() {
   OBJECT_NAME.resize(0);
   OBJECT_NAME.push_back( std::string("robot") );
   OBJECT_NAME.push_back( std::string("table") );
-  OBJECT_NAME.push_back( std::string("chair") );
-  OBJECT_NAME.push_back( std::string("table2") );  
+  OBJECT_NAME.push_back( std::string("chair") ); 
 
   if( OBJECT_NAME.size() != NUM_OBJECTS ) {
     std::cout << "[X] Error initializing OBJECT_NAMES!"<< std::endl;
   }
 
   MARKER_ID.resize(0);
-  MARKER_ID.push_back( 4 );
   MARKER_ID.push_back( 1 );
-  MARKER_ID.push_back( 2 );
-  MARKER_ID.push_back( 3 );
+  MARKER_ID.push_back( 5 );
+  MARKER_ID.push_back( 6 );
 
   if( MARKER_ID.size() != NUM_OBJECTS ) {
     std::cout << "[X] Error initializing MARKER_ID!"<< std::endl;
   }
   
   MARKER_SIZE.resize(0);
-  MARKER_SIZE.push_back( 20.3 );
   MARKER_SIZE.push_back( 20.3 );
   MARKER_SIZE.push_back( 20.3 );
   MARKER_SIZE.push_back( 20.3 );

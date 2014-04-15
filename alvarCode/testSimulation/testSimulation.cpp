@@ -264,10 +264,9 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
 	}
 	
 	switch( i ) {
-	case 0 : mWorld->getSkeleton("marker0")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
-	case 1 : mWorld->getSkeleton("marker1")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
-	case 2 : mWorld->getSkeleton("marker2")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
-	case 3 : mWorld->getSkeleton("marker3")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+	case 0 : mWorld->getSkeleton("robot")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+	case 1 : mWorld->getSkeleton("table")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
+	case 2 : mWorld->getSkeleton("chair")->setConfig( dart::math::logMap( Eigen::Isometry3d(Tf) ) ); break;
 	}
 	
       }

@@ -5,7 +5,6 @@
   <include filename="rodPad.urdf" model_name="cube"/>
   <include filename="goldenPad.urdf" model_name="golden"/>
   <include filename="bicolorRod.urdf" model_name="cam"/>
-  <!--<include filename="redBall.urdf" model_name="cam"/> -->
 
   <entity model="golden" name="origin">
     <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
@@ -28,20 +27,17 @@
   </entity>
 
 
-  <entity model="cube" name="marker0">
+  <entity model="cube" name="chair">
     <origin xyz="-1.0 -1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cube" name="marker1">
+  <entity model="cube" name="table">
     <origin xyz="-1.0 1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cube" name="marker2">
+  <entity model="cube" name="robot">
     <origin xyz="1.0 -1.0 0.0" rpy="0 0 0"/>
   </entity>
 
-  <entity model="cube" name="marker3">
-    <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
-  </entity>
 
 </world>

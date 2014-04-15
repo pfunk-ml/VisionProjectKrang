@@ -132,7 +132,7 @@ void videocallback( IplImage *_img ) {
 
       if( gObjects[i].marker_id == id ) {
 
-	std::cout << "Detected marker with id:"<<id<< " ("<< gObjects[j].obj_name <<")"<< std::endl;
+	std::cout << "Detected marker with id:"<<id<< " ("<< gObjects[i].obj_name <<")"<< std::endl;
 	alvar::Pose p = (*(marker_detector.markers))[j].pose;
 	double transf[16];
 	p.GetMatrixGL( transf, false);

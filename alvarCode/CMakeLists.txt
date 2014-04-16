@@ -70,8 +70,8 @@ set_target_properties( camProcess PROPERTIES RUNTIME_OUTPUT_DIRECTORY
 
 # Add camera central process 
 # Returns markers in global 
-set( camCentralProcess_src CameraCentralProcess.cpp )
-set( camCentralProcess_hdr CameraCentralProcess.h )
+set( camCentralProcess_src CameraCentralProcess.cpp basicFilter.cpp )
+set( camCentralProcess_hdr CameraCentralProcess.h basicFilter.h )
 
 add_library( camCentralProcess ${camCentralProcess_src} ${camCentralProcess_hdr} )
 target_link_libraries( camCentralProcess  globalStuff cvViewer glutViewer ${ACH_LIBS} m)

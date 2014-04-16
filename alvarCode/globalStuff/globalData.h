@@ -23,6 +23,7 @@ extern ObjectData_t gObjects[NUM_OBJECTS];
 
 
 #define PERCEPTION_CHANNEL "krang_vision"
+#define DEBUG_CHANNEL "debug_channel"
 
 /** Set values to global data */
 void setGlobalData();

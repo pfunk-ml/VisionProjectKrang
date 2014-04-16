@@ -56,9 +56,11 @@ class CameraCentralProcess {
 
   std::vector<ach_channel_t> mInput_channels;
   ach_channel_t mOutput_channel;
+  ach_channel_t mDebug_channel;
   MarkerMsg_t mMarkerMsgs[NUM_OBJECTS];
   Planning_output mMsg[NUM_OBJECTS];
   double finalMsg[NUM_OBJECTS][3]; // x,y,angle // visible,
+  double debugMsg[NUM_OBJECTS][3];
 
   // Basic filter for smooth tracking of markers
   basicFilter mBf;

@@ -125,22 +125,15 @@ bool CameraCentralProcess::setupChannels() {
   }
   
   // OUTPUT CHANNEL
-  
-  // NOW WE DO THIS FROM THE SCRIPT
-  
-  /** Delete if existing, then create */
-  /*
-  r = ach_unlink( PERCEPTION_CHANNEL );
-  assert( ACH_OK == r || ACH_ENOENT == r );
-
-  r = ach_create( PERCEPTION_CHANNEL, 10ul, 64ul, NULL );
-  assert( ACH_OK == r );
-  */
 
   /**< Open the channel */
   r = ach_open( &mOutput_channel, PERCEPTION_CHANNEL, NULL );
   assert( ACH_OK == r );
   
+  /**< Open the debug channel */
+  r = ach_open( &mDebug_channel, DEBUG_CHANNEL, NULL );
+  assert( ACH_OK == r );
+
   return true;
 }
 
@@ -248,36 +241,39 @@ void CameraCentralProcess::getWorldTransforms() {
  */
 void CameraCentralProcess::createMessage() {
 
-  
+    double x, y, theta;  
+    double x_est, y_est, theta_est;
+
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
     Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i].marker_id );
     Eigen::Matrix4d Tsprite = Tmarker*gTmarker_sprite[i];
-    double x, y, theta;
     getXYangTriple(Tsprite, x, y, theta);
     
 
-    // Use filter
-    double x_est, y_est, theta_est;
-    mBf.getEstimate( x, y, theta,
-		     x_est, y_est, theta_est );
-
-    // Visible
-    //X
-    finalMsg[i][0] =  x; //x_est;
-    //Y
-    finalMsg[i][1] = y; //y_est;
-    //angle
-    finalMsg[i][2] = theta; //theta_est;
-    
-    
     // If object is not visible, set x,y,theta to 0 by default
     if( (double)mMarkerMsgs[i].visible == -1 ) {
       finalMsg[i][0] = 0;
       finalMsg[i][1] = 0;
       finalMsg[i][2] = 0;
-    }
+    } else {
+
+	// Use filter
+    	mBf.getEstimate( x, y, theta,
+		     	 x_est, y_est, theta_est );
+
+    	// Visible
+    	finalMsg[i][0] =  x;
+    	finalMsg[i][1] = y;
+    	finalMsg[i][2] = theta;
+
+    	debugMsg[i][0] = x_est;
+    	debugMsg[i][1] = y_est;
+    	debugMsg[i][2] = theta_est;
     
-  }
+    }
+
+    
+  } // end for
   
 }
 
@@ -299,5 +295,10 @@ void CameraCentralProcess::sendMessage() {
   ach_put( &mOutput_channel,
 	   finalMsg,
 	   sizeof( finalMsg ) );
+
+  // Send debug
+  ach_put( &mDebug_channel,
+	   debugMsg,
+	   sizeof( debugMsg ) );
 
 }

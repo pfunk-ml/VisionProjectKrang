@@ -51,6 +51,14 @@ int main( int argc, char* argv[] ) {
     }
 
 
+  // Clean debug channel
+    r = ach_unlink( DEBUG_CHANNEL ); 
+    if( r == ACH_OK ) {
+      std::cout << "\t [CLEANUP] Debug channel deleted. UNEXPECTED!!"<< std::endl; 
+    } else if ( r == ACH_ENOENT ) { 
+      std::cout << "\t [CLEANUP] Debug channel did not exist. As expected."<< std::endl;
+    }
+
   return 0;
   
 }

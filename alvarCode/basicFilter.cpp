@@ -57,7 +57,7 @@ bool basicFilter::set_default_weights() {
     w.resize( mNumSteps + 1);
     double dw = 1.0 / (double)( w.size() - 1 );
     for( int i = 0; i < mNumSteps + 1; ++i ) {
-	w[i] = dw*i;
+      w[i] = dw*(double)i;
     }
 
     // Set total sum
@@ -120,7 +120,7 @@ void basicFilter::getEstimate( const double &_x_measured,
     x_est.push_back( _x_est );
 
     y_est.pop_front();
-    y_est.push_back( _ang_est );
+    y_est.push_back( _y_est );
 
     ang_est.pop_front();
     ang_est.push_back( _ang_est );

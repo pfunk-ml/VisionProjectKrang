@@ -12,8 +12,8 @@ int main( int argc, char* argv[] ) {
     mCc.initSetup();
     std::cout << "* Setup channels" <<std::endl;
     mCc.setupChannels();
-    std::cout << "* Sleep 3 seconds before starting loop"<< std::endl;
-    sleep(3);
+    std::cout << "* Sleep 1 seconds before starting loop"<< std::endl;
+    sleep(1);
     std::cout << "Start main loop" <<std::endl;
     mCc.mainLoop();
 

@@ -42,6 +42,15 @@ int main( int argc, char* argv[] ) {
 
   }
 
+  // Clean krang_vision
+    r = ach_unlink( PERCEPTION_CHANNEL ); 
+    if( r == ACH_OK ) {
+      std::cout << "\t [CLEANUP] Perception channel deleted. UNEXPECTED!!"<< std::endl; 
+    } else if ( r == ACH_ENOENT ) { 
+      std::cout << "\t [CLEANUP] Perception channel did not exist. As expected."<< std::endl;
+    }
+
+
   return 0;
   
 }

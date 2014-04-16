@@ -268,7 +268,9 @@ void initAchChannel( int _camIndex ) {
 
     /**< Create output channel, try deleting in case it exists */
     gChannelName = CAM_CHANNEL_NAME[ _camIndex ];
-
+	
+    // NOW WE DO THIS ON THE SCRIPT FILE 
+    /*
     r = ach_unlink( gChannelName.c_str() );
     assert( ACH_OK == r || ACH_ENOENT == r );
 
@@ -278,6 +280,7 @@ void initAchChannel( int _camIndex ) {
     // Set mode
     mode_t mode = 0666;
     ach_chmod( &gChan_output, mode );
+    */
 
     /**< Open the channel */
     r = ach_open( &gChan_output, gChannelName.c_str(), NULL );

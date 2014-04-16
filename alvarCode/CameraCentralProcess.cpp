@@ -120,13 +120,17 @@ bool CameraCentralProcess::setupChannels() {
   
   // OUTPUT CHANNEL
   
+  // NOW WE DO THIS FROM THE SCRIPT
+  
   /** Delete if existing, then create */
+  /*
   r = ach_unlink( PERCEPTION_CHANNEL );
   assert( ACH_OK == r || ACH_ENOENT == r );
 
   r = ach_create( PERCEPTION_CHANNEL, 10ul, 64ul, NULL );
   assert( ACH_OK == r );
-  
+  */
+
   /**< Open the channel */
   r = ach_open( &mOutput_channel, PERCEPTION_CHANNEL, NULL );
   assert( ACH_OK == r );
@@ -155,7 +159,8 @@ void CameraCentralProcess::mainLoop() {
     this->sendMessage();
     
     // Important! If you just run the main loop like crazy it will get you an ACH error
-    // crazy: CONTINUOUSLY WITHOUT SLEEP         
+    // crazy: CONTINUOUSLY WITHOUT SLEEP 
+    // 10Hz        
     usleep(0.1*1e6);
   }
 
@@ -233,6 +238,7 @@ void CameraCentralProcess::getWorldTransforms() {
  * @function createMessage
  * @brief Create message, by now just send transformation
  * (Que tipo de individuo quiere solo informacion planar?)
+ * @ ADDING SPRITE TRANSFORMATION
  */
 void CameraCentralProcess::createMessage() {
   /*
@@ -255,8 +261,9 @@ void CameraCentralProcess::createMessage() {
   
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
     Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i].marker_id );
+    Eigen::Matrix4d Tsprite = Tmarker*gTmarker_sprite[i];
     double x, y, theta;
-    getXYangTriple(Tmarker, x, y, theta);
+    getXYangTriple(Tsprite, x, y, theta);
     
     // Visible
     //finalMsg[i][3] = (double)mMarkerMsgs[i].visible;

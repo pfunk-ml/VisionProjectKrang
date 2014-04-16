@@ -1,5 +1,5 @@
 /**
- *
+ * @file basicFilter.cpp
  */
 
 #include "basicFilter.h"
@@ -12,6 +12,12 @@ basicFilter::basicFilter( int _numSteps ) {
 
     mNumSteps = _numSteps;
     mFlagFull = false;
+
+    x_est.resize(0);
+    y_est.resize(0);
+    ang_est.resize(0);
+    w.resize(0);
+
 }
 
 /**
@@ -22,23 +28,6 @@ basicFilter::~basicFilter() {
 
 }
 
-/**
- * @function push_estimate
- * @brief Constructor
- */
-void basicFilter::push_estimate( const double &_xest,
-				 const double &_yest,
-				 const double &_ang_est ) {
-
-    x_est.push_back( _xest );
-    y_est.push_back( _yest );
-    ang_est.push_back( _ang_est );
-
-    if( x_est.size() == mNumSteps ) {
-	mFlagFull = true;
-    }
-
-}
 
 /**
  * @function set_weights
@@ -87,6 +76,23 @@ void basicFilter::getEstimate( const double &_x_measured,
 			       double &_x_est,
 			       double &_y_est,
 			       double &_ang_est ) {
+
+  // If not enough stuff stored in history, just fill it
+  if( x_est.size() < mNumSteps ) {
+
+    _x_est = _x_measured;
+    _y_est = _y_measured;
+    _ang_est = _ang_measured;
+
+    x_est.push_back( _x_est );
+    y_est.push_back( _y_est );
+    ang_est.push_back( _ang_est );
+    return;
+
+  }
+  if( x_est.size() > mNumSteps ) {
+    std::cout << " ESTIMATE VALUES STORED ARE TOO MANY!!!" << std::endl;
+  }
 
     // Weighted average
     double x_sum = 0;

@@ -132,7 +132,7 @@ void videocallback( IplImage *_img ) {
 
       if( gObjects[i].marker_id == id ) {
 
-	std::cout << "Detected marker with id:"<<id<< " ("<< gObjects[i].obj_name <<")"<< std::endl;
+	//std::cout << "Detected marker with id:"<<id<< " ("<< gObjects[i].obj_name <<")"<< std::endl;
 	alvar::Pose p = (*(marker_detector.markers))[j].pose;
 	double transf[16];
 	p.GetMatrixGL( transf, false);
@@ -156,11 +156,11 @@ void videocallback( IplImage *_img ) {
 
 	for( int row = 0; row < 3; ++row ) {
 	  for( int col = 0; col <4; ++col ) {
-	    std::cout << gMarkerMsgs[i].trans[row][col] << " "; 
-	  }  std::cout << std::endl;
+	    //std::cout << gMarkerMsgs[i].trans[row][col] << " "; 
+	  }  //std::cout << std::endl;
 	} 
-	std::cout << transf[3] << " "<< transf[7]<<" "<< transf[11]<< " "<< transf[15] << std::endl;
-	std::cout << std::endl;
+	//std::cout << transf[3] << " "<< transf[7]<<" "<< transf[11]<< " "<< transf[15] << std::endl;
+	//std::cout << std::endl;
 	gMarkerMsgs[i].visible = 1;
  
 	detected = true;
@@ -170,7 +170,7 @@ void videocallback( IplImage *_img ) {
     } // end of all markers checked
 
     if( detected == false ) {
-      std::cout << "NO detected marker with id "<< gObjects[i].marker_id<<"("<< gObjects[i].obj_name << ")"<<std::endl;
+      //std::cout << "NO detected marker with id "<< gObjects[i].marker_id<<"("<< gObjects[i].obj_name << ")"<<std::endl;
       for( int a = 0; a < 3; ++a ) {
         for( int b = 0; b < 4; ++b ) {
           gMarkerMsgs[i].trans[a][b] = 0;

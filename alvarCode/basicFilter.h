@@ -18,11 +18,6 @@ class basicFilter {
  public:
     basicFilter( int _numSteps = 10 );
     ~basicFilter();
-
-
-    void push_estimate( const double &_xest,
-			const double &_yest,
-			const double &_ang_est );
     
     bool set_weights( std::vector<double> _weights );
     bool set_default_weights();

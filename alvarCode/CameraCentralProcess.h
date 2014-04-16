@@ -9,6 +9,7 @@
 
 #include "globalStuff/globalData.h"
 #include "globalStuff/Object.h"
+#include "basicFilter.h"
 
 class ARMarker;
 class ARCamera;
@@ -58,6 +59,9 @@ class CameraCentralProcess {
   MarkerMsg_t mMarkerMsgs[NUM_OBJECTS];
   Planning_output mMsg[NUM_OBJECTS];
   double finalMsg[NUM_OBJECTS][3]; // x,y,angle // visible,
+
+  // Basic filter for smooth tracking of markers
+  basicFilter mBf;
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

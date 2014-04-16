@@ -16,10 +16,12 @@
 * @function CameraCentralProcess
 * @brief Set initial needed information
 */
-CameraCentralProcess::CameraCentralProcess() {
+CameraCentralProcess::CameraCentralProcess() :
+  mBf(10) {
   
   setGlobalData();
   setGlobalTransforms();
+
 }
 
 /**
@@ -58,6 +60,10 @@ void CameraCentralProcess::initSetup() {
   
   /** World */
   mWorldModel = new WorldModel( mCameras, mMarkers );
+
+  /** Set filter default weights */
+  // (simple ramp shape)
+  mBf.set_default_weights();
   
 }
 
@@ -241,23 +247,7 @@ void CameraCentralProcess::getWorldTransforms() {
  * @ ADDING SPRITE TRANSFORMATION
  */
 void CameraCentralProcess::createMessage() {
-  /*
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    Planning_output p;
-    p.marker_id = mMarkerMsgs[i].marker_id;
-    
-    Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i].marker_id );
-    for( int j = 0; j < 3; ++j ) {
-      for( int k = 0; k < 4; ++k ) {
-	p.Tworld_marker[j][k] = Tmarker(j,k);
-      }
-    }
-    
-    p.visible = mMarkerMsgs[i].visible;
-    
-    mMsg[i] = p;
-  }
-  */
+
   
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
     Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i].marker_id );
@@ -265,14 +255,20 @@ void CameraCentralProcess::createMessage() {
     double x, y, theta;
     getXYangTriple(Tsprite, x, y, theta);
     
+
+    // Use filter
+    double x_est, y_est, theta_est;
+    mBf.getEstimate( x, y, theta,
+		     x_est, y_est, theta_est );
+
     // Visible
-    //finalMsg[i][3] = (double)mMarkerMsgs[i].visible;
     //X
-    finalMsg[i][0] = x;
+    finalMsg[i][0] =  x; //x_est;
     //Y
-    finalMsg[i][1] = y;
+    finalMsg[i][1] = y; //y_est;
     //angle
-    finalMsg[i][2] = theta;
+    finalMsg[i][2] = theta; //theta_est;
+    
     
     // If object is not visible, set x,y,theta to 0 by default
     if( (double)mMarkerMsgs[i].visible == -1 ) {
@@ -294,10 +290,9 @@ void CameraCentralProcess::createMessage() {
 void CameraCentralProcess::sendMessage() {
   
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    printf(" Sending info for Marker [%d] with ID: %d \n", i, mMarkerMsgs[i].marker_id );
-    printf(" \t Camera id: %d \n", mMarkerMsgs[i].cam_id );
-    //printf(" \t Visible: %f \n", finalMsg[i][3] );  
-    printf(" \t Transformation: x: %f y: %f theta: %f \n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2] );
+    //printf(" Sending info for Marker [%d] with ID: %d \n", i, mMarkerMsgs[i].marker_id );
+    //printf(" \t Camera id: %d \n", mMarkerMsgs[i].cam_id );
+    //printf(" \t Transformation: x: %f y: %f theta: %f \n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2] );
   }
 
 

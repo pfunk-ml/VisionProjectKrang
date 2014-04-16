@@ -273,8 +273,11 @@ void initAchChannel( int _camIndex ) {
     assert( ACH_OK == r || ACH_ENOENT == r );
 
     // TODO : CHECK THESE 10 AND 256 NUMBERS
-    r = ach_create( gChannelName.c_str(), 30ul, 256ul, NULL );
+    r = ach_create( gChannelName.c_str(), 10, 64, NULL );
     assert( ACH_OK == r );
+    // Set mode
+    mode_t mode = 0666;
+    ach_chmod( &gChan_output, mode );
 
     /**< Open the channel */
     r = ach_open( &gChan_output, gChannelName.c_str(), NULL );

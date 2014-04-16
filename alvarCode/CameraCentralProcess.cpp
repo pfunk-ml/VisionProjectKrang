@@ -123,8 +123,8 @@ bool CameraCentralProcess::setupChannels() {
   /** Delete if existing, then create */
   r = ach_unlink( PERCEPTION_CHANNEL );
   assert( ACH_OK == r || ACH_ENOENT == r );
-  // TODO : CHECK THESE 10 AND 256 NUMBERS
-  r = ach_create( PERCEPTION_CHANNEL, 30ul, 256ul, NULL );
+
+  r = ach_create( PERCEPTION_CHANNEL, 10ul, 64ul, NULL );
   assert( ACH_OK == r );
   
   /**< Open the channel */
@@ -259,19 +259,19 @@ void CameraCentralProcess::createMessage() {
     getXYangTriple(Tmarker, x, y, theta);
     
     // Visible
-    finalMsg[i][0] = (double)mMarkerMsgs[i].visible;
+    //finalMsg[i][3] = (double)mMarkerMsgs[i].visible;
     //X
-    finalMsg[i][1] = x;
+    finalMsg[i][0] = x;
     //Y
-    finalMsg[i][2] = y;
+    finalMsg[i][1] = y;
     //angle
-    finalMsg[i][3] = theta;
+    finalMsg[i][2] = theta;
     
     // If object is not visible, set x,y,theta to 0 by default
-    if( finalMsg[i][0] == -1 ) {
+    if( (double)mMarkerMsgs[i].visible == -1 ) {
+      finalMsg[i][0] = 0;
       finalMsg[i][1] = 0;
       finalMsg[i][2] = 0;
-      finalMsg[i][3] = 0;
     }
     
   }
@@ -289,8 +289,8 @@ void CameraCentralProcess::sendMessage() {
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
     printf(" Sending info for Marker [%d] with ID: %d \n", i, mMarkerMsgs[i].marker_id );
     printf(" \t Camera id: %d \n", mMarkerMsgs[i].cam_id );
-    printf(" \t Visible: %f \n", finalMsg[i][0] );  
-    printf(" \t Transformation: x: %f y: %f theta: %f \n", finalMsg[i][1], finalMsg[i][2], finalMsg[i][3] );
+    //printf(" \t Visible: %f \n", finalMsg[i][3] );  
+    printf(" \t Transformation: x: %f y: %f theta: %f \n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2] );
   }
 
 

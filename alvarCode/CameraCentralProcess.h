@@ -57,7 +57,7 @@ class CameraCentralProcess {
   ach_channel_t mOutput_channel;
   MarkerMsg_t mMarkerMsgs[NUM_OBJECTS];
   Planning_output mMsg[NUM_OBJECTS];
-  double finalMsg[NUM_OBJECTS][4]; // visible,x,y,angle
+  double finalMsg[NUM_OBJECTS][3]; // x,y,angle // visible,
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

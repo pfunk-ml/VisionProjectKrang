@@ -24,4 +24,13 @@ target_link_libraries( runCalibration cvViewer glutViewer ${alvar_LIBRARIES} ${O
 set_target_properties( runCalibration PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
+# Test final perception output channel
+add_executable( testSubscriber testSubscriber.cpp )
+target_link_libraries( testSubscriber ${ACH_LIBS} )
+
+set_target_properties( testSubscriber PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
+
+
+
 

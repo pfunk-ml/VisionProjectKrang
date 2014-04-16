@@ -226,7 +226,7 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
       std::cout << "Finished setting objects "<<std::endl;
       */
 
-      double po[NUM_OBJECTS][4];
+      double po[NUM_OBJECTS][3];
       size_t fs; int r; 
       
       r = ach_get( &mSim_Channel, 
@@ -243,7 +243,7 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
       for( int i = 0; i < NUM_OBJECTS; ++i ) {
 	
 	Eigen::Matrix4d Tf = Eigen::Matrix4d::Identity();
-	if( po[i][0] == -1 ) { 
+	if( po[i][0] == 0 && po[i][1] == 0 && po[i][2] == 0 ) { 
 	  std::cout << "Object"<< i << " NOT visible" << std::endl;
 	  std::cout << std::endl;
 	}
@@ -251,9 +251,9 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
 	  std::cout << "Object "<< i <<" is visible" << std::endl;
 	  
 	  double x, y, theta;
-	  x = po[i][1];
-	  y = po[i][2];
-	  theta = po[i][3];	
+	  x = po[i][0];
+	  y = po[i][1];
+	  theta = po[i][2];	
 	  
 	  Eigen::Matrix3d rotation;
 	  rotation = Eigen::AngleAxisd(theta, Eigen::Vector3d::UnitZ());

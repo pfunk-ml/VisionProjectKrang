@@ -12,6 +12,13 @@ HOWTO
 
 To run in our perception machine.
 
+0. Connect cameras in order: Unplug all the cameras and then connect them in consecutive order (first camera 0, 
+   then camera 1 and so on).
+   This way, camera X is connected to /dev/videoX, which is considered in our script later. 
+   If you reboot the machine, make sure to do the unplugging-plugging thing, since the /dev/ order might change
+   when restarting.
+   Remember to use the ports of the USB 3.0 card, since we need the cameras to be in independent ports.
+
 1. Set the ALVAR_PLUGIN_PATH to the directory where the plugins are (libalvarcapturepluginfile200.so). 
    For the perception machine this is /usr/local/lib, so you can just add this line to your ~/.bashrc file
    

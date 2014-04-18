@@ -236,15 +236,25 @@ bool init( int _devIndex,
     std::cout << "\t [X] Could not find any capture devices." << std::endl;
     return 0;
   }
+
+for( int i = 0; i < devices.size(); ++i ) {
+
+    std::cout << "Device ID: "<< devices[i].id()<< std::endl;
+}
   
   /*-- Check if _devIndex can be used --*/
-  int selectedDevice;
-  if( _devIndex > devices.size() ) {
-    std::cout << "Device index /dev/video"<<_devIndex<<" bigger than the size of devices vector." << std::endl;
+  int selectedDevice = -1;
+  for( int i = 0; i < devices.size(); ++i ) {
+    if( _devIndex == atoi( (devices[i].id()).c_str() ) ) {
+       selectedDevice = i;
+       break;    
+    }
+  }
+
+  if( selectedDevice == -1 ) {
+    std::cout << "Not /dev"<<_devIndex<<" found. Are you sure a camera is connected there?" << std::endl;
     return false;
   } 
-  
-  selectedDevice = _devIndex;
   
   
   /**- Display capture devices (DEBUG) --*/

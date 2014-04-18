@@ -23,11 +23,11 @@ ach -C debug_channel -o 666  -m 10 -n 64
 # Camera 2 is on /dev/video2
 # Camera 3 is on /dev/video3
 
-# We have to fire cameras in this order: 3-2-1-0 (order of /dev)
+# For some reason, we have to go from up to down
 for i in 3 2 1 0
 do
     echo "************************************"
-    echo "[START] Firing up camera 3 [START]"
+    echo "[START] Firing up camera $i [START]"
     echo "************************************"
     "${BIN_DIR}/camProcess" $i $i &
     sleep 3s

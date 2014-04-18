@@ -262,13 +262,13 @@ void CameraCentralProcess::createMessage() {
 		     	 x_est, y_est, theta_est );
 
     	// Visible
-    	finalMsg[i][0] =  x_est;
-    	finalMsg[i][1] = y_est;
-    	finalMsg[i][2] = theta_est;
+    	finalMsg[i][0] =  x;
+    	finalMsg[i][1] = y;
+    	finalMsg[i][2] = theta;
 
-    	debugMsg[i][0] = x;
-    	debugMsg[i][1] = y;
-    	debugMsg[i][2] = theta;
+    	debugMsg[i][0] = x_est;
+    	debugMsg[i][1] = y_est;
+    	debugMsg[i][2] = theta_est;
     
     }
 

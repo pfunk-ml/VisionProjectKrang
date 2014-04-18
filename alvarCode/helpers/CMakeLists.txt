@@ -2,6 +2,7 @@
 ######################
 # HELPERS            #
 ######################
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}" )
 
 # Executable to generate Markers
 add_executable( generateMarkers generateMarkers.cpp )
@@ -31,6 +32,13 @@ target_link_libraries( testSubscriber ${ACH_LIBS} )
 set_target_properties( testSubscriber PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
+
+# Test filter
+add_executable( testFilter testFilter.cpp ../basicFilter.cpp )
+target_link_libraries( testFilter ${ACH_LIBS} )
+
+set_target_properties( testFilter PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 
 

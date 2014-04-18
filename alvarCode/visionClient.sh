@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Put this script on the same
-# directory where the executables are
+# Where your binaries are
 BIN_DIR="/home/ana/Research/VisionProjectKrang/alvarCode/bin"
 
 # Cleanup any channel that might be wandering around

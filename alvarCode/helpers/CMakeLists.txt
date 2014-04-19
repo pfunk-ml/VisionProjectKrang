@@ -34,11 +34,21 @@ set_target_properties( testSubscriber PROPERTIES RUNTIME_OUTPUT_DIRECTORY
 
 
 # Test filter
+# Use dummy created data
 add_executable( testFilter testFilter.cpp ../basicFilter.cpp )
 target_link_libraries( testFilter ${ACH_LIBS} )
 
 set_target_properties( testFilter PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
+
+
+# Test filter plot
+# Use actual data
+add_executable( testFilterPlot testFilterPlot.cpp ../basicFilter.cpp )
+target_link_libraries( testFilterPlot ${ACH_LIBS} )
+
+set_target_properties( testFilterPlot PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
+  ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 

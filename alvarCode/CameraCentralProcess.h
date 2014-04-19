@@ -63,7 +63,7 @@ class CameraCentralProcess {
   double debugMsg[NUM_OBJECTS][3];
 
   // Basic filter for smooth tracking of markers
-  basicFilter mBf;
+  basicFilter mBf[NUM_OBJECTS];
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

@@ -16,8 +16,7 @@
 * @function CameraCentralProcess
 * @brief Set initial needed information
 */
-CameraCentralProcess::CameraCentralProcess() :
-  mBf(10) {
+CameraCentralProcess::CameraCentralProcess() {
   
   setGlobalData();
   setGlobalTransforms();
@@ -63,8 +62,9 @@ void CameraCentralProcess::initSetup() {
 
   /** Set filter default weights */
   // (simple ramp shape)
-  mBf.set_default_weights();
-  
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  	mBf[i].set_default_weights();
+  }
 }
 
 
@@ -250,29 +250,22 @@ void CameraCentralProcess::createMessage() {
     getXYangTriple(Tsprite, x, y, theta);
     
 
-    // If object is not visible, set x,y,theta to 0 by default
-    if( (double)mMarkerMsgs[i].visible == -1 ) {
-      finalMsg[i][0] = 0;
-      finalMsg[i][1] = 0;
-      finalMsg[i][2] = 0;
-    } else {
+    // If object is not visible, set x,y,theta to last estimated value
+    // WE USED TO DO THIS...
 
-	// Use filter
-    	mBf.getEstimate( x, y, theta,
-		     	 x_est, y_est, theta_est );
-
-    	// Visible
-    	finalMsg[i][0] =  x;
-    	finalMsg[i][1] = y;
-    	finalMsg[i][2] = theta;
-
-    	debugMsg[i][0] = x_est;
-    	debugMsg[i][1] = y_est;
-    	debugMsg[i][2] = theta_est;
+    // Use filter (one filter per each object!)
+    mBf[i].getEstimate( x, y, theta,
+		     	x_est, y_est, theta_est );
     
-    }
+    	finalMsg[i][0] =  x_est;
+    	finalMsg[i][1] = y_est;
+    	finalMsg[i][2] = theta_est;
 
-    
+    	debugMsg[i][0] = x;
+    	debugMsg[i][1] = y;
+    	debugMsg[i][2] = theta;
+
+       
   } // end for
   
 }

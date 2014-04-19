@@ -94,6 +94,18 @@ void basicFilter::getEstimate( const double &_x_measured,
     std::cout << " ESTIMATE VALUES STORED ARE TOO MANY!!!" << std::endl;
   }
 
+  // If the values are 0,0,0 (non visible), we just set the estimate to the last value seen
+  // Here we might also evaluate if the values are too different from the previous ones. ASK JON OR MARTIN
+  if( _x_measured == 0 && _y_measured == 0 && _ang_measured == 0 ) {
+  
+    _x_est = x_est[ x_est.size() - 1];
+    _y_est = y_est[ y_est.size() - 1];
+    _ang_est = ang_est[ ang_est.size() - 1];
+  }
+  
+  // If not, normal proceedings
+  else {
+
     // Weighted average
     double x_sum = 0;
     double y_sum = 0;
@@ -115,6 +127,7 @@ void basicFilter::getEstimate( const double &_x_measured,
     _y_est = y_sum / sum_w;
     _ang_est = ang_sum / sum_w;
 
+  }
     // Update the deque. Get rid of oldest and put newest at the end
     x_est.pop_front();
     x_est.push_back( _x_est );

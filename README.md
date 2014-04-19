@@ -24,11 +24,14 @@ To run in our perception machine.
    
    export ALVAR_PLUGIN_PATH=/usr/local/lib
 
-2. In /VisionProjectKrang/alvarCode, run this script:
+3. Go to /VisionProjectKrang/alvarCode and find the script visionClient. Here, 
+   modify the variable BIN_DIR to the directory where your binaries for the alvarCode are.
+
+3. Now you can run the script:
    
    ./visionClient.sh
 
-3. You should be done
+4. You should be done
 
 BRIEF EXPLANATION
 ------------------

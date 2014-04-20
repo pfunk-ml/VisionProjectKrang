@@ -21,6 +21,8 @@ void getXYangTriple( const Eigen::Matrix4d &_Tf,
 		     double& _x, 
 		     double& _y, 
 		     double& _ang );
+Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf);
+Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf, std::vector<double> _wt);
  
 
 

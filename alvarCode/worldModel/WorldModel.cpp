@@ -5,7 +5,7 @@
 #include "WorldModel.h"
 #include "ARCamera.h"
 #include "ARMarker.h"
-
+#include <math.h>
 
 /**
  * @function getMatAsDouble
@@ -67,6 +67,100 @@ void getXYangTriple( const Eigen::Matrix4d &_Tf,
     
     // Angle should be the Rz angle
     _ang = (double)ea[2];
+}
+
+/**
+ * @function getAverageAffine
+ * @brief Returns "average" rotation and position
+ */
+Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf)
+{
+    // Make them all equal weight
+    std::vector<double> weights(_tf.size(), 1.0);
+    
+    // Call other method
+    return getAverageAffine(_tf, weights);    
+}
+
+/**
+ * @function getAverageAffine
+ * @brief Returns weighted "average" rotation and position
+ */
+Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf, std::vector<double> _wt)
+{
+    // First get weighted average of x y and z
+    double x_mean = 0, y_mean = 0, z_mean = 0, totalweight = 0;
+    for (int i = 0; i < _tf.size(); i++)
+    {
+        double x = _tf[i](0, 3);
+        double y = _tf[i](1, 3);
+        double z = _tf[i](2, 3);
+        double weight = _wt[i];
+
+        // Add up weighted averages
+        x_mean += weight * x;
+        y_mean += weight * y;
+        z_mean += weight * z;
+        totalweight += weight;
+    }
+
+    // Normalize weight
+    x_mean /= totalweight;
+    y_mean /= totalweight;
+    z_mean /= totalweight;
+
+    // Now convert to quaternions
+    std::vector<Eigen::Quaterniond> qs;
+    for (int i = 0; i < _tf.size(); i++)
+    {
+        Eigen::Matrix3d mat;
+        mat = _tf[i].block(0, 0, 3, 3);
+        Eigen::Quaterniond q(mat);
+        qs.push_back(q);
+    }
+
+    // Now find the median quaternion
+    std::vector<double> distances(qs.size(), 0.0);
+    for (int i = 0; i < qs.size(); i++)
+    {
+        double dist = 0;
+        for (int j = 0; j < qs.size(); j++)
+        {   
+            if (j != i)
+            {
+                double dotprod = qs[i].dot(qs[j]);
+                dotprod = abs(log(dotprod));
+                dist += dotprod;
+            }
+        }
+        // Update distance
+        distances[i] = dist;
+    }
+
+    // Find min arg
+    double bestdist = distances[0];
+    int bestind = 0;
+    for (int i = 1; i < distances.size(); i++)
+    {
+        if (distances[i] < bestdist)
+        {
+            bestdist = distances[i];
+            bestind = i;
+        }
+    }
+
+    // Convert best quat back to rotation
+    Matrix3d rotation = qs[bestind].toRotationMatrix();
+
+    // Now return affine with correct values
+    Matrix4d affine;
+    affine.block(0, 0, 3, 3) = rotation;
+    affine(0, 3) = x_mean;
+    affine(1, 3) = y_mean;
+    affine(2, 3) = z_mean;
+    affine.row(3) << 0,0,0,1;
+
+    return affine;
 }
 
 
@@ -140,7 +234,7 @@ bool WorldModel::setMarkerLoc( const int &_cameraID,
     Eigen::Matrix4d Tworld_marker = cameras[getCamInd(_cameraID)].getCam2World() * _Tcam_marker;
 
     // Set marker
-    bool success = markers[getMarkInd(_markerID)].setMarker( Tworld_marker );
+    bool success = markers[getMarkInd(_markerID)].setMarker( Tworld_marker, _cameraID );
 
     return success;
 }

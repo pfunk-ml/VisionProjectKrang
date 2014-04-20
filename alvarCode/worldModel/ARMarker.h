@@ -23,7 +23,7 @@ class ARMarker
         ARMarker(int itsid);
 
         // Set the marker by giving it the World2Marker matrix
-        bool setMarker(Matrix4d world2marker);
+        bool setMarker(Matrix4d world2marker, int cam_id);
 
         // Getters and setters
         int getID() { return id; };

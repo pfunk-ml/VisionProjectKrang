@@ -224,6 +224,9 @@ void CameraCentralProcess::getWorldTransforms() {
     Tf(1,3) = Tf(1,3) / 100.0;
     Tf(2,3) = Tf(2,3) / 100.0;
     
+
+    // TODO, change how this is written to do it for all cameras !
+
     if( !mWorldModel->setMarkerLoc( mMarkerMsgs[i].cam_id,
 			       mMarkerMsgs[i].marker_id,
 			       Tf ) ) {

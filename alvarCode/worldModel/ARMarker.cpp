@@ -13,7 +13,7 @@ ARMarker::ARMarker(int itsid)
     initialized = false;
 }
 
-bool ARMarker::setMarker(Matrix4d transform)
+bool ARMarker::setMarker(Matrix4d transform, int cam_id)
 {
     // Initialize if not already
     initialized = true;

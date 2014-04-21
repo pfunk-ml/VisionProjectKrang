@@ -163,7 +163,6 @@ Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf, std::vector<d
     return affine;
 }
 
-
 /************************************/
 
 
@@ -219,8 +218,8 @@ bool WorldModel::initCamera( const int &_cam2_id,
 }
 
 /**
- * @function getMarkerPose
- * @brief Retrieve marker (with ID _markerID) pose
+ * @function setMarkerPose
+ * @brief Set marker (with ID _markerID) pose
  */
 bool WorldModel::setMarkerLoc( const int &_cameraID, 
 			       const int &_markerID, 
@@ -234,9 +233,53 @@ bool WorldModel::setMarkerLoc( const int &_cameraID,
     Eigen::Matrix4d Tworld_marker = cameras[getCamInd(_cameraID)].getCam2World() * _Tcam_marker;
 
     // Set marker
-    bool success = markers[getMarkInd(_markerID)].setMarker( Tworld_marker, _cameraID );
+    bool success = markers[getMarkInd(_markerID)].setMarker(Tworld_marker);
 
     return success;
+}
+
+/**
+ * @function setMarkerPose
+ * @brief Set marker (with ID _markerID) pose
+ */
+bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs, 
+		       const int &_markerID, 
+		       const std::vector<Eigen::Matrix4d> &_Tcam_markers,
+               const std::vector<double> &_confidences ) {
+
+    // Check that cameras are initialized
+    for (int i = 0; i < _cameraIDs.size(); i++)
+    {
+        int _cameraID = _cameraIDs[i];
+        if (!cameras[getCamInd(_cameraID)].isInitialized())
+            return false;
+    }
+
+    // Get world to marker matrices
+    std::vector<Eigen::Matrix4d> world_mats;
+    for (int i = 0; i < _Tcam_markers.size(); i++)
+    {
+        Eigen::Matrix4d _Tcam_marker = _Tcam_markers[i];
+        int _cameraID = _cameraIDs[i];
+        Eigen::Matrix4d Tworld_marker = cameras[getCamInd(_cameraID)].getCam2World() * _Tcam_marker;
+        world_mats.push_back(Tworld_marker);
+    }
+
+    // Now get the "average"
+    Eigen::Matrix4d avgmat = getAverageAffine(world_mats, _confidences);
+
+    // Set marker
+    bool success = markers[getMarkInd(_markerID)].setMarker(avgmat);
+
+    return success;
+}
+
+bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs, 
+		       const int &_markerID, 
+		       const std::vector<Eigen::Matrix4d> &_Tcam_markers) {
+    // Make them all equal weight
+    std::vector<double> weights(_Tcam_markers.size(), 1.0);
+    return setMarkerLoc(_cameraIDs, _markerID, _Tcam_markers, weights);
 }
 
 /**

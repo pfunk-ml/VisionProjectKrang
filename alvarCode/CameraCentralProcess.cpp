@@ -173,6 +173,13 @@ bool CameraCentralProcess::grabChannelsInfo() {
   
   MarkerMsg_t tempMm[NUM_OBJECTS];
   int r; size_t fs;
+
+  // Clear earlier messages
+  // Vector Changes here
+  for ( int i = 0; i < NUM_OBJECTS; i++)
+  {
+    mMarkerMsgs[i].clear();
+  }
   
   for( int i = 0; i < mInput_channels.size(); ++i ) {
     r = ach_get( &mInput_channels[i],
@@ -190,17 +197,18 @@ bool CameraCentralProcess::grabChannelsInfo() {
       return false;
     }
     
-    
-    
+    // Vector Changes here
     if( i == 0 ) {
       for( int j = 0; j < NUM_OBJECTS; ++j ) {
-	mMarkerMsgs[j] = tempMm[j];
+	mMarkerMsgs[j].push_back(tempMm[j]);
       }
     } // end if i == 0
     else {
       for( int j = 0; j < NUM_OBJECTS; ++j ) {
-	if( mMarkerMsgs[j].visible == -1 && tempMm[j].visible == 1 ) {
-	  mMarkerMsgs[j] = tempMm[j];
+	if( mMarkerMsgs[j][0].visible == -1 && tempMm[j].visible == 1 ) 
+    {
+      mMarkerMsgs.clear();
+	  mMarkerMsgs[j].push_back(tempMm[j]);
 	}
       }
     } // end else i == 0
@@ -217,19 +225,30 @@ bool CameraCentralProcess::grabChannelsInfo() {
  */
 void CameraCentralProcess::getWorldTransforms() {
   
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i].trans);
-    
-    Tf(0,3) = Tf(0,3) / 100.0;
-    Tf(1,3) = Tf(1,3) / 100.0;
-    Tf(2,3) = Tf(2,3) / 100.0;
-    
+  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+  {
 
-    // TODO, change how this is written to do it for all cameras !
+    // Vector Changes here
+    std::vector<Eigen::Matrix4d> transforms;
+    std::vector<int> cameraIDs;
+    for (int ind = 0; ind < mMarkerMsgs[i].size(); ind++)
+    {
+      Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i][ind].trans);
+      int cameraID = m_MarkerMgs[i][ind].cam_id;
+         
+      // Divide distances by 100 (so now in meters)
+      Tf(0,3) = Tf(0,3) / 100.0;
+      Tf(1,3) = Tf(1,3) / 100.0;
+      Tf(2,3) = Tf(2,3) / 100.0;
+     
+      // Append to vector
+      transforms.push_back(Tf);
+      cameraIDs.push_back(cameraID);
+    }
 
-    if( !mWorldModel->setMarkerLoc( mMarkerMsgs[i].cam_id,
-			       mMarkerMsgs[i].marker_id,
-			       Tf ) ) {
+    // Vector Changes here
+    if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].markerID, transforms)
+    {
        std::cout << "[camCentralProcess-- getWorldTransforms] ERROR - CAMERA IS PROBABLY NOT INITIALIZED"<< std::endl;
     }	
   }
@@ -248,7 +267,8 @@ void CameraCentralProcess::createMessage() {
     double x_est, y_est, theta_est;
 
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i].marker_id );
+    // Vector Changes here
+    Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i][0].marker_id );
     Eigen::Matrix4d Tsprite = Tmarker*gTmarker_sprite[i];
     getXYangTriple(Tsprite, x, y, theta);
     

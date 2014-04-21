@@ -58,6 +58,17 @@ class WorldModel {
 		       const int &_markerID, 
 		       const Eigen::Matrix4d &_Tcam_marker );
 
+    // Alternate setMarkerLoc that lets you set multiple poses rather than just the last
+    bool setMarkerLoc( const std::vector<int> &_cameraIDs, 
+		       const int &_markerID, 
+		       const std::vector<Eigen::Matrix4d> &_Tcam_markers,
+               const std::vector<double> &_confidences );
+
+    // Same as previous but assumes same confidence
+    bool setMarkerLoc( const std::vector<int> &_cameraIDs, 
+		       const int &_markerID, 
+		       const std::vector<Eigen::Matrix4d> &_Tcam_markers);
+
     // Method to get the location of a marker relative to the world marker
     Eigen::Vector3d getMarkerLoc( const int &_markerID );
     

@@ -8,6 +8,11 @@
 
 #pragma once
 
+enum WEIGHT_TYPE {
+
+  RAMP = 0,
+  GAUSSIAN_LEFT  
+};
 
 
 /**
@@ -16,11 +21,11 @@
 class basicFilter {
 
  public:
-    basicFilter( int _numSteps = 10 );
+    basicFilter( int _numSteps = 5 );
     ~basicFilter();
     
     bool set_weights( std::vector<double> _weights );
-    bool set_default_weights();
+    bool set_default_weights( int _type = RAMP );
 
     std::vector<double> w; /**< Weights */
     double sum_w;

@@ -63,7 +63,7 @@ void CameraCentralProcess::initSetup() {
   /** Set filter default weights */
   // (simple ramp shape)
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-  	mBf[i].set_default_weights();
+  	mBf[i].set_default_weights( GAUSSIAN_LEFT );
   }
 }
 
@@ -212,7 +212,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
 	    }
         else if (tempMm[j].visible == 1)
         {
-          mMarkerMsgs[j].push_back(tempMm[j]);
+          //mMarkerMsgs[j].push_back(tempMm[j]);
         }
       }
     } // end else i == 0

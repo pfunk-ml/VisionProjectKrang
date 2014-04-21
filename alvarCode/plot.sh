@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-BIN_DIR="/home/ana/Research/VisionProjectKrang/alvarCode_CoC/bin/"
+BIN_DIR="/home/ana/Research/VisionProjectKrang/alvarCode/bin/"
 
 #plot "logging_est0.txt" every ::1::100 using 0:1 with lines, "logging_est1.txt" every ::1::100 using 0:4 with lines
 

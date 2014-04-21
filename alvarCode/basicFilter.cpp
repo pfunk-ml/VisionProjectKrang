@@ -3,6 +3,7 @@
  */
 
 #include "basicFilter.h"
+#include <math.h>
 
 /**
  * @function basicFilter
@@ -51,20 +52,40 @@ bool basicFilter::set_weights( std::vector<double> _weights ) {
 /**
  * @function set_default_weights
  */
-bool basicFilter::set_default_weights() {
+bool basicFilter::set_default_weights( int _type ) {
 
-    // Simple ramp (very stupid)
+  // Simple ramp (very stupid)
+  if( _type == RAMP ) {
     w.resize( mNumSteps + 1);
     double dw = 1.0 / (double)( w.size() - 1 );
     for( int i = 0; i < mNumSteps + 1; ++i ) {
       w[i] = dw*(double)i;
     }
+  } 
+  // Left gaussian
+  else if( _type == GAUSSIAN_LEFT ) {
 
-    // Set total sum
-    sum_w = 0;
-    for( int i = 0; i < w.size(); ++i ) {
-	sum_w += w[i];
+    double dev = 0.3;
+    double factor = 1.0 / ( sqrt(2*3.14157)*dev );
+
+    w.resize( mNumSteps + 1);
+    double dx = 1.0 / (double)( w.size() - 1 );
+    double x;
+    for( int i = 0; i < mNumSteps + 1; ++i ) {
+      x = dx*i - 1.0;
+      w[i] = factor*exp(-x*x/(2.0*dev*dev));
     }
+
+
+  } // end else if
+
+
+    // Set total sum of weights
+  sum_w = 0;
+  for( int i = 0; i < w.size(); ++i ) {
+    sum_w += w[i];
+  }
+
 }
 
 /**

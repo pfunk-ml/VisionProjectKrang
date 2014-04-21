@@ -33,13 +33,8 @@ int main( int argc, char *argv[] ) {
   // Create the filter
   int numSteps = 10;
   basicFilter BF( numSteps );
-  BF.set_default_weights();
+  BF.set_default_weights(GAUSSIAN_LEFT);
 
-  std::cout << "Default weights: "<< std::endl;
-  for( int i = 0; i < BF.w.size(); ++i ) {
-    std::cout<< "w["<<i<<"]: "<<BF.w[i]<<std::endl;
-  }
-  std::cout <<"Sum of weights: "<< BF.sum_w<< std::endl;
 
   // Get estimates
   double est1, est2, est3;
@@ -49,6 +44,13 @@ int main( int argc, char *argv[] ) {
     estimate.push_back( est1 );
     std::cout <<"["<<i<<"] Measure: "<< samples[i]<< " Estimate: "<<est1 << std::endl;
   }
+
+  std::cout << "Default weights: "<< std::endl;
+  for( int i = 0; i < BF.w.size(); ++i ) {
+    std::cout<< "w["<<i<<"]: "<<BF.w[i]<<std::endl;
+  }
+  std::cout <<"Sum of weights: "<< BF.sum_w<< std::endl;
+
 
   FILE* f;
   f = fopen("testFilter.txt", "w");

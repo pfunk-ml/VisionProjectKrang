@@ -109,23 +109,30 @@ void basicFilter::getEstimate( const double &_x_measured,
     // Weighted average
     double x_sum = 0;
     double y_sum = 0;
-    double ang_sum = 0;
+    double ang_sum_x = 0;
+    double ang_sum_y = 0;
 
     for( int i = 0; i < x_est.size(); ++i ) {
 	x_sum += x_est[i]*w[i];
 	y_sum += y_est[i]*w[i];
-	ang_sum += ang_est[i]*w[i];
+	ang_sum_x += ang_est[i]*cos(x)*w[i];
+    ang_sum_y += ang_est[i]*sin(x)*w[i];
     }
     
     // Add measurement
     x_sum += _x_measured*w[mNumSteps];
     y_sum += _y_measured*w[mNumSteps];
-    ang_sum += _ang_measured*w[mNumSteps];
+    ang_sum_x += _ang_measured*cos(x)*w[mNumSteps];
+    ang_sum_y += _ang_measured*sin(x)*w[mNumSteps];
 
     // Average
     _x_est = x_sum / sum_w;
     _y_est = y_sum / sum_w;
-    _ang_est = ang_sum / sum_w;
+    //_ang_est = ang_sum / sum_w;
+    
+    // Get angle 
+    _ang_est = atan2(ang_sum_y, ang_sum_x);
+    
 
   }
     // Update the deque. Get rid of oldest and put newest at the end

@@ -212,7 +212,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
 	    }
         else if (tempMm[j].visible == 1)
         {
-          //mMarkerMsgs[j].push_back(tempMm[j]);
+          mMarkerMsgs[j].push_back(tempMm[j]);
         }
       }
     } // end else i == 0

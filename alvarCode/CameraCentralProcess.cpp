@@ -205,11 +205,15 @@ bool CameraCentralProcess::grabChannelsInfo() {
     } // end if i == 0
     else {
       for( int j = 0; j < NUM_OBJECTS; ++j ) {
-	if( mMarkerMsgs[j][0].visible == -1 && tempMm[j].visible == 1 ) 
-    {
-      mMarkerMsgs.clear();
-	  mMarkerMsgs[j].push_back(tempMm[j]);
-	}
+	    if( mMarkerMsgs[j][0].visible == -1 && tempMm[j].visible == 1 ) 
+        {
+          mMarkerMsgs.clear();
+	      mMarkerMsgs[j].push_back(tempMm[j]);
+	    }
+        else if (tempMm[j].visible == 1)
+        {
+          mMarkerMsgs[j].push_back(tempMm[j]);
+        }
       }
     } // end else i == 0
     

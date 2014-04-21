@@ -277,8 +277,10 @@ void CameraCentralProcess::createMessage() {
     getXYangTriple(Tsprite, x, y, theta);
     
 
-    // If object is not visible, set x,y,theta to last estimated value
-    // WE USED TO DO THIS...
+    // If object is not visible, set x,y,theta to zero to signal the filter that these values are not being seen!
+    if( mMarkerMsgs[i][0].visible == -1 ) {
+       x = 0; y = 0; theta = 0;
+    }
 
     // Use filter (one filter per each object!)
     mBf[i].getEstimate( x, y, theta,

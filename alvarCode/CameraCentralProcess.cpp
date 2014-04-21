@@ -207,7 +207,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
       for( int j = 0; j < NUM_OBJECTS; ++j ) {
 	    if( mMarkerMsgs[j][0].visible == -1 && tempMm[j].visible == 1 ) 
         {
-          mMarkerMsgs.clear();
+          mMarkerMsgs[j].clear();
 	      mMarkerMsgs[j].push_back(tempMm[j]);
 	    }
         else if (tempMm[j].visible == 1)
@@ -238,7 +238,7 @@ void CameraCentralProcess::getWorldTransforms() {
     for (int ind = 0; ind < mMarkerMsgs[i].size(); ind++)
     {
       Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i][ind].trans);
-      int cameraID = m_MarkerMgs[i][ind].cam_id;
+      int cameraID = mMarkerMsgs[i][ind].cam_id;
          
       // Divide distances by 100 (so now in meters)
       Tf(0,3) = Tf(0,3) / 100.0;
@@ -251,7 +251,7 @@ void CameraCentralProcess::getWorldTransforms() {
     }
 
     // Vector Changes here
-    if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].markerID, transforms)
+    if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].marker_id, transforms))
     {
        std::cout << "[camCentralProcess-- getWorldTransforms] ERROR - CAMERA IS PROBABLY NOT INITIALIZED"<< std::endl;
     }	

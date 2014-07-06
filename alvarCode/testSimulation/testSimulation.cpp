@@ -121,8 +121,10 @@ GRIPTab( parent, id, pos, size, style ) {
     viewer->DrawGLScene();  
 
      // SET GLOBAL INFORMATION!!!!!	
-      setGlobalData();
-      setGlobalTransforms();
+     Json::Value config;
+     parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+     setGlobalData(config);
+     setGlobalTransforms(config);
 }
 
 

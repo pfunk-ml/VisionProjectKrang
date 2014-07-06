@@ -7,23 +7,22 @@
 #include <vector>
 #include <string>
 #include "Object.h"
+#include "json/json.h"
 
-#define NUM_CAMERAS 4
-#define NUM_OBJECTS 3
+extern int NUM_CAMERAS;
+extern int NUM_OBJECTS;
 
 extern std::vector<std::string> OBJECT_NAME;
 extern std::vector<int> MARKER_ID;
-extern std::vector<int> MARKER_SIZE;
+extern std::vector<double> MARKER_SIZE;
 
 extern std::vector<std::string> CAM_CALIB_NAME;
 extern std::vector<std::string> CAM_CHANNEL_NAME;
 
-extern ObjectData_t gObjects[NUM_OBJECTS];
+extern std::vector<ObjectData_t> gObjects;
 
-
-
-#define PERCEPTION_CHANNEL "krang_vision"
-#define DEBUG_CHANNEL "debug_channel"
+extern std::string PERCEPTION_CHANNEL;
+extern std::string DEBUG_CHANNEL;
 
 /** Set values to global data */
-void setGlobalData();
+void setGlobalData(Json::Value config);

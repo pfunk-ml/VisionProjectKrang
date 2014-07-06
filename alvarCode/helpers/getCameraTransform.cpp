@@ -36,7 +36,9 @@ int main(int argc, char *argv[]) {
   }
 
   /** Setting global data */
-  setGlobalData();
+  Json::Value config;
+  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+  setGlobalData(config);
   std::cout << "\t * Setting global data done." << std::endl;
 
   /** Initialise GlutViewer and CvTestbed */

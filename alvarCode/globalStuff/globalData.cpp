@@ -6,80 +6,104 @@
 #include "globalData.h"
 
 /** Global */
+int NUM_CAMERAS;
+int NUM_OBJECTS;
+
 std::vector<std::string> OBJECT_NAME;
 std::vector<int> MARKER_ID;
-std::vector<int> MARKER_SIZE;
+std::vector<double> MARKER_SIZE;
 
 std::vector<std::string> CAM_CALIB_NAME;
 std::vector<std::string> CAM_CHANNEL_NAME;
 
-ObjectData_t gObjects[NUM_OBJECTS];
+std::vector<ObjectData_t> gObjects;
 
+std::string PERCEPTION_CHANNEL;
+std::string DEBUG_CHANNEL;
 
 /**
  * @function setGlobalData
  * @brief Set global information 
  */
-void setGlobalData() {
+void setGlobalData(Json::Value config) 
+{
+    // Numbers of things
+    NUM_CAMERAS = config.get("num_cameras", 0).asInt();
+    NUM_OBJECTS = config.get("num_object", 0).asInt();
 
-  // Calibration file
-  CAM_CALIB_NAME.resize(0);
-  for( int i = 0; i < NUM_CAMERAS; ++i ) {
-    char name[30];
-    sprintf( name, "Data/camCalib_%d.xml", i);
-    CAM_CALIB_NAME.push_back( std::string(name) );
-  }
+    // Channel names
+    PERCEPTION_CHANNEL = config.get("perception_channel", "perc").asString();
+    DEBUG_CHANNEL = config.get("debug_channel", "debug").asString();
 
-  // Channel names for cameras
-  CAM_CHANNEL_NAME.resize(0);
-  for( int i = 0; i < NUM_CAMERAS; ++i ) {
-    char name[30];
-    sprintf( name, "cam%d_channel", i);
-    CAM_CHANNEL_NAME.push_back( std::string(name) );
-  }
+    // Calibration file
+    CAM_CALIB_NAME.resize(0);
+    for( int i = 0; i < NUM_CAMERAS; ++i ) 
+    {
+        std::string name = config["cam_calib_name"].get(i, "calib").asString();
+        CAM_CALIB_NAME.push_back(name);
+    }
+
+    // Channel names for cameras
+    CAM_CHANNEL_NAME.resize(0);
+    for( int i = 0; i < NUM_CAMERAS; ++i ) 
+    {
+        std::string name = config["cam_channel_name"].get(i, "chan").asString();
+        CAM_CHANNEL_NAME.push_back(name);
+    }
   
-  // Objects 
-  OBJECT_NAME.resize(0);
-  OBJECT_NAME.push_back( std::string("robot") );
-  OBJECT_NAME.push_back( std::string("table") );
-  OBJECT_NAME.push_back( std::string("chair") ); 
+    // Objects 
+    OBJECT_NAME.resize(0);
+    for (int i = 0; i < NUM_OBJECTS; i++)
+    {
+        std::string name = config["object_name"].get(i, "obj").asString();
+        OBJECT_NAME.push_back(name);
+    }
 
-  if( OBJECT_NAME.size() != NUM_OBJECTS ) {
-    std::cout << "[X] Error initializing OBJECT_NAMES!"<< std::endl;
-  }
+    if( OBJECT_NAME.size() != NUM_OBJECTS ) 
+    {
+        std::cout << "[X] Error initializing OBJECT_NAMES!"<< std::endl;
+    }
 
-  MARKER_ID.resize(0);
-  MARKER_ID.push_back( 1 );
-  MARKER_ID.push_back( 5 );
-  MARKER_ID.push_back( 6 );
+    // IDs
+    MARKER_ID.resize(0);
+    for (int i = 0; i < NUM_OBJECTS; i++)
+    {
+        int id = config["marker_id"].get(i, 0).asInt();
+        MARKER_ID.push_back(id);
+    }   
 
-  if( MARKER_ID.size() != NUM_OBJECTS ) {
-    std::cout << "[X] Error initializing MARKER_ID!"<< std::endl;
-  }
-  
-  MARKER_SIZE.resize(0);
-  MARKER_SIZE.push_back( 20.3 );
-  MARKER_SIZE.push_back( 20.3 );
-  MARKER_SIZE.push_back( 20.3 );
+    if( MARKER_ID.size() != NUM_OBJECTS ) 
+    {
+        std::cout << "[X] Error initializing MARKER_ID!"<< std::endl;
+    }
 
-  if( MARKER_SIZE.size() != NUM_OBJECTS ) {
-    std::cout << "[X] Error initializing MARKER_SIZE!"<< std::endl;
-  }
+    // Sizes
+    MARKER_SIZE.resize(0);
+    for (int i = 0; i < NUM_OBJECTS; i++)
+    {
+        double size = config["marker_size"].get(i, 0).asDouble();
+        MARKER_SIZE.push_back(size);
+    } 
 
+    if( MARKER_SIZE.size() != NUM_OBJECTS ) 
+    {
+        std::cout << "[X] Error initializing MARKER_SIZE!"<< std::endl;
+    }
 
-  /**< Initialize objects for each marker */
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    ObjectData_t obj;
-    char name[50];
-    sprintf( obj.obj_name, "%s", OBJECT_NAME[i].c_str() ); 
-    //obj.obj_name = name;
-    obj.marker_id  = MARKER_ID[i];
-    obj.visible = -1;
-    obj.width = MARKER_SIZE[i];
-    obj.center[0] = 0; obj.center[1] = 0;
-    obj.cam_id = -1;
+    /**< Initialize objects for each marker */
+    for( int i = 0; i < NUM_OBJECTS; ++i ) 
+    {
+        ObjectData_t obj;
+        char name[50];
+        sprintf( obj.obj_name, "%s", OBJECT_NAME[i].c_str() ); 
+        //obj.obj_name = name;
+        obj.marker_id  = MARKER_ID[i];
+        obj.visible = -1;
+        obj.width = MARKER_SIZE[i];
+        obj.center[0] = 0; obj.center[1] = 0;
+        obj.cam_id = -1;
     
-    // Add object
-    gObjects[i] = obj;
-  }
+        // Add object
+        gObjects.push_back(obj);
+    }
 }

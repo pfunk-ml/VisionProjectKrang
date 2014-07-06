@@ -1,0 +1,102 @@
+// Configuration
+{
+	// Number of cameras used
+	"num_cameras" : 4,
+	
+	// Number of tags
+	"num_object" : 3,
+	
+	// Object names
+	"object_name" : ["robot", "table", "chair"],
+	
+	// Marker IDs
+	"marker_id" : [1, 5, 6],
+
+	// Marker sizes
+	"marker_size" : [20.3, 20.3, 20.3],
+
+	// Calibration files
+	"cam_calib_name" : ["Data/camCalib_0.xml",
+	"Data/camCalib_1.xml",
+	"Data/camCalib_2.xml",
+	"Data/camCalib_3.xml"],
+
+	// Camera channel names
+	"cam_channel_name" : ["cam0_channel",
+	"cam1_channel", 
+	"cam2_channel", 
+	"cam3_channel"],
+
+	// Perception channel name
+	"perception_channel" : "krang_vision",
+	
+	// Debug channel name
+	"debug_channel" : "debug_channel",
+
+	// Origin location
+	"gTworld_origin" : 
+    [
+	    [0, 1, 0, 2.7686],
+	    [-1, 0, 0, 2.3114],
+	    [0, 0, 1, 0],
+	    [0, 0, 0, 1] 
+    ],
+
+	// Origin marker ID
+	"marker_origin_id" : 4,
+
+	// Camera origin ID
+	"camera_origin_id": 0,
+
+	// World to camera matrices
+	"gTworld_cam" : 
+    [
+    	[ 
+            [-0.998209, -0.0232161, -0.0551266, 89.288],
+            [-0.0219696, 0.999491, -0.0231106, 101.508],
+            [0.0556351, -0.0218581, -0.998212, 296.085],
+	        [0, 0, 0, 1]
+        ],
+    	[ 
+            [0.981348, 0.00231326, 0.192223, 74.5487],  
+	        [0.000432792, -0.999952, 0.00982415, -64.8524],
+	        [0.192237, -0.00955773, -0.981302, 273.846],
+	        [0, 0, 0, 1] 
+        ], 
+	    [ 
+            [-0.999564, 0.0238067, 0.017449, 76.459],  
+	        [0.0123426, 0.874116, -0.48556, 43.9597],
+	        [-0.026812, -0.485134, -0.874029, 273.28],
+	        [0, 0, 0, 1] 
+        ],
+	    [ 
+            [0.980693, -0.0429465, 0.190779, 62.4286],  
+	        [-0.0417944, -0.999076, -0.0100601, 99.9049],
+	        [0.191035, 0.00189234, -0.981581, 318.945],
+	        [0, 0, 0, 1] 
+        ]  
+	],
+
+	// Marker to sprite matrices
+    "gTmarker_sprite" : 
+    [
+	    [ 
+            [1, 0, 0, 0],  
+	        [0, 1, 0, 0],
+	        [0, 0, 1, 0],
+	        [0, 0, 0, 1] 
+        ],	// Robot
+	    [ 
+            [1, 0, 0, -0.4572],  
+	        [0, 1, 0, -0.4572],
+	        [0, 0, 1, 0],
+	        [0, 0, 0, 1] 
+        ],	// Table
+	    [ 
+            [0, 1, 0, -0.279],  
+	        [-1, 0, 0, 0.2286],
+	        [0, 0, 1, 0],
+	        [0, 0, 0, 1] 
+        ]	// Chair
+	]
+}

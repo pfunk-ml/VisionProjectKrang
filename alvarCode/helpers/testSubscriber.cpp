@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <ach.h>
 #include <iostream>
+#include <string>
+#include <cstring>
 
 #include <stdio.h>
 
@@ -20,11 +22,17 @@ ach_channel_t debug_channel;
 
 void print_arr_2d(double A[][NDIM], int n);
 
-int main(int argc, char* argv[] ) {
+int main(int argc, char* argv[] ) 
+{
+  // Copy to char pointers
+  char outputChanChar[1024];
+  strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+  char debugChanChar[1024];
+  strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
 
   // open the channels
-  int r = ach_open( &channel, PERCEPTION_CHANNEL, NULL );
-  int rdebug = ach_open( &debug_channel, DEBUG_CHANNEL, NULL );
+  int r = ach_open( &channel, outputChanChar, NULL );
+  int rdebug = ach_open( &debug_channel, debugChanChar, NULL );
 
   assert(ACH_OK == r && ACH_OK == rdebug);
 
@@ -32,7 +40,8 @@ int main(int argc, char* argv[] ) {
   r = ach_flush(&debug_channel);
 
   // test receive
-  double rtraj[NUM_OBJECTS][NDIM] = {0};
+  double rtraj[NUM_OBJECTS][NDIM];
+  memset(rtraj, 0, NUM_OBJECTS*NDIM*sizeof(double));
   size_t frame_size;
 
   while( true ) {

@@ -16,6 +16,9 @@
 #include "globalStuff/globalData.h"
 #include "globalStuff/Object.h"
 
+#include "json/json.h"
+#include "globalStuff/optparser.h"
+
 const int gMarker_size = 20; // 20.3 cm
 alvar::Camera gCam;
 
@@ -27,7 +30,7 @@ std::string gCalibFilename;
 
 
 /**< Marker messages to be sent */
-MarkerMsg_t gMarkerMsgs[NUM_OBJECTS];
+std::vector<MarkerMsg_t> gMarkerMsgs;
 
 /**< Channel to send info */
 ach_channel_t gChan_output;
@@ -55,11 +58,17 @@ int main(int argc, char *argv[]) {
   int camIndex = atoi( argv[2] );
 
   /** Setting global data */
-  setGlobalData();
+  // First get json file
+  Json::Value config;
+  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+  
+  setGlobalData(config);
   std::cout << "\t * Setting global data done." << std::endl;
 
   /** Set the camera index for this process */
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+  {
+    gMarkerMsgs.push_back(MarkerMsg_t());
     gObjects[i].cam_id = camIndex;
   }
 
@@ -187,10 +196,17 @@ void videocallback( IplImage *_img ) {
     _img->origin = !_img->origin;
   }
 
+  // Convert gMarkerMsgs to pointer
+  MarkerMsg_t gMarkerMsgsPtr[NUM_OBJECTS];
+  for (int i = 0; i < NUM_OBJECTS; i++)
+  {
+    gMarkerMsgsPtr[i] = gMarkerMsgs[i];
+  }
+
     /**< Send objects state to channel */
     ach_put( &gChan_output,
-	     gMarkerMsgs,
-	     sizeof( gMarkerMsgs ) );
+	     gMarkerMsgsPtr,
+	     sizeof( gMarkerMsgsPtr ) );
 
 }
 

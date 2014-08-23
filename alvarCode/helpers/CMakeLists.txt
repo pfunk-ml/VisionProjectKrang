@@ -27,7 +27,7 @@ set_target_properties( runCalibration PROPERTIES RUNTIME_OUTPUT_DIRECTORY
 
 # Test final perception output channel
 add_executable( testSubscriber testSubscriber.cpp )
-target_link_libraries( testSubscriber ${ACH_LIBS} )
+target_link_libraries( testSubscriber globalStuff ${ACH_LIBS} )
 
 set_target_properties( testSubscriber PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
@@ -46,7 +46,7 @@ set_target_properties( testFilter PROPERTIES RUNTIME_OUTPUT_DIRECTORY
 # Test filter plot
 # Use actual data
 add_executable( testFilterPlot testFilterPlot.cpp ../basicFilter.cpp )
-target_link_libraries( testFilterPlot ${ACH_LIBS} )
+target_link_libraries( testFilterPlot globalStuff ${ACH_LIBS} )
 
 set_target_properties( testFilterPlot PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )

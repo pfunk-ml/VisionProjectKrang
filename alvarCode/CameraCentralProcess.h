@@ -6,6 +6,8 @@
 #include <vector>
 #include <stdint.h>
 #include <ach.h>
+#include <string>
+#include <cstring>
 
 #include "globalStuff/globalData.h"
 #include "globalStuff/Object.h"
@@ -57,13 +59,13 @@ class CameraCentralProcess {
   std::vector<ach_channel_t> mInput_channels;
   ach_channel_t mOutput_channel;
   ach_channel_t mDebug_channel;
-  std::vector<MarkerMsg_t> mMarkerMsgs[NUM_OBJECTS]; // Vector Changes here
-  Planning_output mMsg[NUM_OBJECTS];
-  double finalMsg[NUM_OBJECTS][3]; // x,y,angle // visible,
-  double debugMsg[NUM_OBJECTS][3];
+  std::vector<std::vector<MarkerMsg_t> > mMarkerMsgs;
+  std::vector<Planning_output> mMsg;
+  std::vector<double*> finalMsg; // x,y,angle // visible,
+  std::vector<double*> debugMsg;
 
   // Basic filter for smooth tracking of markers
-  basicFilter mBf[NUM_OBJECTS];
+  std::vector<basicFilter> mBf;
 
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

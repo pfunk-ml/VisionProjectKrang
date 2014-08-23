@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Where your binaries are
-BIN_DIR="/home/ana/Research/VisionProjectKrang/alvarCode/bin"
+BIN_DIR="/home/kenneth/VisionProjectKrang/alvarCode/bin"
 
 # Cleanup any channel that might be wandering around
 echo "-- Start cleanup process! --"

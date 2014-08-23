@@ -8,6 +8,8 @@
 #include "viz/Shared.h"
 
 #include "globalStuff/globalData.h"
+#include "json/json.h"
+#include "globalStuff/optparser.h"
 
 const int gMarker_size = 20; // 20.3 cm
 alvar::Camera gCam;

@@ -54,6 +54,9 @@
 #include "globalStuff/globalTransforms.h"
 #include <ach.h>
 
+#include "json/json.h"
+#include "globalStuff/optparser.h"
+
 ach_channel_t mSim_Channel;
 
 
@@ -150,9 +153,13 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
       // Start connection && SET HARD CODED VALUES
     case id_button_startConnection : {
 
+      // Copy to char pointers
+      char outputChanChar[1024];
+      strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+
       // Start our own channel to read
       int r;
-      r = ach_open( &mSim_Channel, PERCEPTION_CHANNEL, NULL );
+      r = ach_open( &mSim_Channel, outputChanChar, NULL );
       assert( ACH_OK == r );
       
       std::cout << "Opened successfully channel "<< PERCEPTION_CHANNEL << std::endl;

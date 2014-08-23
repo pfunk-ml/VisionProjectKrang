@@ -8,6 +8,8 @@
 #include "worldModel/WorldModel.h"
 #include "globalStuff/globalData.h"
 #include "globalStuff/globalTransforms.h"
+#include "json/json.h"
+#include "globalStuff/optparser.h"
 #include <iostream>
 #include <stdio.h>
 
@@ -16,10 +18,24 @@
 * @function CameraCentralProcess
 * @brief Set initial needed information
 */
-CameraCentralProcess::CameraCentralProcess() {
+CameraCentralProcess::CameraCentralProcess() 
+{
+  // First get json file
+  Json::Value config;
+  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
   
-  setGlobalData();
-  setGlobalTransforms();
+  setGlobalData(config);
+  setGlobalTransforms(config);
+
+  // Initialize the vectors
+  for (int i = 0; i < NUM_OBJECTS; i++)
+  {
+    mMarkerMsgs.push_back(std::vector<MarkerMsg_t>());
+    mMsg.push_back(Planning_output());
+    finalMsg.push_back(new double[3]); // x,y,angle // visible,
+    debugMsg.push_back(new double[3]);
+    mBf.push_back(basicFilter());
+  }
 
 }
 
@@ -27,7 +43,13 @@ CameraCentralProcess::CameraCentralProcess() {
  * @function
  * @brief
  */
-CameraCentralProcess::~CameraCentralProcess() {
+CameraCentralProcess::~CameraCentralProcess() 
+{
+  for (int i = 0; i < NUM_OBJECTS; i++)
+  {
+    delete finalMsg[i];
+    delete debugMsg[i];
+  }
 }
 
 /**
@@ -126,12 +148,18 @@ bool CameraCentralProcess::setupChannels() {
   
   // OUTPUT CHANNEL
 
+  // Copy to char pointers
+  char outputChanChar[1024];
+  strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+  char debugChanChar[1024];
+  strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
+
   /**< Open the channel */
-  r = ach_open( &mOutput_channel, PERCEPTION_CHANNEL, NULL );
+  r = ach_open( &mOutput_channel, outputChanChar, NULL );
   assert( ACH_OK == r );
   
   /**< Open the debug channel */
-  r = ach_open( &mDebug_channel, DEBUG_CHANNEL, NULL );
+  r = ach_open( &mDebug_channel, debugChanChar, NULL );
   assert( ACH_OK == r );
 
   return true;
@@ -176,19 +204,21 @@ bool CameraCentralProcess::grabChannelsInfo() {
 
   // Clear earlier messages
   // Vector Changes here
-  for ( int i = 0; i < NUM_OBJECTS; i++)
+  for ( int i = 0; i < mMarkerMsgs.size(); i++)
   {
     mMarkerMsgs[i].clear();
   }
   
-  for( int i = 0; i < mInput_channels.size(); ++i ) {
+  for( int i = 0; i < mInput_channels.size(); ++i ) 
+  {
     r = ach_get( &mInput_channels[i],
 		 &tempMm,
 		 sizeof(tempMm),
 		 &fs,
 		 NULL, ACH_O_LAST );
     
-    if( ACH_OK != r && ACH_MISSED_FRAME != r ) {
+    if( ACH_OK != r && ACH_MISSED_FRAME != r ) 
+    {
       std::cout << "ACH status bad. EXITING MAIN LOOP" << std::endl;
       return false;
     }
@@ -199,8 +229,9 @@ bool CameraCentralProcess::grabChannelsInfo() {
     
     // Vector Changes here
     if( i == 0 ) {
-      for( int j = 0; j < NUM_OBJECTS; ++j ) {
-	mMarkerMsgs[j].push_back(tempMm[j]);
+      for( int j = 0; j < NUM_OBJECTS; ++j ) 
+      {
+	    mMarkerMsgs[j].push_back(tempMm[j]);
       }
     } // end if i == 0
     else {
@@ -313,14 +344,25 @@ void CameraCentralProcess::sendMessage() {
     //printf(" \t Transformation: x: %f y: %f theta: %f \n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2] );
   }
 
+  // Convert finalMsg and debugMsg to double[][]
+  double finalMsgPtr[NUM_OBJECTS][3];
+  double debugMsgPtr[NUM_OBJECTS][3];
+  for (int i = 0; i < NUM_OBJECTS; i++)
+  {
+    for (int j = 0; j < 3; j++)
+    {
+      finalMsgPtr[i][j] = finalMsg[i][j];
+      debugMsgPtr[i][j] = debugMsg[i][j];
+    }
+  }
 
   ach_put( &mOutput_channel,
-	   finalMsg,
-	   sizeof( finalMsg ) );
+	   finalMsgPtr,
+	   sizeof( finalMsgPtr ) );
 
   // Send debug
   ach_put( &mDebug_channel,
-	   debugMsg,
-	   sizeof( debugMsg ) );
+	   debugMsgPtr,
+	   sizeof( debugMsgPtr ) );
 
 }

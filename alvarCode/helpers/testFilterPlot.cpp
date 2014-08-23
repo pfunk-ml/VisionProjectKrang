@@ -9,6 +9,8 @@
 #include <assert.h>
 #include <ach.h>
 #include <iostream>
+#include <string>
+#include <cstring>
 
 #include <stdio.h>
 
@@ -20,7 +22,7 @@ ach_channel_t debug_channel;
 
 
 // LOGGING FOR DEBUG
-FILE* pF[NUM_OBJECTS];
+std::vector<FILE*> pF;
 
 /**
  * @brief Close before leaving
@@ -38,13 +40,19 @@ void closeFiles() {
 
 void print_arr_2d(double A[][NDIM], int n);
 
-int main(int argc, char* argv[] ) {
-
+int main(int argc, char* argv[] ) 
+{
   atexit( closeFiles );
 
+  // Copy to char pointers
+  char outputChanChar[1024];
+  strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+  char debugChanChar[1024];
+  strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
+
   // open the channels
-  int r = ach_open( &channel, PERCEPTION_CHANNEL, NULL );
-  int rdebug = ach_open( &debug_channel, DEBUG_CHANNEL, NULL );
+  int r = ach_open( &channel, outputChanChar, NULL );
+  int rdebug = ach_open( &debug_channel, debugChanChar, NULL );
 
   assert(ACH_OK == r && ACH_OK == rdebug);
 
@@ -52,15 +60,17 @@ int main(int argc, char* argv[] ) {
   r = ach_flush(&debug_channel);
 
   // test receive
-  double percep[NUM_OBJECTS][NDIM] = {0};
-  double debug[NUM_OBJECTS][NDIM] = {0};
+  double percep[NUM_OBJECTS][NDIM];
+  memset(percep, 0, NUM_OBJECTS*NDIM*sizeof(double));
+  double debug[NUM_OBJECTS][NDIM];
+  memset(debug, 0, NUM_OBJECTS*NDIM*sizeof(double));
   size_t frame_size;
 
   // Open files for debug
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
    char name[50];
    sprintf( name, "logging_est%d.txt", i );
-   pF[i] = fopen( name, "w+" );
+   pF.push_back(fopen( name, "w+"));
   }
 
   int counter = 0;

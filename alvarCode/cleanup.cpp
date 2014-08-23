@@ -23,10 +23,16 @@
 
 #include "globalStuff/globalData.h"
 
+#include "json/json.h"
+#include "globalStuff/optparser.h"
 
-int main( int argc, char* argv[] ) {
 
-  setGlobalData();
+int main( int argc, char* argv[] ) 
+{
+  // First get json file
+  Json::Value config;
+  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+  setGlobalData(config);
 
   // Clean cameras
   int r;
@@ -42,8 +48,14 @@ int main( int argc, char* argv[] ) {
 
   }
 
+  // Copy to char pointers
+  char outputChanChar[1024];
+  strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+  char debugChanChar[1024];
+  strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
+
   // Clean krang_vision
-    r = ach_unlink( PERCEPTION_CHANNEL ); 
+    r = ach_unlink( outputChanChar ); 
     if( r == ACH_OK ) {
       std::cout << "\t [CLEANUP] Perception channel deleted. UNEXPECTED!!"<< std::endl; 
     } else if ( r == ACH_ENOENT ) { 
@@ -52,7 +64,7 @@ int main( int argc, char* argv[] ) {
 
 
   // Clean debug channel
-    r = ach_unlink( DEBUG_CHANNEL ); 
+    r = ach_unlink( debugChanChar ); 
     if( r == ACH_OK ) {
       std::cout << "\t [CLEANUP] Debug channel deleted. UNEXPECTED!!"<< std::endl; 
     } else if ( r == ACH_ENOENT ) { 

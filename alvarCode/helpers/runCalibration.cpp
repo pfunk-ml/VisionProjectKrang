@@ -28,6 +28,8 @@ std::stringstream gCalibrationFilename;
  * @brief Function to be called in the loop
  */
 void videocallback( IplImage *_img ) {
+
+    std::cout<<__func__<<" entered.\n";
     
     static bool calibrated = false;
     static int calib_count=0;

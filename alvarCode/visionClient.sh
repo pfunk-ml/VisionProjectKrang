@@ -1,21 +1,21 @@
 #!/bin/bash
 
 # Where your binaries are
-BIN_DIR="/home/kenneth/VisionProjectKrang/alvarCode/bin"
+BIN_DIR="./bin"
 
 # Cleanup any channel that might be wandering around
-echo "-- Start cleanup process! --"
+echo "-- Starting cleanup process. Previous ACH channels will be deleted. --"
 "${BIN_DIR}/cleanup"
 
-echo "-- Cleaned channels! --"
-
-# Create channels for 2 cameras
+# Create channels for 4 cameras
 ach -C cam0_channel -o 666  -m 10 -n 64
 ach -C cam1_channel -o 666  -m 10 -n 64
 ach -C cam2_channel -o 666  -m 10 -n 64
 ach -C cam3_channel -o 666  -m 10 -n 64
 ach -C krang_vision -o 666  -m 10 -n 64
 ach -C debug_channel -o 666  -m 10 -n 64
+
+echo "-- Channels cleaned. --"
 
 # Fire camera processes. Assuming that:
 # Camera 0 is on /dev/video0
@@ -25,6 +25,7 @@ ach -C debug_channel -o 666  -m 10 -n 64
 
 # For some reason, we have to go from up to down
 for i in 3 2 1 0
+#for i in 0
 do
     echo "************************************"
     echo "[START] Firing up camera $i [START]"

@@ -1,17 +1,17 @@
 camProc
 =========
 
-Requirements
+REQUIREMENTS
 -------------
 
 * ach for inter-process communication
 * yaml-cpp version 0.5.1 (not the one in Ubuntu 12.04, that is as old as 0.2 and we need the newest version)
 
-Dependencies
+DEPENDENCIES
 -------------
 * ach
 * alvar
-* opencv
+* opencv (tested with 2.4.8)
 * glut
 * opengl
 * eigen
@@ -44,7 +44,7 @@ To run in our perception machine.
    
    ./visionClient.sh
 
-6. You should be done
+6. You should be done.
 
 BRIEF EXPLANATION
 ------------------

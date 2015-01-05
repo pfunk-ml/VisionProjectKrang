@@ -1,0 +1,16 @@
+/home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles/camCentralProcess.dir
+/home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles/camCentralProcessMain.dir
+/home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles/camProcess.dir
+/home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles/cleanup.dir
+/home/nehchal/VisionProjectKrang/alvarCode/viz/CMakeFiles/cvViewer.dir
+/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/generateMarkers.dir
+/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/getCameraTransform.dir
+/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/globalStuff.dir
+/home/nehchal/VisionProjectKrang/alvarCode/viz/CMakeFiles/glutViewer.dir
+/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/runCalibration.dir
+/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/testFilter.dir
+/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/testFilterPlot.dir
+/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/testGlobals.dir
+/home/nehchal/VisionProjectKrang/alvarCode/testSimulation/CMakeFiles/testSimulation.dir
+/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/testSubscriber.dir
+/home/nehchal/VisionProjectKrang/alvarCode/worldModel/CMakeFiles/worldModel.dir

@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
   /** Setting global data */
   Json::Value config;
-  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+  parseJSONFile("/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
   setGlobalData(config);
   std::cout << "\t * Setting global data done." << std::endl;
 
@@ -121,10 +121,10 @@ void videocallback( IplImage *_img ) {
       p.GetMatrixGL( transf, false);
       
       for( int col = 0; col < 4; ++col ) {
-	for( int row = 0; row < 4; ++row ) {
-	  std::cout << transf[col+row*4] << " ";
-	}
-	std::cout << std::endl;
+	      for( int row = 0; row < 4; ++row ) {
+	         std::cout << transf[col+row*4] << " ";
+	      }
+	      std::cout << std::endl;
       }
       
       std::cout << std::endl;

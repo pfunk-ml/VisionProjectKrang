@@ -218,6 +218,8 @@ void videocallback( IplImage *_img ) {
 bool init( int _devIndex, 
 	   int _camIndex,
 	   alvar::Capture **_cap ) {
+
+  std::cout << "init() entered.";
   
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;  
   gCalibFilename = CAM_CALIB_NAME[_camIndex];
@@ -226,7 +228,7 @@ bool init( int _devIndex,
   std::cout<<"** Loading calibration file: "<< gCalibFilename << std::endl;
   if ( gCam.SetCalib( gCalibFilename.c_str(), 
 		      gWidth, gHeight) ) {
-    std::cout<<"\t Loaded camera calibration file successfully"<<std::endl;
+    std::cout<<"\t Loaded camera calibration file successfully."<<std::endl;
   } else {
     gCam.SetRes( gWidth, gHeight );
     std::cout<<"\t Failed to load camera calibration file"<<std::endl;
@@ -246,8 +248,11 @@ bool init( int _devIndex,
   outputEnumeratedPlugins(plugins);
   std::cout << std::endl;
   
+  std::cout<<"Line:"<<__LINE__<<'\n';
   /*-- Enumerate possible capture devices --*/
   alvar::CaptureFactory::CaptureDeviceVector devices = alvar::CaptureFactory::instance()->enumerateDevices();
+  std::cout<<"Line:"<<__LINE__<<'\n';
+
   if (devices.size() < 1) {
     std::cout << "\t [X] Could not find any capture devices." << std::endl;
     return 0;
@@ -298,7 +303,11 @@ void initAchChannel( int _camIndex ) {
 
     /**< Open the channel */
     r = ach_open( &gChan_output, gChannelName.c_str(), NULL );
-    assert( ACH_OK == r );
+    std::cout<<"r = "<<r<<'\n';
+    if(r==ACH_ENOENT);
+      std::cout<<__FILE__<<':'<<__LINE__<<':'<<"Error: Channel "<<gChannelName.c_str()<<" does not exist.\n";
+    assert(r == ACH_OK);
+    
 
     std::cout << "\t Created channel: "<< gChannelName<< std::endl;
 }

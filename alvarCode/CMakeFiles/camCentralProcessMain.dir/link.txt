@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/camCentralProcessMain.dir/camCentralProcessMain.cpp.o  -o bin/camCentralProcessMain -rdynamic -L/usr/local/lib lib/libcamCentralProcess.a lib/libglobalStuff.a lib/libworldModel.a -lach -lm -ljsoncpp lib/libcvViewer.a lib/libglutViewer.a -lGLU -lGL -lSM -lICE -lX11 -lXext -lglut -lXmu -lXi -Wl,-rpath,/usr/local/lib 

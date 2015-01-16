@@ -11,6 +11,8 @@ Camera.h
 -
 iostream
 -
+stdlib.h
+-
 viz/CvTestbed.h
 /home/nehchal/VisionProjectKrang/alvarCode/helpers/viz/CvTestbed.h
 viz/Shared.h

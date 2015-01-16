@@ -42,20 +42,10 @@ vector
 json/json.h
 /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/json/json.h
 
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.cpp
-optparser.h
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.h
-
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.h
-json/json.h
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/json/json.h
+/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/object.cpp
+Object.h
+/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/Object.h
 iostream
--
-fstream
--
-iomanip
--
-string
 -
 
 /usr/include/eigen3/Eigen/Cholesky

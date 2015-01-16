@@ -43,6 +43,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = /usr/bin/ccmake
+
 # The top-level source directory on which CMake was run.
 CMAKE_SOURCE_DIR = /home/nehchal/VisionProjectKrang/alvarCode
 
@@ -54,8 +57,8 @@ CMAKE_BINARY_DIR = /home/nehchal/VisionProjectKrang/alvarCode
 
 # All Build rule for target.
 CMakeFiles/camCentralProcess.dir/all: viz/CMakeFiles/glutViewer.dir/all
-CMakeFiles/camCentralProcess.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 CMakeFiles/camCentralProcess.dir/all: viz/CMakeFiles/cvViewer.dir/all
+CMakeFiles/camCentralProcess.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f CMakeFiles/camCentralProcess.dir/build.make CMakeFiles/camCentralProcess.dir/depend
 	$(MAKE) -f CMakeFiles/camCentralProcess.dir/build.make CMakeFiles/camCentralProcess.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  1 2
@@ -68,7 +71,7 @@ all: CMakeFiles/camCentralProcess.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/camCentralProcess.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 8
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/camCentralProcess.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : CMakeFiles/camCentralProcess.dir/rule
@@ -105,7 +108,7 @@ all: CMakeFiles/camCentralProcessMain.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/camCentralProcessMain.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 11
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 12
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/camCentralProcessMain.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : CMakeFiles/camCentralProcessMain.dir/rule
@@ -128,8 +131,8 @@ clean: CMakeFiles/camCentralProcessMain.dir/clean
 
 # All Build rule for target.
 CMakeFiles/camProcess.dir/all: viz/CMakeFiles/glutViewer.dir/all
-CMakeFiles/camProcess.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 CMakeFiles/camProcess.dir/all: viz/CMakeFiles/cvViewer.dir/all
+CMakeFiles/camProcess.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f CMakeFiles/camProcess.dir/build.make CMakeFiles/camProcess.dir/depend
 	$(MAKE) -f CMakeFiles/camProcess.dir/build.make CMakeFiles/camProcess.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  4
@@ -142,7 +145,7 @@ all: CMakeFiles/camProcess.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/camProcess.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/camProcess.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : CMakeFiles/camProcess.dir/rule
@@ -177,7 +180,7 @@ all: CMakeFiles/cleanup.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/cleanup.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cleanup.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : CMakeFiles/cleanup.dir/rule
@@ -254,7 +257,7 @@ clean: viz/CMakeFiles/cvViewer.dir/clean
 viz/CMakeFiles/glutViewer.dir/all:
 	$(MAKE) -f viz/CMakeFiles/glutViewer.dir/build.make viz/CMakeFiles/glutViewer.dir/depend
 	$(MAKE) -f viz/CMakeFiles/glutViewer.dir/build.make viz/CMakeFiles/glutViewer.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  12
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  13
 	@echo "Built target glutViewer"
 .PHONY : viz/CMakeFiles/glutViewer.dir/all
 
@@ -306,7 +309,7 @@ globalStuff/preinstall:
 globalStuff/CMakeFiles/globalStuff.dir/all:
 	$(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/depend
 	$(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  9 10 11
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  9 10 11 12
 	@echo "Built target globalStuff"
 .PHONY : globalStuff/CMakeFiles/globalStuff.dir/all
 
@@ -316,7 +319,7 @@ all: globalStuff/CMakeFiles/globalStuff.dir/all
 
 # Build rule for subdir invocation for target.
 globalStuff/CMakeFiles/globalStuff.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 globalStuff/CMakeFiles/globalStuff.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : globalStuff/CMakeFiles/globalStuff.dir/rule
@@ -341,7 +344,7 @@ clean: globalStuff/CMakeFiles/globalStuff.dir/clean
 globalStuff/CMakeFiles/testGlobals.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f globalStuff/CMakeFiles/testGlobals.dir/build.make globalStuff/CMakeFiles/testGlobals.dir/depend
 	$(MAKE) -f globalStuff/CMakeFiles/testGlobals.dir/build.make globalStuff/CMakeFiles/testGlobals.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  18
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  19
 	@echo "Built target testGlobals"
 .PHONY : globalStuff/CMakeFiles/testGlobals.dir/all
 
@@ -351,7 +354,7 @@ all: globalStuff/CMakeFiles/testGlobals.dir/all
 
 # Build rule for subdir invocation for target.
 globalStuff/CMakeFiles/testGlobals.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 globalStuff/CMakeFiles/testGlobals.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : globalStuff/CMakeFiles/testGlobals.dir/rule
@@ -391,7 +394,7 @@ worldModel/preinstall:
 worldModel/CMakeFiles/worldModel.dir/all:
 	$(MAKE) -f worldModel/CMakeFiles/worldModel.dir/build.make worldModel/CMakeFiles/worldModel.dir/depend
 	$(MAKE) -f worldModel/CMakeFiles/worldModel.dir/build.make worldModel/CMakeFiles/worldModel.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  22 23 24
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  23 24 25
 	@echo "Built target worldModel"
 .PHONY : worldModel/CMakeFiles/worldModel.dir/all
 
@@ -485,8 +488,8 @@ clean: helpers/CMakeFiles/generateMarkers.dir/clean
 
 # All Build rule for target.
 helpers/CMakeFiles/getCameraTransform.dir/all: viz/CMakeFiles/glutViewer.dir/all
-helpers/CMakeFiles/getCameraTransform.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 helpers/CMakeFiles/getCameraTransform.dir/all: viz/CMakeFiles/cvViewer.dir/all
+helpers/CMakeFiles/getCameraTransform.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f helpers/CMakeFiles/getCameraTransform.dir/build.make helpers/CMakeFiles/getCameraTransform.dir/depend
 	$(MAKE) -f helpers/CMakeFiles/getCameraTransform.dir/build.make helpers/CMakeFiles/getCameraTransform.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  8
@@ -499,7 +502,7 @@ all: helpers/CMakeFiles/getCameraTransform.dir/all
 
 # Build rule for subdir invocation for target.
 helpers/CMakeFiles/getCameraTransform.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 helpers/CMakeFiles/getCameraTransform.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : helpers/CMakeFiles/getCameraTransform.dir/rule
@@ -525,7 +528,7 @@ helpers/CMakeFiles/runCalibration.dir/all: viz/CMakeFiles/glutViewer.dir/all
 helpers/CMakeFiles/runCalibration.dir/all: viz/CMakeFiles/cvViewer.dir/all
 	$(MAKE) -f helpers/CMakeFiles/runCalibration.dir/build.make helpers/CMakeFiles/runCalibration.dir/depend
 	$(MAKE) -f helpers/CMakeFiles/runCalibration.dir/build.make helpers/CMakeFiles/runCalibration.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  13
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  14
 	@echo "Built target runCalibration"
 .PHONY : helpers/CMakeFiles/runCalibration.dir/all
 
@@ -560,7 +563,7 @@ clean: helpers/CMakeFiles/runCalibration.dir/clean
 helpers/CMakeFiles/testFilter.dir/all:
 	$(MAKE) -f helpers/CMakeFiles/testFilter.dir/build.make helpers/CMakeFiles/testFilter.dir/depend
 	$(MAKE) -f helpers/CMakeFiles/testFilter.dir/build.make helpers/CMakeFiles/testFilter.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  14 15
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  15 16
 	@echo "Built target testFilter"
 .PHONY : helpers/CMakeFiles/testFilter.dir/all
 
@@ -595,7 +598,7 @@ clean: helpers/CMakeFiles/testFilter.dir/clean
 helpers/CMakeFiles/testFilterPlot.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f helpers/CMakeFiles/testFilterPlot.dir/build.make helpers/CMakeFiles/testFilterPlot.dir/depend
 	$(MAKE) -f helpers/CMakeFiles/testFilterPlot.dir/build.make helpers/CMakeFiles/testFilterPlot.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  16 17
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  17 18
 	@echo "Built target testFilterPlot"
 .PHONY : helpers/CMakeFiles/testFilterPlot.dir/all
 
@@ -605,7 +608,7 @@ all: helpers/CMakeFiles/testFilterPlot.dir/all
 
 # Build rule for subdir invocation for target.
 helpers/CMakeFiles/testFilterPlot.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 6
 	$(MAKE) -f CMakeFiles/Makefile2 helpers/CMakeFiles/testFilterPlot.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : helpers/CMakeFiles/testFilterPlot.dir/rule
@@ -630,7 +633,7 @@ clean: helpers/CMakeFiles/testFilterPlot.dir/clean
 helpers/CMakeFiles/testSubscriber.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f helpers/CMakeFiles/testSubscriber.dir/build.make helpers/CMakeFiles/testSubscriber.dir/depend
 	$(MAKE) -f helpers/CMakeFiles/testSubscriber.dir/build.make helpers/CMakeFiles/testSubscriber.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  21
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  22
 	@echo "Built target testSubscriber"
 .PHONY : helpers/CMakeFiles/testSubscriber.dir/all
 
@@ -640,7 +643,7 @@ all: helpers/CMakeFiles/testSubscriber.dir/all
 
 # Build rule for subdir invocation for target.
 helpers/CMakeFiles/testSubscriber.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 helpers/CMakeFiles/testSubscriber.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : helpers/CMakeFiles/testSubscriber.dir/rule
@@ -680,7 +683,7 @@ testSimulation/preinstall:
 testSimulation/CMakeFiles/testSimulation.dir/all: globalStuff/CMakeFiles/globalStuff.dir/all
 	$(MAKE) -f testSimulation/CMakeFiles/testSimulation.dir/build.make testSimulation/CMakeFiles/testSimulation.dir/depend
 	$(MAKE) -f testSimulation/CMakeFiles/testSimulation.dir/build.make testSimulation/CMakeFiles/testSimulation.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  19 20
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles  20 21
 	@echo "Built target testSimulation"
 .PHONY : testSimulation/CMakeFiles/testSimulation.dir/all
 
@@ -690,7 +693,7 @@ all: testSimulation/CMakeFiles/testSimulation.dir/all
 
 # Build rule for subdir invocation for target.
 testSimulation/CMakeFiles/testSimulation.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 6
 	$(MAKE) -f CMakeFiles/Makefile2 testSimulation/CMakeFiles/testSimulation.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles 0
 .PHONY : testSimulation/CMakeFiles/testSimulation.dir/rule

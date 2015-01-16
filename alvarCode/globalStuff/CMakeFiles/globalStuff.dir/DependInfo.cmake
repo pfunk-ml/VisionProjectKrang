@@ -6,6 +6,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalData.cpp" "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/globalStuff.dir/globalData.cpp.o"
   "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.cpp" "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o"
+  "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/object.cpp" "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/globalStuff.dir/object.cpp.o"
   "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.cpp" "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")

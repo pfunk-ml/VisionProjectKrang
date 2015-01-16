@@ -1,50 +1,47 @@
-camProc
-=========
+SETUP
 
-REQUIREMENTS
--------------
+   When any device is connected physically to the computer it is assigned a unique name 
 
-* ach for inter-process communication
-* yaml-cpp version 0.5.1 (not the one in Ubuntu 12.04, that is as old as 0.2 and we need the newest version)
+   To run in our perception machine.
 
-DEPENDENCIES
--------------
-* ach
-* alvar
-* opencv (tested with 2.4.8)
-* glut
-* opengl
-* eigen
+   0. Connect cameras in order: Unplug all the cameras and then connect them in consecutive order (first camera 0, 
+      then camera 1 and so on).
+      This way, camera X is connected to /dev/videoX, which is considered in our script later. 
+      If you reboot the machine, make sure to do the unplugging-plugging thing, since the /dev/ order might change
+      when restarting.
+      Remember to use the ports of the USB 3.0 card, since we need the cameras to be in independent ports.
 
-HOWTO
-------
+   1. Set the ALVAR_PLUGIN_PATH to the directory where the plugins are (libalvarcapturepluginfile200.so). 
+      For the perception machine this is /usr/local/lib, so you can just add this line to your ~/.bashrc file
+      
+      export ALVAR_PLUGIN_PATH=/usr/local/lib
 
-To run in our perception machine.
+   3. Go to /VisionProjectKrang/alvarCode and find the script visionClient. Here, 
+      modify the variable BIN_DIR to the directory where your binaries for the alvarCode are.
 
-0. Connect cameras in order: Unplug all the cameras and then connect them in consecutive order (first camera 0, 
-   then camera 1 and so on).
-   This way, camera X is connected to /dev/videoX, which is considered in our script later. 
-   If you reboot the machine, make sure to do the unplugging-plugging thing, since the /dev/ order might change
-   when restarting.
-   Remember to use the ports of the USB 3.0 card, since we need the cameras to be in independent ports.
+   4. Build the code. This can be done simply by
 
-1. Set the ALVAR_PLUGIN_PATH to the directory where the plugins are (libalvarcapturepluginfile200.so). 
-   For the perception machine this is /usr/local/lib, so you can just add this line to your ~/.bashrc file
-   
-   export ALVAR_PLUGIN_PATH=/usr/local/lib
+      * Run CMake to generate Makefile
+         $ cd path/to/alvarCode/
+         $ cmake .
 
-3. Go to /VisionProjectKrang/alvarCode and find the script visionClient. Here, 
-   modify the variable BIN_DIR to the directory where your binaries for the alvarCode are.
+      * Run make for compilation. All binaries executables go to bin/ folder.
+         $ cd path/to/alvarCode/
+         $ make
 
-4. Build the code. This can be done simply by
-   * Creating a director build in alvarCode
-   * running .. cmake and make within the build directory
+      Note: After making any changes to files, 'cmake' need not be re-run. 'make' should be run. If new files are created then changes may be needed to make to CMakeLists.txt file.
 
-5. Now you can run the script:
-   
-   ./visionClient.sh
 
-6. You should be done.
+
+   5. Set the parameters
+         
+
+   6. Now you can run the script:
+      
+         ./visionClient.sh
+
+   6. You should be done.
+
 
 BRIEF EXPLANATION
 ------------------

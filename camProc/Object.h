@@ -1,5 +1,6 @@
 /**
  * @file Object.h
+ * @brief Defines the message formats for ACH channels.
  */
 #pragma once
 
@@ -17,9 +18,17 @@ struct ObjectData_t {
 
 /**< Message to be sent for each marker */
 struct MarkerMsg_t {
-    int id;
-    double trans[3][4];
-    int visible;
-    int cam_id;
+    int id;             // the ID of the object
+    
+    /* homogenous transformation matrix. Only first 3 rows of 4x4 matrix are \
+       represented. Fourth is row is assumed (0, 0, 0, 1) */
+    double trans[3][4]; 
+    int visible;        // is the object visible to camera
+    int cam_id;         // ID of the camera
 };
 
+typedef struct MarkerMsg_t MarkerMsg_t
+
+/* Prints the marker message to the stdout. 
+ * markerMsg: [IN] pointer to marker msg to be printed */
+void printMarkerMsg(const MarkerMsg_t *markerMsg);

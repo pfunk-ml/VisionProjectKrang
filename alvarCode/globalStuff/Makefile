@@ -35,6 +35,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = /usr/bin/ccmake
+
 # The top-level source directory on which CMake was run.
 CMAKE_SOURCE_DIR = /home/nehchal/VisionProjectKrang/alvarCode
 
@@ -46,8 +49,8 @@ CMAKE_BINARY_DIR = /home/nehchal/VisionProjectKrang/alvarCode
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running interactive CMake command-line interface..."
-	/usr/bin/cmake -i .
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -195,6 +198,30 @@ globalTransforms.cpp.s:
 	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.s
 .PHONY : globalTransforms.cpp.s
 
+object.o: object.cpp.o
+.PHONY : object.o
+
+# target to build an object file
+object.cpp.o:
+	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/object.cpp.o
+.PHONY : object.cpp.o
+
+object.i: object.cpp.i
+.PHONY : object.i
+
+# target to preprocess a source file
+object.cpp.i:
+	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/object.cpp.i
+.PHONY : object.cpp.i
+
+object.s: object.cpp.s
+.PHONY : object.s
+
+# target to generate assembly for a file
+object.cpp.s:
+	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/object.cpp.s
+.PHONY : object.cpp.s
+
 optparser.o: optparser.cpp.o
 .PHONY : optparser.o
 
@@ -238,6 +265,9 @@ help:
 	@echo "... globalTransforms.o"
 	@echo "... globalTransforms.i"
 	@echo "... globalTransforms.s"
+	@echo "... object.o"
+	@echo "... object.i"
+	@echo "... object.s"
 	@echo "... optparser.o"
 	@echo "... optparser.i"
 	@echo "... optparser.s"

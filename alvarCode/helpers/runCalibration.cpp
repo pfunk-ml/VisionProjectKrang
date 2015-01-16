@@ -5,31 +5,32 @@
 #include <Camera.h>
 
 #include <iostream>
+ #include <stdlib.h>
 #include "viz/CvTestbed.h"
 #include "viz/Shared.h"
 
 
 
 // Number of captures needed to perform the calibration
-const int gCalib_count_max=75;
+const int gCalib_count_max = 10;
 
 // Size of marker's edge in cm.
 const int gEtalon_square_size = 2.5;
 
 // Number of internal corners in the pattern
-const int gEtalon_rows=6;
-const int gEtalon_columns=8;
+const int gEtalon_rows = 6;
+const int gEtalon_columns = 8;
 
 // Name of calibration file to store the results
 std::stringstream gCalibrationFilename;
 
 
 /**
- * @brief Function to be called in the loop
+ * @brief Function to be called for every frame in the video stream.
  */
 void videocallback( IplImage *_img ) {
 
-    std::cout<<__func__<<" entered.\n";
+    //std::cout<<"Line "<<__LINE__<<": "<<__func__<<" entered.\n";
     
     static bool calibrated = false;
     static int calib_count=0;
@@ -39,10 +40,9 @@ void videocallback( IplImage *_img ) {
     static bool initialized = false;
 
     if (!initialized) {
-	cam.SetRes( _img->width, 
-		    _img->height );
-	prev_tick = cvGetTickCount();
-	initialized = true;
+	   cam.SetRes( _img->width, _img->height );
+	   prev_tick = cvGetTickCount();
+	   initialized = true;
     }
   
     bool flip_image = ( _img->origin? true:false );
@@ -65,7 +65,10 @@ void videocallback( IplImage *_img ) {
             pp.Reset(); 
             cam.SaveCalib( gCalibrationFilename.str().c_str() );
             std::cout<<"*** Saving calibration: "<< gCalibrationFilename.str() << std::endl;
+            std::cout<<"Calibration Complete.\n";
             calibrated = true;
+            // exit the program
+            exit(0);
         } 
         // If we are still collecting calibration data
         // - For every 1.5s add calibration data from detected 7*9 chessboard (and visualize it if true)
@@ -106,13 +109,9 @@ void videocallback( IplImage *_img ) {
 /**
  * @function main
  */
-int main( int argc, char *argv[] )
-{
-
-  int gDevIndex = 0;
-  if( argc > 1 ) {
-    gDevIndex = atoi( argv[1] );
-  }
+int main( int argc, char *argv[] ){
+    
+    int devIndex = argc > 1 ? atoi(argv[1]) : 0;
 
     try {
 
@@ -140,20 +139,21 @@ int main( int argc, char *argv[] )
 
         
         // Display capture device (refers to /dev/videoX)
-	int selectedDevice;
-	std::cout << "Num available devices: "<< devices.size() << std::endl;
-	for( int i = 0; i < devices.size(); ++i ) {
-	  std::cout << "Device ["<<i<<"] ID: "<< devices[i].id() << 
-	    " name:"<< devices[i].uniqueName() << std::endl;
-	}
-	if( gDevIndex < devices.size() ) {
-	  selectedDevice = gDevIndex;
-	  std::cout << "Selected device ["<<gDevIndex<<"] ID: "<< devices[gDevIndex].id() << 
-	    " name:"<< devices[gDevIndex].uniqueName() << std::endl;
-	} else {
-	  selectedDevice = 0;
-	  std::cout << "Setting default device to ZERO. Probably wrong"<< std::endl;
-	}
+    	int selectedDevice;
+    	std::cout << "Num available devices: "<< devices.size() << std::endl;
+    	for( int i = 0; i < devices.size(); ++i ) {
+    	  std::cout << "Device ["<<i<<"] ID: "<< devices[i].id() << 
+    	    " name:"<< devices[i].uniqueName() << std::endl;
+    	}
+    	if( devIndex < devices.size() ) {
+    	  selectedDevice = devIndex;
+    	  std::cout << "Selected device ["<<devIndex<<"] ID: "<< devices[devIndex].id() << 
+    	    " name:"<< devices[devIndex].uniqueName() << std::endl;
+    	} 
+        else {
+    	  selectedDevice = 0;
+    	  std::cout << "Setting default device to ZERO. Probably wrong"<< std::endl;
+    	}
         
         // Create capture object from camera
         Capture *cap = CaptureFactory::instance()->createCapture(devices[selectedDevice]);

@@ -52,12 +52,6 @@ Eigen/Geometry
 list
 -
 
-/home/nehchal/VisionProjectKrang/alvarCode/testSimulation/testSimulationApp.cpp
-GRIPApp.h
-/home/nehchal/VisionProjectKrang/alvarCode/testSimulation/GRIPApp.h
-testSimulation.h
-/home/nehchal/VisionProjectKrang/alvarCode/testSimulation/testSimulation.h
-
 /usr/include/eigen3/Eigen/Cholesky
 Core
 /usr/include/eigen3/Eigen/Core

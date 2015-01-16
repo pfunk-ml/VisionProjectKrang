@@ -1,2 +1,2 @@
-/usr/bin/ar cr ../lib/libglobalStuff.a  CMakeFiles/globalStuff.dir/globalData.cpp.o CMakeFiles/globalStuff.dir/globalTransforms.cpp.o CMakeFiles/globalStuff.dir/optparser.cpp.o
+/usr/bin/ar cr ../lib/libglobalStuff.a  CMakeFiles/globalStuff.dir/globalData.cpp.o CMakeFiles/globalStuff.dir/globalTransforms.cpp.o CMakeFiles/globalStuff.dir/optparser.cpp.o CMakeFiles/globalStuff.dir/object.cpp.o
 /usr/bin/ranlib ../lib/libglobalStuff.a

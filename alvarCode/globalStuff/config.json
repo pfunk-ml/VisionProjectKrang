@@ -1,7 +1,7 @@
 // Configuration
 {
 	// Number of cameras used
-	"num_cameras" : 1,
+	"num_cameras" : 4,
 	
 	// Number of tags
 	"num_object" : 3,

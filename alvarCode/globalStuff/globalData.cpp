@@ -77,7 +77,7 @@ void setGlobalData(Json::Value config)
         std::cout << "[X] Error initializing MARKER_ID!"<< std::endl;
     }
 
-    // Sizes
+    // Marker Sizes
     MARKER_SIZE.resize(0);
     for (int i = 0; i < NUM_OBJECTS; i++)
     {

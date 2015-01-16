@@ -205,6 +205,9 @@ globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o
  /usr/local/include/json/reader.h
  /usr/local/include/json/value.h
  /usr/local/include/json/writer.h
+globalStuff/CMakeFiles/globalStuff.dir/object.cpp.o
+ /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/Object.h
+ /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/object.cpp
 globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o
  /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.cpp
  /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.h

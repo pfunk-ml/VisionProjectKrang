@@ -31,6 +31,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = /usr/bin/ccmake
+
 # The top-level source directory on which CMake was run.
 CMAKE_SOURCE_DIR = /home/nehchal/VisionProjectKrang/alvarCode
 
@@ -79,25 +82,25 @@ runCalibration_EXTERNAL_OBJECTS =
 bin/runCalibration: helpers/CMakeFiles/runCalibration.dir/runCalibration.cpp.o
 bin/runCalibration: lib/libcvViewer.a
 bin/runCalibration: lib/libglutViewer.a
-bin/runCalibration: /usr/local/lib/libopencv_videostab.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_video.so.2.4.8
+bin/runCalibration: /usr/local/lib/libopencv_videostab.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_video.so.2.4.10
 bin/runCalibration: /usr/local/lib/libopencv_ts.a
-bin/runCalibration: /usr/local/lib/libopencv_superres.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_stitching.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_photo.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_ocl.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_objdetect.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_nonfree.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_ml.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_legacy.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_imgproc.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_highgui.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_gpu.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_flann.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_features2d.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_core.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_contrib.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_calib3d.so.2.4.8
+bin/runCalibration: /usr/local/lib/libopencv_superres.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_stitching.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_photo.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_ocl.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_objdetect.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_nonfree.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_ml.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_legacy.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_imgproc.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_highgui.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_gpu.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_flann.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_features2d.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_core.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_contrib.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_calib3d.so.2.4.10
 bin/runCalibration: /usr/lib/x86_64-linux-gnu/libglut.so
 bin/runCalibration: /usr/lib/x86_64-linux-gnu/libXmu.so
 bin/runCalibration: /usr/lib/x86_64-linux-gnu/libXi.so
@@ -107,20 +110,20 @@ bin/runCalibration: /usr/lib/x86_64-linux-gnu/libSM.so
 bin/runCalibration: /usr/lib/x86_64-linux-gnu/libICE.so
 bin/runCalibration: /usr/lib/x86_64-linux-gnu/libX11.so
 bin/runCalibration: /usr/lib/x86_64-linux-gnu/libXext.so
-bin/runCalibration: /usr/local/lib/libopencv_nonfree.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_ocl.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_gpu.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_photo.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_objdetect.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_legacy.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_video.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_ml.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_calib3d.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_features2d.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_highgui.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_imgproc.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_flann.so.2.4.8
-bin/runCalibration: /usr/local/lib/libopencv_core.so.2.4.8
+bin/runCalibration: /usr/local/lib/libopencv_nonfree.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_ocl.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_gpu.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_photo.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_objdetect.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_legacy.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_video.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_ml.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_calib3d.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_features2d.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_highgui.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_imgproc.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_flann.so.2.4.10
+bin/runCalibration: /usr/local/lib/libopencv_core.so.2.4.10
 bin/runCalibration: helpers/CMakeFiles/runCalibration.dir/build.make
 bin/runCalibration: helpers/CMakeFiles/runCalibration.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ../bin/runCalibration"

@@ -205,6 +205,9 @@ globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o: /usr/local/includ
 globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o: /usr/local/include/json/value.h
 globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o: /usr/local/include/json/writer.h
 
+globalStuff/CMakeFiles/globalStuff.dir/object.cpp.o: globalStuff/Object.h
+globalStuff/CMakeFiles/globalStuff.dir/object.cpp.o: globalStuff/object.cpp
+
 globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o: globalStuff/optparser.cpp
 globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o: globalStuff/optparser.h
 globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o: /usr/local/include/json/autolink.h

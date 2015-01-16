@@ -21,10 +21,11 @@ After a bit of googling (see links below), the following steps offered a solutio
 	  $ ...
 	  run: 'udev-acl --action=add --device=/dev/krangcam0'
 
-resources:
-Ubuntu tutorial: http://ubuntuforums.org/showthread.php?t=168221
-Writing udev rules: http://www.reactivated.net/writing_udev_rules.html
-Debugging: http://askubuntu.com/questions/187251/udev-webcam-rule-read-but-not-respected
+RESOURCES
+
+	Ubuntu tutorial: http://ubuntuforums.org/showthread.php?t=168221
+	Writing udev rules: http://www.reactivated.net/writing_udev_rules.html
+	Debugging: http://askubuntu.com/questions/187251/udev-webcam-rule-read-but-not-respected
 
 --------------------------------------------------------------------------
 contents of /etc/udev/rules.d/10-camera.rules:

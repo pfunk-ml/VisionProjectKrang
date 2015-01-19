@@ -388,7 +388,7 @@ camCentralProcess_LIB_DEPENDS:STATIC=general;globalStuff;general;cvViewer;genera
 cvViewer_LIB_DEPENDS:STATIC=
 
 //Dependencies for the target
-globalStuff_LIB_DEPENDS:STATIC=general;jsoncpp;
+globalStuff_LIB_DEPENDS:STATIC=general;jsoncpp;general;worldModel;
 
 //Dependencies for the target
 glutViewer_LIB_DEPENDS:STATIC=general;/usr/lib/x86_64-linux-gnu/libGLU.so;general;/usr/lib/x86_64-linux-gnu/libGL.so;general;/usr/lib/x86_64-linux-gnu/libSM.so;general;/usr/lib/x86_64-linux-gnu/libICE.so;general;/usr/lib/x86_64-linux-gnu/libX11.so;general;/usr/lib/x86_64-linux-gnu/libXext.so;general;/usr/lib/x86_64-linux-gnu/libglut.so;general;/usr/lib/x86_64-linux-gnu/libXmu.so;general;/usr/lib/x86_64-linux-gnu/libXi.so;

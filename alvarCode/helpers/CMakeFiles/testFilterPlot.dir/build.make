@@ -106,6 +106,7 @@ testFilterPlot_EXTERNAL_OBJECTS =
 bin/testFilterPlot: helpers/CMakeFiles/testFilterPlot.dir/testFilterPlot.cpp.o
 bin/testFilterPlot: helpers/CMakeFiles/testFilterPlot.dir/__/basicFilter.cpp.o
 bin/testFilterPlot: lib/libglobalStuff.a
+bin/testFilterPlot: lib/libworldModel.a
 bin/testFilterPlot: helpers/CMakeFiles/testFilterPlot.dir/build.make
 bin/testFilterPlot: helpers/CMakeFiles/testFilterPlot.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ../bin/testFilterPlot"

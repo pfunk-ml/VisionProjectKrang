@@ -164,7 +164,7 @@ bool init( int _devIndex,
 	   alvar::Capture **_cap ) {
   
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;  
-  gCalibFilename = CAM_CALIB_NAME[_camIndex];
+  gCalibFilename = CAM_CALIB_NAME;
 
   /** Load calibration file */
   std::cout<<"** Loading calibration file: "<< gCalibFilename << std::endl;

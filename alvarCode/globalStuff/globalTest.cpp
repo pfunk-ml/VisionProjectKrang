@@ -13,7 +13,7 @@ int main()
 {
     // First get json file
     Json::Value config;
-    parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+    parseJSONFile("./config.json", config);
 
     // First set everything
     setGlobalData(config);
@@ -34,14 +34,14 @@ int main()
     {
         cout << "Object " << i << ": " << OBJECT_NAME[i] << endl;
         cout << "Marker ID: " << MARKER_ID[i] << endl;
-        cout << "Marker Size: " << MARKER_SIZE[i] << endl;
+        // cout << "Marker Size: " << MARKER_SIZE[i] << endl;
     }
 
     // Get camera info
     for (int i = 0; i < NUM_OBJECTS; i++)
     {
         cout << "Camera " << i << endl;
-        cout << "Calibration File: " << CAM_CALIB_NAME[i] << endl;
+        cout << "Calibration File: " << CAM_CALIB_NAME << endl;
         cout << "Channel Name: " << CAM_CHANNEL_NAME[i] << endl; 
     }
 

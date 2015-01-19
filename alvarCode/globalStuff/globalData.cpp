@@ -13,7 +13,7 @@ std::vector<std::string> OBJECT_NAME;
 std::vector<int> MARKER_ID;
 std::vector<double> MARKER_SIZE;
 
-std::vector<std::string> CAM_CALIB_NAME;
+std::string CAM_CALIB_NAME;
 std::vector<std::string> CAM_CHANNEL_NAME;
 
 std::vector<ObjectData_t> gObjects;
@@ -36,12 +36,15 @@ void setGlobalData(Json::Value config)
     DEBUG_CHANNEL = config.get("debug_channel", "debug").asString();
 
     // Calibration file
+    /*
     CAM_CALIB_NAME.resize(0);
     for( int i = 0; i < NUM_CAMERAS; ++i ) 
     {
         std::string name = config["cam_calib_name"].get(i, "calib").asString();
         CAM_CALIB_NAME.push_back(name);
     }
+    */
+    CAM_CALIB_NAME = config["cam_calib_name"].asString();
 
     // Channel names for cameras
     CAM_CHANNEL_NAME.resize(0);
@@ -78,6 +81,7 @@ void setGlobalData(Json::Value config)
     }
 
     // Marker Sizes
+    /*
     MARKER_SIZE.resize(0);
     for (int i = 0; i < NUM_OBJECTS; i++)
     {
@@ -89,6 +93,7 @@ void setGlobalData(Json::Value config)
     {
         std::cout << "[X] Error initializing MARKER_SIZE!"<< std::endl;
     }
+    */
 
     /**< Initialize objects for each marker */
     for( int i = 0; i < NUM_OBJECTS; ++i ) 
@@ -99,7 +104,7 @@ void setGlobalData(Json::Value config)
         //obj.obj_name = name;
         obj.marker_id  = MARKER_ID[i];
         obj.visible = -1;
-        obj.width = MARKER_SIZE[i];
+        //obj.width = MARKER_SIZE[i];
         obj.center[0] = 0; obj.center[1] = 0;
         obj.cam_id = -1;
     

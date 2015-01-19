@@ -13,19 +13,20 @@
 	"marker_id" : [1, 5, 6],
 
 	// Marker sizes
-	"marker_size" : [20.3, 20.3, 20.3],
+	// "marker_size" : [20.3, 20.3, 20.3],
 
 	// Calibration files
-	"cam_calib_name" : ["Data/camCalib_0.xml",
-	"Data/camCalib_1.xml",
-	"Data/camCalib_2.xml",
-	"Data/camCalib_3.xml"],
+	//"cam_calib_name" : ["Data/camCalib_0.xml",
+	//                    "Data/camCalib_1.xml",
+	//                    "Data/camCalib_2.xml",
+	//                    "Data/camCalib_3.xml"],
+    "cam_calib_name" : "Data/camCalib.xml",
 
 	// Camera channel names
 	"cam_channel_name" : ["cam0_channel",
-	"cam1_channel", 
-	"cam2_channel", 
-	"cam3_channel"],
+	                      "cam1_channel", 
+	                      "cam2_channel", 
+	                      "cam3_channel"],
 
 	// Perception channel name
 	"perception_channel" : "krang_vision",
@@ -87,14 +88,14 @@
 	        [0, 0, 0, 1] 
         ],	// Robot
 	    [ 
-            [1, 0, 0, -0.4572],  
-	        [0, 1, 0, -0.4572],
+            [1, 0, 0, 0],  
+	        [0, 1, 0, 0],
 	        [0, 0, 1, 0],
 	        [0, 0, 0, 1] 
         ],	// Table
 	    [ 
-            [0, 1, 0, -0.279],  
-	        [-1, 0, 0, 0.2286],
+            [1, 0, 0, 0],  
+	        [0, 1, 0, 0],
 	        [0, 0, 1, 0],
 	        [0, 0, 0, 1] 
         ]	// Chair

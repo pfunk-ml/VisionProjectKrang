@@ -36,6 +36,7 @@ class CameraCentralProcess {
     CameraCentralProcess();
     ~CameraCentralProcess();
     
+    /* */
     void initSetup();
     int spawnCamera( char* _camProgram,
 		     char** _argList );

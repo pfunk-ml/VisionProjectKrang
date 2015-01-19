@@ -81,6 +81,7 @@ testSubscriber_EXTERNAL_OBJECTS =
 
 bin/testSubscriber: helpers/CMakeFiles/testSubscriber.dir/testSubscriber.cpp.o
 bin/testSubscriber: lib/libglobalStuff.a
+bin/testSubscriber: lib/libworldModel.a
 bin/testSubscriber: helpers/CMakeFiles/testSubscriber.dir/build.make
 bin/testSubscriber: helpers/CMakeFiles/testSubscriber.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ../bin/testSubscriber"

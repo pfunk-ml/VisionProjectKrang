@@ -1,1 +1,1 @@
-/usr/bin/c++       CMakeFiles/testGlobals.dir/globalTest.cpp.o  -o testGlobals -rdynamic -L/usr/local/lib ../lib/libglobalStuff.a -ljsoncpp -Wl,-rpath,/usr/local/lib 
+/usr/bin/c++       CMakeFiles/testGlobals.dir/globalTest.cpp.o  -o testGlobals -rdynamic -L/usr/local/lib ../lib/libglobalStuff.a -ljsoncpp ../lib/libworldModel.a -Wl,-rpath,/usr/local/lib 

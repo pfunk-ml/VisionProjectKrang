@@ -12,7 +12,7 @@ OBJECTIVE
 
     To test the calibration procedure. Particularly,
         1. Effect of varying the distance of checkboard from camera on the calibration time.
-        2. Effect of size of checkerboard patter on calibration time.
+        2. Effect of size of checkerboard pattern on calibration time.
 
     While calibrating, the program detects the checkerboard pattern from the video frame. The program may fail to detect pattern in some of the frames. This depends on the clarity of checkerboard patter in the frame, which depends upon size and distance of marker from camera. The program must do detection from specific number of frames before generating calibration file.
 
@@ -25,17 +25,19 @@ PROCEDURE
         $ make
         $ time ./bin/runCalibration 0
     4. Note down the down time it takes to calibrate. Use user time in the reported statistics by above program.
-    5. Repeat above process 3 times.
-    5. Repeat above steps for different values of D.
+    5. Repeat above process 5 times.
+    6. Repeat above steps for different values of D.
+    7. Repeat above steps for different size of checkboard pattern.
 
 OBSERVATIONS
 
+    Camera: Logitech Webcam Pro 9000
     Checkerboard pattern can found in file: https://github.com/astanin/alvar/blob/master/doc/ALVAR.pdf (Page 9).
 
     Number of captures required for calibration = 10
 
     Checkerboard pattern
-        Length of square edge = 2.5 cm
+        Length of square edge = 2.2 cm
         Number of internal corners (rows) = 6
         Number of internal corners (cols) = 8
 
@@ -53,9 +55,32 @@ OBSERVATIONS
       |    122         |      5.11          |
       |    122         |      5.09          |
       +----------------+--------------------+
-        Table 1: Distance and corresponding 
-           times taken for calibration.
+        Table 1: Distance from camera and 
+          corresponding times taken for 
+          calibration.
 
+    Checkerboard pattern
+        Length of square edge =  3 cm
+        Number of internal corners (rows) = 6
+        Number of internal corners (cols) = 8
+
+      +----------------+--------------------+
+      | Dist (D) in cm |  Time (sec)        |
+      |----------------+--------------------+
+      |    170         |      4.47          |
+      |    170         |      5.53          |
+      |    170         |      4.89          |
+      |    170         |      5.14          |
+      |    170         |      4.71          |
+      |    122         |      3.96          |
+      |    122         |      4.61          |
+      |    122         |      5.20          |
+      |    122         |      5.32          |
+      |    122         |      4.56          |
+      +----------------+--------------------+
+        Table 2: Distance from camera and 
+          corresponding times taken for 
+          calibration.
 
     Note: Real time was much larger than user time (2 to 3 times). Real time is the actual time surpassed which takes into account time taken by other processes running on the computer as well.
 
@@ -63,8 +88,11 @@ OBSERVATIONS
 RESULTS
 
     1. The time taken to calibrate varies widely across different attempts using same distance.
-    2. As checkboard pattern is moved closer to camera, the average time and variance decreases significantly. This is due the fact that image became more clearer when pattern was brought closer to camera.
+    2. As checkerboard pattern is moved closer to camera, the average time and variance decreases significantly. This is due the fact that image became more clearer when pattern was brought closer to camera.
+    3. As checkboard pattern size is increased, the average time and variance decreases for larger distance. However time saturates as distance is decreases and doesn't decreases futher.
 
 CONCLUSION
     
-    For faster and more predictive calibration process, distance of checkboard from camera should be decreased. If that is not the option, then larger checkboard pattern can be tried.
+    For faster and more predictive calibration process, distance of checkboard from camera should be decreased. If that is not the option, then checkboard pattern should be at good enough height.
+
+    For 'Logitech Webcam Pro 9000', checkerboard with edge of 3 cm is good enough at distance of 1.7 meters.

@@ -3,12 +3,14 @@
  */
 #pragma once
 
+#include "worldModel/WorldModel.h"
+
 /**< Info we store for each marker*/
 struct ObjectData_t {
     char obj_name[50];
     int marker_id;
     int visible;
-    double width;
+    //double width;
     double center[2];
     double trans[3][4];
     int cam_id;

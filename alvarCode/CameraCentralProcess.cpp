@@ -1,5 +1,8 @@
 /**
 * @file CameraCentralProcess.h
+
+
+  
 */
 #include "CameraCentralProcess.h"
 
@@ -88,8 +91,6 @@ void CameraCentralProcess::initSetup() {
   	mBf[i].set_default_weights( GAUSSIAN_LEFT );
   }
 }
-
-
 
 /**
  * @function spawnCamera
@@ -231,7 +232,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
     if( i == 0 ) {
       for( int j = 0; j < NUM_OBJECTS; ++j ) 
       {
-	    mMarkerMsgs[j].push_back(tempMm[j]);
+	      mMarkerMsgs[j].push_back(tempMm[j]);
       }
     } // end if i == 0
     else {
@@ -298,16 +299,15 @@ void CameraCentralProcess::getWorldTransforms() {
  */
 void CameraCentralProcess::createMessage() {
 
-    double x, y, theta;  
-    double x_est, y_est, theta_est;
+  double x, y, theta;  
+  double x_est, y_est, theta_est;
 
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
     // Vector Changes here
     Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i][0].marker_id );
-    Eigen::Matrix4d Tsprite = Tmarker*gTmarker_sprite[i];
+    Eigen::Matrix4d Tsprite = Tmarker * gTmarker_sprite[i];
     getXYangTriple(Tsprite, x, y, theta);
     
-
     // If object is not visible, set x,y,theta to zero to signal the filter that these values are not being seen!
     if( mMarkerMsgs[i][0].visible == -1 ) {
        x = 0; y = 0; theta = 0;
@@ -315,19 +315,16 @@ void CameraCentralProcess::createMessage() {
 
     // Use filter (one filter per each object!)
     mBf[i].getEstimate( x, y, theta,
-		     	x_est, y_est, theta_est );
-    
-    	finalMsg[i][0] =  x_est;
-    	finalMsg[i][1] = y_est;
-    	finalMsg[i][2] = theta_est;
+       	x_est, y_est, theta_est );
 
-    	debugMsg[i][0] = x;
-    	debugMsg[i][1] = y;
-    	debugMsg[i][2] = theta;
+    finalMsg[i][0] = x_est;
+    finalMsg[i][1] = y_est;
+    finalMsg[i][2] = theta_est;
 
-       
+    debugMsg[i][0] = x;
+    debugMsg[i][1] = y;
+    debugMsg[i][2] = theta;      
   } // end for
-  
 }
 
 

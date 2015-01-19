@@ -19,7 +19,8 @@ class ARMarker
         Vector3d LocInWorld;    // The location of the world in world coordinates (3D) 
 
     public:
-        // Constructor
+        /* Constructor
+            itsid : [IN] the ID of the marker */
         ARMarker(int itsid);
 
         // Set the marker by giving it the World2Marker matrix

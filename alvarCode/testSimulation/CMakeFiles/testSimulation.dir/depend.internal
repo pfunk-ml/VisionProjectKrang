@@ -431,6 +431,9 @@ testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o
  globalStuff/globalData.h
  globalStuff/globalTransforms.h
  globalStuff/optparser.h
+ worldModel/ARCamera.h
+ worldModel/ARMarker.h
+ worldModel/WorldModel.h
 testSimulation/CMakeFiles/testSimulation.dir/testSimulationApp.cpp.o
  /home/nehchal/VisionProjectKrang/alvarCode/testSimulation/testSimulation.h
  /home/nehchal/VisionProjectKrang/alvarCode/testSimulation/testSimulationApp.cpp

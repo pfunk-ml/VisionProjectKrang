@@ -19,4 +19,5 @@ SET(CMAKE_TARGET_DEFINITIONS
 # Targets to which this target links.
 SET(CMAKE_TARGET_LINKED_INFO_FILES
   "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/CMakeFiles/globalStuff.dir/DependInfo.cmake"
+  "/home/nehchal/VisionProjectKrang/alvarCode/worldModel/CMakeFiles/worldModel.dir/DependInfo.cmake"
   )

@@ -33,7 +33,7 @@ double** getMatAsDouble( const Eigen::Matrix4d &_mat ) {
  * @function getDOubleArrAsMat
  * @brief Gets Eigen::Matrix4d from _trans double array
  */
-Eigen::Matrix4d getDoubleArrAsMat( double _trans[3][4] ) {
+Eigen::Matrix4d getDoubleArrAsMat( const double _trans[3][4] ) {
 
     // Now put in matrix 4d stuff
     Eigen::Matrix4d mat;

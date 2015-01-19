@@ -66,7 +66,10 @@ PARAMETERS
  
 CALIBRATION
 
-    Calibration step calculates the transformation from cam frame to CamGlobal frame.
+    Calibration step calculates various parameters.
+
+    Intrinsic Parameters
+    --------------------
 
     Each camera needs to be calibrated. Each camera has single calibration file located in 'Data' folder.
     Currently there are 4 calibration files, one for each of the camera. There is a naming convention for the calibration file name.
@@ -81,8 +84,6 @@ CALIBRATION
         Width
         Height
 
-        What does each mean?
-
     How to generate calibration file?
         See Documentation/Workflow.md
 
@@ -95,7 +96,7 @@ CALIBRATION
 
     Procedure for calibration
         1. Print checkerboard pattern on paper.
-        2. Place the checkerboard on the ground such that it lies in the view of all four cameras. In what orientation?
+        2. Place the checkerboard on the ground such that it lies in the view of all four cameras. In what orientation ???
         3. Change parameters in the alvarCode/helpers/runCalibration.cpp file.
         4. Compile
                 $ cd path/to/alvarCode/
@@ -107,12 +108,14 @@ CALIBRATION
             Replace x by camera ID. For example, for Cam 0
                 $./bin/runCalibration 0
         
-        6.   
+        6. Copy or move the generated calibration file to a Data/ folder named camCalib.xml .
 
     getCameraTransforms outputs the 4x4 homogenous transform matrix.
 
     runCalibration probably needs some checkboard !
     
+    Extrinsic Parameters
+    --------------------
 
 
 
@@ -132,7 +135,7 @@ DESCRIPTION OF CAMERA RIG
          CAM0 :-|                         |-: CAM2
 
 
-        Fig: Top view of Camera Rig showing poisition of 
+        Fig: Top view of Camera Rig showing position of 
              four cameras attached to it. The cameras face
              into the paper.
 
@@ -146,9 +149,11 @@ FILES AND FOLDERS
 
         * alvarCode/ - here is where all the current stuff is. See setup.md, global.md, OneCamera.md, MainProgram.md, Helpers.md, Simulation.md Workflow.md and Data.md for additional information on this code and functionality.
         
-        alvarCode has following files and sub-directories.
+            alvarCode has following files and sub-directories.
 
-            globalStuff : Configuration parameters.
+            globalStuff/ : Configuration parameters.
+
+            Data/Markers/ : All the AR markers pattern images and corresponding xml files. Surprisingly this folder in not used by camProcess during execution. How it gets the pattern design info?
 
             camProcess.cpp : The program for single camera that tracks AR markers.
         
@@ -192,10 +197,24 @@ COORDINATE FRAMES
 
         World Frame (W)
         CamGlobal Frame (Cg): The origin of this frame lies at centre of rectangle formed by 4 cameras.
-        Cam0 Frame (C0)
+        Cam0 Frame (C0) 
         Cam1 Frame (C1)
         Cam2 Frame (C2)
         Cam3 Frame (C3)
+            : The origin of camera frame lies at the respective camera (consider camera as a point). The direction towards which camera is facing is the positive z-axis.
+
+                y-axis 
+                 ^       
+                 |
+                 |            
+             __  |   
+            |  | +------------> z-axis
+            |__|
+
+            Camera
+
+            Fig: The Cam Frame. Origin is at the 
+              camera. x-axis is into the paper.
 
     A coodinate frame is defined by position of the origin and orientation of its x, y and z axis.
 

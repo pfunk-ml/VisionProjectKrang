@@ -15,8 +15,17 @@
    
 /** Helpers */
 double** getMatAsDouble( const Eigen::Matrix4d &_mat );
-Eigen::Matrix4d getDoubleArrAsMat( double _trans[3][4] );
 
+/* Converts a 3x4 double array to Matrix4d matrix
+    _trans    : [IN] the 3x4 transformation matrix
+    return val: the 4x4 homogenous matrix */
+Eigen::Matrix4d getDoubleArrAsMat( const double _trans[3][4] );
+
+/* Obtain x, y and theta from transformation matrix.
+    _Tf : [IN]  the ptr to homogenous transformation matrix
+    _x  : [OUT] x-coordinate
+    _y  : [OUT] y-coordinate
+    _ang: [OUT] the angle about z-axis */
 void getXYangTriple( const Eigen::Matrix4d &_Tf, 
 		     double& _x, 
 		     double& _y, 

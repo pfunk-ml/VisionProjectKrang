@@ -1,5 +1,24 @@
 /**
  * @function camProcess.cpp
+ *
+    This is a program for a single camera that detects AR marker(s) in the 
+    camera view and outputs the marker(s) details to a ACH channel. It reads 
+    the marker IDs to be detected from a configuration file.
+
+    The name of the channel to publish the marker details should be mentioned 
+    in configuration file and channel must exist before the execution of this 
+    program. The details of the message format pushlished are mentioned in the 
+    documentation.
+
+    One component of the marker data is the transformation matrix. This 
+    transformation matrix denotes pose of marker in the camera reference frame 
+    and not in world reference frame.
+
+    This program needs intrinsic parameters of the camera. So, camera should be 
+    calibrated beforehand and the intrinsic parameters should be stored in 
+    calibration file. The name of calibration is mentioned in the configuration 
+    file.
+
  */
 #include <stdlib.h>
 #include <errno.h>
@@ -20,13 +39,14 @@
 #include "globalStuff/optparser.h"
 
 /** TODO - Set the following parameters **/
-const int gMarker_size = 20; // 20.3 cm
+const int gMarker_size = 12.06; // 20.3 cm
+// const int gMarker_size = 20; // 20.3 cm
 alvar::Camera gCam;
 
 int gWidth = 640;
 int gHeight = 480;
 
-char gConfigFile[] = "/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/config.json";
+char gConfigFile[] = "globalStuff/config.json";
 
 /**< Camera details */
 std::string gCalibFilename;
@@ -51,7 +71,7 @@ bool init( int _devIndex,
            alvar::Capture **_cap ) {
   
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;
-  gCalibFilename = CAM_CALIB_NAME[_camIndex];
+  gCalibFilename = CAM_CALIB_NAME;
   std::cout<<"Line "<<__LINE__<<":\n";
 
   /** Load calibration file */
@@ -209,7 +229,7 @@ int main(int argc, char *argv[]) {
 void videocallback( IplImage *_img ) {
 
   // Flip the image if needed
-  bool flip_image = (_img->origin? true:false);
+  bool flip_image = (_img->origin ? true : false);
   if (flip_image) {
     cvFlip(_img);
     _img->origin = !_img->origin;
@@ -257,13 +277,6 @@ void videocallback( IplImage *_img ) {
       	gMarkerMsgs[i].trans[2][2] = transf[10];
       	gMarkerMsgs[i].trans[2][3] = transf[14];
 
-      	for( int row = 0; row < 3; ++row ) {
-      	  for( int col = 0; col <4; ++col ) {
-      	    //std::cout << gMarkerMsgs[i].trans[row][col] << " "; 
-      	  }  //std::cout << std::endl;
-      	} 
-      	//std::cout << transf[3] << " "<< transf[7]<<" "<< transf[11]<< " "<< transf[15] << std::endl;
-      	//std::cout << std::endl;
       	gMarkerMsgs[i].visible = 1;
        
       	detected = true;

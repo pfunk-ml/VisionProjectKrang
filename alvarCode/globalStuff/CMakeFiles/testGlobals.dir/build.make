@@ -81,6 +81,7 @@ testGlobals_EXTERNAL_OBJECTS =
 
 globalStuff/testGlobals: globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o
 globalStuff/testGlobals: lib/libglobalStuff.a
+globalStuff/testGlobals: lib/libworldModel.a
 globalStuff/testGlobals: globalStuff/CMakeFiles/testGlobals.dir/build.make
 globalStuff/testGlobals: globalStuff/CMakeFiles/testGlobals.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable testGlobals"

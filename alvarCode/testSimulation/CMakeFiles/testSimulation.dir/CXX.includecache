@@ -3971,6 +3971,8 @@ deque
 -
 
 globalStuff/Object.h
+worldModel/WorldModel.h
+globalStuff/worldModel/WorldModel.h
 
 globalStuff/globalData.h
 vector
@@ -4000,5 +4002,25 @@ fstream
 iomanip
 -
 string
+-
+
+worldModel/ARCamera.h
+Eigen/Dense
+-
+
+worldModel/ARMarker.h
+Eigen/Dense
+-
+
+worldModel/WorldModel.h
+ARCamera.h
+worldModel/ARCamera.h
+ARMarker.h
+worldModel/ARMarker.h
+iostream
+-
+Eigen/Dense
+-
+vector
 -
 

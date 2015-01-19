@@ -430,6 +430,9 @@ testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: globalStuff/O
 testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: globalStuff/globalData.h
 testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: globalStuff/globalTransforms.h
 testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: globalStuff/optparser.h
+testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: worldModel/ARCamera.h
+testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: worldModel/ARMarker.h
+testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o: worldModel/WorldModel.h
 
 testSimulation/CMakeFiles/testSimulation.dir/testSimulationApp.cpp.o: testSimulation/testSimulation.h
 testSimulation/CMakeFiles/testSimulation.dir/testSimulationApp.cpp.o: testSimulation/testSimulationApp.cpp

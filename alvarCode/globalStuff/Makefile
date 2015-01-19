@@ -126,6 +126,30 @@ testGlobals/fast:
 	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/testGlobals.dir/build.make globalStuff/CMakeFiles/testGlobals.dir/build
 .PHONY : testGlobals/fast
 
+Object.o: Object.cpp.o
+.PHONY : Object.o
+
+# target to build an object file
+Object.cpp.o:
+	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o
+.PHONY : Object.cpp.o
+
+Object.i: Object.cpp.i
+.PHONY : Object.i
+
+# target to preprocess a source file
+Object.cpp.i:
+	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.i
+.PHONY : Object.cpp.i
+
+Object.s: Object.cpp.s
+.PHONY : Object.s
+
+# target to generate assembly for a file
+Object.cpp.s:
+	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.s
+.PHONY : Object.cpp.s
+
 globalData.o: globalData.cpp.o
 .PHONY : globalData.o
 
@@ -198,30 +222,6 @@ globalTransforms.cpp.s:
 	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.s
 .PHONY : globalTransforms.cpp.s
 
-object.o: object.cpp.o
-.PHONY : object.o
-
-# target to build an object file
-object.cpp.o:
-	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/object.cpp.o
-.PHONY : object.cpp.o
-
-object.i: object.cpp.i
-.PHONY : object.i
-
-# target to preprocess a source file
-object.cpp.i:
-	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/object.cpp.i
-.PHONY : object.cpp.i
-
-object.s: object.cpp.s
-.PHONY : object.s
-
-# target to generate assembly for a file
-object.cpp.s:
-	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/object.cpp.s
-.PHONY : object.cpp.s
-
 optparser.o: optparser.cpp.o
 .PHONY : optparser.o
 
@@ -256,6 +256,9 @@ help:
 	@echo "... globalStuff"
 	@echo "... rebuild_cache"
 	@echo "... testGlobals"
+	@echo "... Object.o"
+	@echo "... Object.i"
+	@echo "... Object.s"
 	@echo "... globalData.o"
 	@echo "... globalData.i"
 	@echo "... globalData.s"
@@ -265,9 +268,6 @@ help:
 	@echo "... globalTransforms.o"
 	@echo "... globalTransforms.i"
 	@echo "... globalTransforms.s"
-	@echo "... object.o"
-	@echo "... object.i"
-	@echo "... object.s"
 	@echo "... optparser.o"
 	@echo "... optparser.i"
 	@echo "... optparser.s"

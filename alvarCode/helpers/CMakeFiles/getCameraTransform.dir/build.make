@@ -111,6 +111,7 @@ bin/getCameraTransform: /usr/lib/x86_64-linux-gnu/libSM.so
 bin/getCameraTransform: /usr/lib/x86_64-linux-gnu/libICE.so
 bin/getCameraTransform: /usr/lib/x86_64-linux-gnu/libX11.so
 bin/getCameraTransform: /usr/lib/x86_64-linux-gnu/libXext.so
+bin/getCameraTransform: lib/libworldModel.a
 bin/getCameraTransform: /usr/local/lib/libopencv_nonfree.so.2.4.10
 bin/getCameraTransform: /usr/local/lib/libopencv_ocl.so.2.4.10
 bin/getCameraTransform: /usr/local/lib/libopencv_gpu.so.2.4.10

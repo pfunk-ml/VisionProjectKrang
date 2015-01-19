@@ -7,6 +7,8 @@
 #IncludeRegexTransform: 
 
 /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/Object.h
+worldModel/WorldModel.h
+/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/worldModel/WorldModel.h
 
 /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalData.cpp
 stdio.h
@@ -41,12 +43,6 @@ vector
 -
 json/json.h
 /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/json/json.h
-
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/object.cpp
-Object.h
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/Object.h
-iostream
--
 
 /usr/include/eigen3/Eigen/Cholesky
 Core
@@ -295,6 +291,22 @@ src/Core/util/ReenableStupidWarnings.h
 /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
 Eigen2Support
 /usr/include/eigen3/Eigen/Eigen2Support
+
+/usr/include/eigen3/Eigen/Dense
+Core
+/usr/include/eigen3/Eigen/Core
+LU
+/usr/include/eigen3/Eigen/LU
+Cholesky
+/usr/include/eigen3/Eigen/Cholesky
+QR
+/usr/include/eigen3/Eigen/QR
+SVD
+/usr/include/eigen3/Eigen/SVD
+Geometry
+/usr/include/eigen3/Eigen/Geometry
+Eigenvalues
+/usr/include/eigen3/Eigen/Eigenvalues
 
 /usr/include/eigen3/Eigen/Eigen2Support
 src/Core/util/DisableStupidWarnings.h
@@ -1006,5 +1018,25 @@ value.h
 vector
 -
 string
+-
+
+worldModel/ARCamera.h
+Eigen/Dense
+-
+
+worldModel/ARMarker.h
+Eigen/Dense
+-
+
+worldModel/WorldModel.h
+ARCamera.h
+worldModel/ARCamera.h
+ARMarker.h
+worldModel/ARMarker.h
+iostream
+-
+Eigen/Dense
+-
+vector
 -
 

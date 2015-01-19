@@ -107,6 +107,7 @@ bin/testSimulation: testSimulation/CMakeFiles/testSimulation.dir/testSimulation.
 bin/testSimulation: testSimulation/CMakeFiles/testSimulation.dir/testSimulationApp.cpp.o
 bin/testSimulation: lib/libglobalStuff.a
 bin/testSimulation: /usr/local/lib/libdart3.so.0.0.0
+bin/testSimulation: lib/libworldModel.a
 bin/testSimulation: /usr/local/lib/libdart-core3.so.0.0.0
 bin/testSimulation: /usr/local/lib/libfcl.so
 bin/testSimulation: /usr/lib/libccd.so

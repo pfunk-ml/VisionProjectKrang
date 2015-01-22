@@ -6,34 +6,20 @@
 
 #IncludeRegexTransform: 
 
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARCamera.h
-Eigen/Dense
--
-
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARMarker.h
-Eigen/Dense
--
-
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/WorldModel.cpp
-WorldModel.h
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/WorldModel.h
-ARCamera.h
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARCamera.h
-ARMarker.h
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARMarker.h
-math.h
--
-
-/home/nehchal/VisionProjectKrang/alvarCode/worldModel/WorldModel.h
+/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARCamera.cpp
 ARCamera.h
 /home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARCamera.h
 ARMarker.h
 /home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARMarker.h
 iostream
 -
+
+/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARCamera.h
 Eigen/Dense
 -
-vector
+
+/home/nehchal/VisionProjectKrang/alvarCode/worldModel/ARMarker.h
+Eigen/Dense
 -
 
 /usr/include/eigen3/Eigen/Cholesky

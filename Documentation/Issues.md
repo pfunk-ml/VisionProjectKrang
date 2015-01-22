@@ -1,6 +1,6 @@
 ISSUES
 
-Commonly occurring problems
+Commonly occurring issues and problems
 
 
 #ISSUE
@@ -21,13 +21,13 @@ Commonly occurring problems
 
 #ISSUE
 
-      Error while runnign camProcess
+      Error while running camProcess
          On running,
            $ cd path/to/alvarCode
            $ ach -C cam0_channel -o 666  -m 10 -n 64
            $ ./bin/camProcess 0 0
 
-         Following error Appears:
+         Following error appears:
             libv4l2: error setting pixformat: Device or resource busy
 
     * Solution
@@ -45,3 +45,21 @@ Commonly occurring problems
 
     [By Nehchal Jindal - Jan 8, 2015]
 
+#ISSUE
+
+      Error while running camProcess
+         On running,
+           $ cd path/to/alvarCode
+           $ ach -C cam0_channel -o 666  -m 10 -n 64
+           $ ./bin/camProcess 0 0
+
+         Following error appears:
+            libv4l2: error turning on stream: Invalid argument
+
+      The problem occured when previous intance of camProcess was terminated by pressing Ctrl + C .
+
+    * Solution
+        No reported solution.
+        Try physically disconnecting the camera and again reconnecting the camera to the computer.
+
+        [By Nehchal Jindal - Jan 20, 2015]

@@ -1,5 +1,20 @@
 /**
  * @function markerDetector.cpp
+
+  This program generates the extrinsic parameters for the camera. Appropriate 
+  arguments are read from config.json
+
+  It needs three command line arguments
+    $ getCameraTransform devX camX  OBJ_ID
+
+  Example
+    $ getCameraTransform 0 0 5
+
+  Extrinsic parameters refers to the world to camera transformation matrix. 
+  The 4x4 transformation matrix is printed in the terminal window.
+
+    P_world = Tworld_cam * P_cam
+
  */
 #include <MarkerDetector.h>
 
@@ -11,12 +26,8 @@
 #include "json/json.h"
 #include "globalStuff/optparser.h"
 
-const int gMarker_size = 20; // 20.3 cm
 alvar::Camera gCam;
 Drawable d[32];
-
-int gWidth = 640;
-int gHeight = 480;
 
 int gObjID;
 std::string gCalibFilename;
@@ -44,7 +55,7 @@ int main(int argc, char *argv[]) {
   std::cout << "\t * Setting global data done." << std::endl;
 
   /** Initialise GlutViewer and CvTestbed */
-  GlutViewer::Start( argc, argv, gWidth, gHeight );
+  GlutViewer::Start( argc, argv, gConfParams.width, gConfParams.height );
   CvTestbed::Instance().SetVideoCallback(videocallback);
   std::cout << "\t * Initialized GlutViewer and CvTestbed "<< std::endl;
 
@@ -63,7 +74,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "** Start capture"<< std::endl;
     cap->start();
-    cap->setResolution(gWidth, gHeight);
+    cap->setResolution(gConfParams.width, gConfParams.height);
     
     char videoTitle[100];
     sprintf( videoTitle, "Marker Detector for camera %d", camIndex );    
@@ -98,7 +109,7 @@ void videocallback( IplImage *_img ) {
   
   // Setup the marker detector
   static alvar::MarkerDetector<alvar::MarkerData> marker_detector;
-  marker_detector.SetMarkerSize(gMarker_size); 
+  marker_detector.SetMarkerSize(gConfParams.markerSize); 
 
   // Perform detection
   marker_detector.Detect(_img, &gCam, true, true);
@@ -121,10 +132,15 @@ void videocallback( IplImage *_img ) {
       p.GetMatrixGL( transf, false);
       
       for( int col = 0; col < 4; ++col ) {
+        std::cout<<'[';
 	      for( int row = 0; row < 4; ++row ) {
-	         std::cout << transf[col+row*4] << " ";
+	         std::cout << transf[col+row*4];
+           if (row != 3) 
+              std::cout<<", ";
 	      }
-	      std::cout << std::endl;
+	      std::cout<<']';
+        if(col != 3)
+          cout<<",\n";
       }
       
       std::cout << std::endl;
@@ -164,27 +180,27 @@ bool init( int _devIndex,
 	   alvar::Capture **_cap ) {
   
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;  
-  gCalibFilename = CAM_CALIB_NAME;
+  gCalibFilename = CAM_CALIB_NAME[_camIndex];
 
   /** Load calibration file */
   std::cout<<"** Loading calibration file: "<< gCalibFilename << std::endl;
   if ( gCam.SetCalib( gCalibFilename.c_str(), 
-		      gWidth, gHeight) ) {
+		      gConfParams.width, gConfParams.height) ) {
     std::cout<<"\t Loaded camera calibration file successfully"<<std::endl;
   } else {
-    gCam.SetRes( gWidth, gHeight );
+    gCam.SetRes( gConfParams.width, gConfParams.height );
     std::cout<<"\t Failed to load camera calibration file"<<std::endl;
   }
   
   /** Set camera matrix into the viewer */
   double p[16];
   gCam.GetOpenglProjectionMatrix( p,
-				  gWidth,
-				  gHeight );
+				  gConfParams.width,
+				  gConfParams.height );
   
   GlutViewer::SetGlProjectionMatrix(p);
   for (int i=0; i<32; i++) {
-    d[i].SetScale( gMarker_size);
+    d[i].SetScale(gConfParams.markerSize);
   }
   std::cout << "\t * Set Viewer with camera matrix"<<std::endl;
   

@@ -36,7 +36,7 @@ class CameraCentralProcess {
     CameraCentralProcess();
     ~CameraCentralProcess();
     
-    /* */
+    /* Initializes mCameras and mMarkers. */
     void initSetup();
     int spawnCamera( char* _camProgram,
 		     char** _argList );
@@ -44,9 +44,15 @@ class CameraCentralProcess {
     bool setupChannels();
 
     void mainLoop();
+
+    /* Reads the ACH channels. */
     bool grabChannelsInfo();
+
+    /*  */
     void getWorldTransforms();
+    
     void createMessage();
+    void printMessage();
     void sendMessage();
     
   
@@ -57,10 +63,18 @@ class CameraCentralProcess {
   std::vector<ARCamera> mCameras;
   std::vector<ARMarker> mMarkers;
 
+  // input ACH channels to get marker positions in camera frames.
   std::vector<ach_channel_t> mInput_channels;
-  ach_channel_t mOutput_channel;
-  ach_channel_t mDebug_channel;
+
+  // output ACH channel to send marker/object position in ?? frame
+  ach_channel_t mOutput_channel; 
+
+  ach_channel_t mDebug_channel;  // output ACH channel
+
+  /* 2D array. Single row contains marker messages sent by different cameras 
+     corresponding to same object */
   std::vector<std::vector<MarkerMsg_t> > mMarkerMsgs;
+  
   std::vector<Planning_output> mMsg;
   std::vector<double*> finalMsg; // x,y,angle // visible,
   std::vector<double*> debugMsg;

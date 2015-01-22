@@ -37,14 +37,8 @@
 
 #include "json/json.h"
 #include "globalStuff/optparser.h"
-
-/** TODO - Set the following parameters **/
-const int gMarker_size = 12.06; // 20.3 cm
-// const int gMarker_size = 20; // 20.3 cm
+    
 alvar::Camera gCam;
-
-int gWidth = 640;
-int gHeight = 480;
 
 char gConfigFile[] = "globalStuff/config.json";
 
@@ -71,16 +65,16 @@ bool init( int _devIndex,
            alvar::Capture **_cap ) {
   
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;
-  gCalibFilename = CAM_CALIB_NAME;
+  gCalibFilename = CAM_CALIB_NAME[_camIndex];
   std::cout<<"Line "<<__LINE__<<":\n";
 
   /** Load calibration file */
   std::cout<<"** Loading calibration file: "<< gCalibFilename << std::endl;
   if ( gCam.SetCalib( gCalibFilename.c_str(), 
-          gWidth, gHeight) ) {
+          gConfParams.width, gConfParams.height) ) {
     std::cout<<"\t Loaded camera calibration file successfully."<<std::endl;
   } else {
-    gCam.SetRes( gWidth, gHeight );
+    gCam.SetRes( gConfParams.width, gConfParams.height );
     std::cout<<"\t Failed to load camera calibration file."<<std::endl;
   }
  
@@ -204,7 +198,7 @@ int main(int argc, char *argv[]) {
 
     std::cout << "** Start capture"<< std::endl;
     cap->start();
-    cap->setResolution(gWidth, gHeight);
+    cap->setResolution(gConfParams.width, gConfParams.height);
     
     char videoTitle[100];
     sprintf( videoTitle, "Marker Detector for camera %d", camIndex );    
@@ -213,7 +207,8 @@ int main(int argc, char *argv[]) {
     cap->stop();
     delete cap;
     
-  } else {
+  } 
+  else {
     std::cout << "[X] Could not initialize the selected capture backend." << std::endl;
     return 1;
   }
@@ -237,7 +232,7 @@ void videocallback( IplImage *_img ) {
   
   // Setup the marker detector
   static alvar::MarkerDetector<alvar::MarkerData> marker_detector;
-  marker_detector.SetMarkerSize(gMarker_size); 
+  marker_detector.SetMarkerSize(gConfParams.markerSize); 
 
   // Perform detection
   marker_detector.Detect(_img, &gCam, true, true);
@@ -315,9 +310,9 @@ void videocallback( IplImage *_img ) {
   // std::cout<<"Line "<<__LINE__<<':'<<"NUM_OBJECTS = "<<NUM_OBJECTS<<'\n';
 
   /* Print the marker messages */
-  for(int i=0; i<NUM_OBJECTS; i++)
-    Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
-  std::cout<<"---\n";
+  //for(int i=0; i<NUM_OBJECTS; i++)
+  //  Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
+  //std::cout<<"---\n";
 
   /**< Send objects state to channel */
   ach_put( &gChan_output, gMarkerMsgsPtr, sizeof( gMarkerMsgsPtr ) );

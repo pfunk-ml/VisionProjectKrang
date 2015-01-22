@@ -51,7 +51,10 @@ class WorldModel {
     WorldModel( const std::vector<ARCamera> &_cameras, 
 		const std::vector<ARMarker> &_markers );
     
-    // Method to initialize the first camera to the origin marker
+    /* Method to initialize the first camera to the origin marker
+        _cameraID   : [IN] ID of the camera
+        _markerID   : [IN] ID of the marker
+        _Tcam_marker: [IN] Pose of marker in camera frame */
     bool setOrigin( const int &_cameraID, 
 		    const int &_markerID, 
 		    const Eigen::Matrix4d &_Tcam_marker );
@@ -62,7 +65,10 @@ class WorldModel {
 		     const Eigen::Matrix4d &_Tc2_marker, 
 		     const Eigen::Matrix4d &_Tc1_marker);
     
-    // Method to set a marker's location in the world frame
+    /* Method to set marker's pose in the world frame
+        _cameraID   : [IN] ID of the camera
+        _markerID   : [IN] ID of the marker
+        _Tcam_marker: [IN] Input is pose of marker in camera frame */
     bool setMarkerLoc( const int &_cameraID, 
 		       const int &_markerID, 
 		       const Eigen::Matrix4d &_Tcam_marker );
@@ -81,6 +87,9 @@ class WorldModel {
     // Method to get the location of a marker relative to the world marker
     Eigen::Vector3d getMarkerLoc( const int &_markerID );
     
+    /* Returns marker pose in world frame
+        _markerID : [IN] marker ID
+        return val: 4x4 matrix. Marker pose in world frame. */
     Eigen::Matrix4d getMarkerPose( const int &_markerID );
     
     

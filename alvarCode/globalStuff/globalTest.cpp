@@ -13,11 +13,12 @@ int main()
 {
     // First get json file
     Json::Value config;
+    std::cout<<"Ha1";
     parseJSONFile("./config.json", config);
-
+    std::cout<<"Ha1";
     // First set everything
     setGlobalData(config);
-    setGlobalTransforms(config);
+    //setGlobalTransforms(config);
 
     // Get number of cameras
     cout << "Number of cameras: " << NUM_CAMERAS << endl;
@@ -32,26 +33,22 @@ int main()
     // Get object info
     for (int i = 0; i < NUM_OBJECTS; i++)
     {
-        cout << "Object " << i << ": " << OBJECT_NAME[i] << endl;
+        cout << "Object " << i << ": " << gObjects[i].obj_name << endl;
         cout << "Marker ID: " << MARKER_ID[i] << endl;
         // cout << "Marker Size: " << MARKER_SIZE[i] << endl;
     }
 
     // Get camera info
-    for (int i = 0; i < NUM_OBJECTS; i++)
+    for (int i = 0; i < NUM_CAMERAS; i++)
     {
         cout << "Camera " << i << endl;
-        cout << "Calibration File: " << CAM_CALIB_NAME << endl;
+        cout << "Calibration File: " << CAM_CALIB_NAME[i] << endl;
         cout << "Channel Name: " << CAM_CHANNEL_NAME[i] << endl; 
     }
 
-    // Print world to origin
-    cout << "gMarker_Origin_ID: " << gMarker_Origin_ID << endl;
-    cout << "gCamera_Origin_ID: " << gCamera_Origin_ID << endl;
-    cout << "gTworld_origin: " << endl << gTworld_origin << endl;
     for (int i = 0; i < NUM_CAMERAS; i++)
     {
-        cout << "gTworld_cam[" << i << "]: " << endl << gTworld_cam[i] << endl;
+        cout << "gT_cam2world[" << i << "]: " << endl << gTworld_cam[i] << endl;
     }   
     for (int i = 0; i < NUM_OBJECTS; i++)
     { 

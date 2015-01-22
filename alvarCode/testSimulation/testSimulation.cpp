@@ -127,7 +127,7 @@ GRIPTab( parent, id, pos, size, style ) {
      Json::Value config;
      parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
      setGlobalData(config);
-     setGlobalTransforms(config);
+     // setGlobalTransforms(config);
 }
 
 

@@ -164,7 +164,7 @@ int main( int argc, char *argv[] ){
         if (cap) {
             std::stringstream settingsFilename;
             settingsFilename << "camera_settings_" << uniqueName << ".xml";
-            gCalibrationFilename << "camera_calibration_" << uniqueName << ".xml";
+            gCalibrationFilename << "camCalib_" << uniqueName << ".xml";
             
             cap->start();
             cap->setResolution(640, 480);

@@ -26,6 +26,8 @@ MESSAGE FORMATS
 
     The message format is defined in file alvarCode/camProc/Object.h using struct MarkerMsg_t .
 
+    The distances are in cms and angles in radians.
+
     According to camProcess.cpp, the message length is 336 bytes (112 bytes for each of 3 objects). But channel size is 64 ! Huh !
 
     

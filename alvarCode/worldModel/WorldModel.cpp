@@ -196,7 +196,8 @@ bool WorldModel::setOrigin( const int &_cameraID,
 
 /**
  * @function initCamera
- * @brief Initialize camera world transformation from a known cam and marker visible to both
+ * @brief Initialize camera to world transformation from a known cam and marker
+          visible to both
  */
 bool WorldModel::initCamera( const int &_cam2_id, 
 			     const int &_cam1_id, 
@@ -209,7 +210,8 @@ bool WorldModel::initCamera( const int &_cam2_id,
         return false;
 
     // Get world to camera transform for new camera
-    Eigen::Matrix4d Tworld_cam2 = cameras[getCamInd( _cam1_id)].getWorld2Cam() * _Tc1_marker.inverse() * _Tc2_marker;
+    Eigen::Matrix4d Tworld_cam2 = cameras[getCamInd( _cam1_id)].getWorld2Cam() 
+                                        * _Tc1_marker.inverse() * _Tc2_marker;
 
     // Initialize camera with that transform
     bool success = cameras[getCamInd(_cam2_id)].initializeCamera( Tworld_cam2 );

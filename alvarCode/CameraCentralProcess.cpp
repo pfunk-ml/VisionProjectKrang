@@ -25,10 +25,10 @@ CameraCentralProcess::CameraCentralProcess()
 {
   // First get json file
   Json::Value config;
-  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+  parseJSONFile("globalStuff/config.json", config);
   
   setGlobalData(config);
-  setGlobalTransforms(config);
+  //setGlobalTransforms(config);
 
   // Initialize the vectors
   for (int i = 0; i < NUM_OBJECTS; i++)
@@ -125,7 +125,7 @@ bool CameraCentralProcess::setupChannels() {
   
   mInput_channels.resize(0);
   
-  std::cout << "Initializing input channels" << std::endl;
+  std::cout << "Initializing input channels..." << std::endl;
   int r; int counter; std::string name;
   
   counter = 0;
@@ -143,7 +143,7 @@ bool CameraCentralProcess::setupChannels() {
   }
   
   if( mInput_channels.size() == 0 ) {
-    std::cout << "\t XX No a single channel opened. ERROR XX" << std::endl;
+    std::cout << "\t XX Not a single channel opened. ERROR XX" << std::endl;
     return false;
   }
   
@@ -176,16 +176,19 @@ void CameraCentralProcess::mainLoop() {
     
     // Get info from channels
     if( !this->grabChannelsInfo() ) { break; }
-    
+
     // Calculate the markers transformation
     this->getWorldTransforms();
-    
+
     // Create the message
     this->createMessage();
-    
+
+    // Print the message
+    this->printMessage();
+
     // Send the message
     this->sendMessage();
-    
+
     // Important! If you just run the main loop like crazy it will get you an ACH error
     // crazy: CONTINUOUSLY WITHOUT SLEEP 
     // 10Hz        
@@ -199,80 +202,63 @@ void CameraCentralProcess::mainLoop() {
  * @brief Grab information from camera channels
  */
 bool CameraCentralProcess::grabChannelsInfo() {
+
   
-  MarkerMsg_t tempMm[NUM_OBJECTS];
-  int r; size_t fs;
+  MarkerMsg_t tempMm[NUM_OBJECTS];  // temporary marker msgs
+  int r;      // result
+  size_t fs;  // frame size
 
   // Clear earlier messages
-  // Vector Changes here
   for ( int i = 0; i < mMarkerMsgs.size(); i++)
-  {
     mMarkerMsgs[i].clear();
-  }
   
-  for( int i = 0; i < mInput_channels.size(); ++i ) 
-  {
+  for( int i = 0; i < mInput_channels.size(); ++i ) { // iterate over all channels
+    // read the input channel
     r = ach_get( &mInput_channels[i],
-		 &tempMm,
-		 sizeof(tempMm),
-		 &fs,
-		 NULL, ACH_O_LAST );
+                  &tempMm,
+                  sizeof(tempMm),
+                  &fs,
+                  NULL, ACH_O_LAST );
     
-    if( ACH_OK != r && ACH_MISSED_FRAME != r ) 
-    {
-      std::cout << "ACH status bad. EXITING MAIN LOOP" << std::endl;
+    if( r != ACH_OK && r != ACH_MISSED_FRAME ) {
+      std::cout << "Error: ACH status bad. EXITING MAIN LOOP" << std::endl;
       return false;
     }
-    if( sizeof(tempMm) != fs ) {
-      std::cout << "Frame size and message received are not the same. EXITING MAIN LOOP"<< std::endl;
+
+    else if( fs != sizeof(tempMm)) {
+      std::cout << "Error: Frame size and message received are not of the same. EXITING MAIN LOOP"<< std::endl;
       return false;
     }
     
-    // Vector Changes here
-    if( i == 0 ) {
-      for( int j = 0; j < NUM_OBJECTS; ++j ) 
-      {
-	      mMarkerMsgs[j].push_back(tempMm[j]);
-      }
-    } // end if i == 0
-    else {
-      for( int j = 0; j < NUM_OBJECTS; ++j ) {
-	    if( mMarkerMsgs[j][0].visible == -1 && tempMm[j].visible == 1 ) 
-        {
-          mMarkerMsgs[j].clear();
-	      mMarkerMsgs[j].push_back(tempMm[j]);
-	    }
-        else if (tempMm[j].visible == 1)
-        {
-          mMarkerMsgs[j].push_back(tempMm[j]);
-        }
-      }
-    } // end else i == 0
-    
-  } // end for
-  
-  
+    /* Iterate over each object. If object is visible in message read from 
+         current channel, then add it to mMarkerMsgs */
+    for(int j=0; j < NUM_OBJECTS; j++) {     
+      if(tempMm[j].visible == 1)
+        mMarkerMsgs[j].push_back(tempMm[j]);
+    }
+  } // end for with i
   return true;
 }
 
 /**
  * @function getWorldTransforms
- * @brief Read message information stored in mObjects and fills the transform info
+ * @brief Read message information stored in mMarkerMsgs and fills the transform info
  */
 void CameraCentralProcess::getWorldTransforms() {
   
-  for( int i = 0; i < NUM_OBJECTS; ++i ) 
-  {
-
-    // Vector Changes here
+  for( int i = 0; i < NUM_OBJECTS; ++i )  {   // iterate over objects
+    
     std::vector<Eigen::Matrix4d> transforms;
     std::vector<int> cameraIDs;
-    for (int ind = 0; ind < mMarkerMsgs[i].size(); ind++)
-    {
+
+    for (int ind = 0; ind < mMarkerMsgs[i].size(); ind++) {
+
+      // pose of marker in camera frame
       Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i][ind].trans);
+      
       int cameraID = mMarkerMsgs[i][ind].cam_id;
          
-      // Divide distances by 100 (so now in meters)
+      // Divide distances (x, y, z) by 100 (so now in meters)
       Tf(0,3) = Tf(0,3) / 100.0;
       Tf(1,3) = Tf(1,3) / 100.0;
       Tf(2,3) = Tf(2,3) / 100.0;
@@ -282,11 +268,10 @@ void CameraCentralProcess::getWorldTransforms() {
       cameraIDs.push_back(cameraID);
     }
 
-    // Vector Changes here
-    if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].marker_id, transforms))
-    {
-       std::cout << "[camCentralProcess-- getWorldTransforms] ERROR - CAMERA IS PROBABLY NOT INITIALIZED"<< std::endl;
-    }	
+    if (mMarkerMsgs[i].size() > 0) { 
+      if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].marker_id, transforms))
+        std::cout << "[camCentralProcess-- getWorldTransforms] ERROR - CAMERA IS PROBABLY NOT INITIALIZED"<< std::endl;
+    }
   }
 }
 
@@ -303,19 +288,26 @@ void CameraCentralProcess::createMessage() {
   double x_est, y_est, theta_est;
 
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    // Vector Changes here
-    Eigen::Matrix4d Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i][0].marker_id );
-    Eigen::Matrix4d Tsprite = Tmarker * gTmarker_sprite[i];
-    getXYangTriple(Tsprite, x, y, theta);
+
+    Eigen::Matrix4d Tmarker; // marker pose in world frame 
+    Eigen::Matrix4d Tsprite;
     
     // If object is not visible, set x,y,theta to zero to signal the filter that these values are not being seen!
-    if( mMarkerMsgs[i][0].visible == -1 ) {
-       x = 0; y = 0; theta = 0;
+    if( mMarkerMsgs[i].size() == 0 ) {
+      x = 0; y = 0; theta = 0;
+    }
+    else if(mMarkerMsgs[i][0].visible != 1){
+      x = 0; y = 0; theta = 0;
+    }
+    else{
+      Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i][0].marker_id );
+      Tsprite = Tmarker * gTmarker_sprite[i];
+      getXYangTriple(Tsprite, x, y, theta);
     }
 
     // Use filter (one filter per each object!)
     mBf[i].getEstimate( x, y, theta,
-       	x_est, y_est, theta_est );
+       	                  x_est, y_est, theta_est );
 
     finalMsg[i][0] = x_est;
     finalMsg[i][1] = y_est;
@@ -327,7 +319,15 @@ void CameraCentralProcess::createMessage() {
   } // end for
 }
 
-
+void CameraCentralProcess::printMessage() {
+  int i;
+  printf("  x           y         theta\n");
+  for(i = 0; i < NUM_OBJECTS; i++) {
+    printf("%9.3f %9.3f %9.3f\n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2]);
+  }
+  std::cout<<"--";
+  return;
+}
 
 /**
 * @function sendMessage

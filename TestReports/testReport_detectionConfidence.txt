@@ -1,0 +1,73 @@
+                TEST REPORT
+        
+            Project: Vision Krang
+        Author: Nehchal J. (nehchal@gatech.edu)
+                Jan 20, 2015
+
+                   Draft
+
+Conducted By: ___ Nehchal J. __  
+
+OBJECTIVE
+
+    1. Test the variation of AR Marker dectection confidence with distance of marker from the camera.
+
+SETUP
+    
+    The camera is mounted from the roof facing downwards.
+
+PROCEDURE
+
+    1. Make sure camera is calibrated.
+    2. Place AR marker in the field of view of camera horizontally. Make sure marker ID is present in the config.json file.
+    3. Create ACH channel to publish marker data.
+        $ ach -C cam0_channel -o 666  -m 10 -n 64 
+        $ cd path/to/alvarCode   
+
+    4. Run camProcess. Make sure to set configuration parameters in comProces.cpp file. Using camera 0,        
+        $ ./bin/camProcess 0 0
+
+    5. Note down the detection confidence value.
+    6. Repeat above steps with marker at different heights.
+
+    Notes: 
+        1. Make sure the marker id used is in config.json file.
+        2. Remember to change configuration settings corresponding to checkboard or marker during calibration and camProcess execution.
+
+OBSERVATIONS
+
+    Camera: __ Logitech WebCam 9000 __
+    Distance between table and camera is approximately 170 cms.
+
+    Marker Size (edge length): __ 12.06 cms __
+
+                  +-------------+----------------+
+                  |  H (in cms) | confidence (%) |
+                  +-------------+----------------+
+                  |  170        |                |
+                  |             |                |
+                  |             |                |
+                  |             |                |
+                  |             |                |
+                  +-------------+----------------+
+       Table 1: The readings for confidence level. H is the height
+                  of marker from the camera.
+
+    
+    Marker Size (edge length): __ 20 cms __
+
+                  +-------------+----------------+
+                  |  H (in cms) | confidence (%) |
+                  +-------------+----------------+
+                  |             |                |
+                  |             |                |
+                  |             |                |
+                  |             |                |
+                  |             |                |
+                  +-------------+----------------+
+       Table 2: The readings for confidence level. H is the height
+                  of marker from the camera.
+
+RESULTS
+
+    

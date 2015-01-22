@@ -1,0 +1,64 @@
+                TEST REPORT
+        
+            Project: Vision Krang
+        Author: Nehchal J. (nehchal@gatech.edu)
+                Jan 20, 2015
+
+                   Draft
+
+Conducted By: ___ Nehchal J. __  
+
+OBJECTIVE
+  //  to be changed
+
+    1. Test the variation of AR Marker dectection confidence with distance of marker from the camera.
+
+SETUP
+    
+    The camera is mounted from the roof facing downwards.
+
+PROCEDURE
+
+  //  to be changed
+
+    1. Make sure camera is calibrated.
+    2. Place AR marker in the field of view of camera horizontally. Make sure marker ID is present in the config.json file.
+    3. Create ACH channel to publish marker data.
+        $ ach -C cam0_channel -o 666  -m 10 -n 64 
+        $ cd path/to/alvarCode   
+
+    4. Run camProcess. Make sure to set configuration parameters in comProces.cpp file. Using camera 0,        
+        $ ./bin/camProcess 0 0
+
+    5. Note down the detection confidence value.
+    6. Repeat above steps with marker at different heights.
+
+    Notes: 
+        1. Make sure the marker id used is in config.json file.
+        2. Remember to change configuration settings corresponding to checkboard or marker during calibration and camProcess execution.
+
+OBSERVATIONS
+
+      Camera 0
+        x: 0.341 m
+        y: -0.419 m
+        theta: 0.001 rad
+
+      Camera 1:
+        x: -0.456 m
+        y: -0.379 m
+        theta: 0.002
+
+      Camera 2
+        x: 0.405 m
+        y: 0.407 m
+        theta: 0.010 rad
+
+      Camera 3:
+        x: -0.402 m
+        y: 0.453 m
+        theta: 0.001 rad
+
+RESULTS
+
+    //  to be changed

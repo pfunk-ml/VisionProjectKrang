@@ -25,7 +25,7 @@ TABLE OF CONTENTS
     . Running Multiple Cameras
     
     . Notation
-    . Coordinate Frames
+    . Reference Frames
     . Transforms
 
 
@@ -66,17 +66,19 @@ PARAMETERS
  
 CALIBRATION
 
-    Calibration step calculates various parameters.
+    Calibration step calculates various intrinsic and extrinsic parameters.
 
     Intrinsic Parameters
     --------------------
 
+    Intrinsic parameters of a camera don't depend on how the camera is mounted. Theoretically, all cameras of same model should have same intrinsic parameters. But, there may be small variations in lens position, sensor position, etc. So, it is preferable calibrate each of the camera separately. 
+
     Each camera needs to be calibrated. Each camera has single calibration file located in 'Data' folder.
-    Currently there are 4 calibration files, one for each of the camera. There is a naming convention for the calibration file name.
-        Data/camCalib_0.xml
-        Data/camCalib_1.xml
-        Data/camCalib_2.xml
-        Data/camCalib_3.xml
+    Currently there are 4 calibration files, one for each of the camera. There is a naming convention for the calibration file.
+        Data/camCalib0.xml
+        Data/camCalib1.xml
+        Data/camCalib2.xml
+        Data/camCalib3.xml
 
     Each calibration file contains:
         Intrinsic Matrix (3 x 3 Matrix)
@@ -84,19 +86,10 @@ CALIBRATION
         Width
         Height
 
-    How to generate calibration file?
-        See Documentation/Workflow.md
-
-        Where to find global marker?
-            Global marker ID is given as ID during the caliration step. Any marker can be used as global marker.
-
-        Which ID corresponds to which marker?
-            Folder for markers: Data/patterns
-            There are 8 markers. Digit at end of file name, denotes the marker ID.
-
-    Procedure for calibration
+    Procedure for calibration of single camera for intrinsic parameters.
+    
         1. Print checkerboard pattern on paper.
-        2. Place the checkerboard on the ground such that it lies in the view of all four cameras. In what orientation ???
+        2. Place the checkerboard such that it can be visible in camera view.
         3. Change parameters in the alvarCode/helpers/runCalibration.cpp file.
         4. Compile
                 $ cd path/to/alvarCode/
@@ -108,15 +101,39 @@ CALIBRATION
             Replace x by camera ID. For example, for Cam 0
                 $./bin/runCalibration 0
         
-        6. Copy or move the generated calibration file to a Data/ folder named camCalib.xml .
+        6. Move the checkerboard in different directions and change orientations, while the program captures different scenes.
+        7. Copy or move the generated calibration file to a Data/ folder named camCalib0.xml .
 
-    getCameraTransforms outputs the 4x4 homogenous transform matrix.
-
-    runCalibration probably needs some checkboard !
     
     Extrinsic Parameters
     --------------------
 
+    Extrinsic parameters depend upon the how the camera is mounted. Extrinsic parameters refers to the transformation matrix from world frame to camera frame (Tworld_cam). 
+
+        P_world = Tworld_cam * P_cam
+
+    Each camera has its own matrix. This matrix is defined in configuration file config.json .
+
+    Intrinsic parameters of camera should be calibrated before calibrating extrinsic paramters.
+
+        Procedure for calibration of extrinsic parameters.
+
+            1. Print a global AR marker with some ID on paper.
+            2. Place it such that it is completely visible in the view of all cameras.
+            3. Get transform for each camera.
+                $ cd path/to/alvarCode
+                $ ./bin/getCameraTransform devX camX  OBJ_ID
+                
+               For example, for devX = 0, camX = 0 and marker ID = 5
+                $ ./bin/getCameraTransform 0 0 5
+            4. Copy the output transform matrix into config.json at appropirate location in appropriate format.
+
+        Where to find global marker?
+            Global marker ID is given as ID during the caliration step. Any marker can be used as global marker.
+
+        Which ID corresponds to which marker?
+            Folder for markers: Data/patterns
+            There are 8 markers. Digit at end of file name, denotes the marker ID.
 
 
 DESCRIPTION OF CAMERA RIG
@@ -182,26 +199,20 @@ CONNECTING THE CAMERAS TO DESKTOP
     Same camera may get different device node name every time it is inserted, depending on order the order in which cameras are connected. These device node names may changes after a restart of system. To ensure that the device node name remains same for a particular cameras, udev rules are to be written. See "CameraUdevSetup.md" for details.
 
 
-NOTATION
-
-    1. Position of object in frame A is written as P_A
-
-    2. Transform from frame A to B is represented as T^A_B. So,
-
-            P_B = T^A_B * P_A
-
-
-COORDINATE FRAMES
+REFERENCE FRAMES
     
     They are several frames defined in the system. Each frame is a 3D. Various frames are as follows.
 
-        World Frame (W)
-        CamGlobal Frame (Cg): The origin of this frame lies at centre of rectangle formed by 4 cameras.
+        
+        Global (G): The origin of this frame lies somewhere near the centre of rectangle formed by 4 cameras. The global marker is placed here during the extrinsic calibration process.
+        
+        World Frame (W): This is the outermost frame.
+            
         Cam0 Frame (C0) 
         Cam1 Frame (C1)
         Cam2 Frame (C2)
         Cam3 Frame (C3)
-            : The origin of camera frame lies at the respective camera (consider camera as a point). The direction towards which camera is facing is the positive z-axis.
+            : The origin of camera frame lies somewhere at the respective camera (consider camera as a point). The direction towards which camera is facing is the positive z-axis.
 
                 y-axis 
                  ^       
@@ -220,6 +231,10 @@ COORDINATE FRAMES
 
     Pose of object refers to its position and orientation. Transformation of a pose of object from one coordinate frame to another can be specified by a 4x4 affine homogenous matrix.
 
+    Transformation from Camera to Global frame is calculated during extrinsic calibration.
+
+    Transformation from Global frame to world frame is calculated manually.
+
 
 TRANSFORMS
     
@@ -227,9 +242,9 @@ TRANSFORMS
 
     Each transform from one coordinate frame to another coordinate frame is an affine transformation defined by 3x3 martix.
 
-    Transforms from CamGlobal frame to World frame is defined manually.
+    Transforms from World frame to Origin frame is defined manually.
 
-    Transform from Camx to CamGlobal frame is calculated during calibration process for each camera.
+    Transform from CamX to world frame is calculated during calibration process for each camera.
 
 
 

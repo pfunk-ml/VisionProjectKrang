@@ -8,7 +8,7 @@
 
 void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
     int i, j;
-    double x, y, theta;
+    double x, y, z, theta;
     Eigen::Matrix4d transMat;
 
     std::cout<<"Object ID:"<<markerMsg->marker_id<<'\n';
@@ -25,8 +25,10 @@ void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
 
     transMat = getDoubleArrAsMat(markerMsg->trans);
     getXYangTriple(transMat, x, y, theta);
+    z = markerMsg->trans[2][3];
     std::cout<<"x-coorinate: "<<x<<'\n';
     std::cout<<"y-coorinate: "<<y<<'\n';
+    std::cout<<"y-coorinate: "<<z<<'\n';
     std::cout<<"theta: "<<theta<<'\n';
     
     std::cout<<"Camera ID:"<<markerMsg->cam_id<<'\n';

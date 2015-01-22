@@ -1,4 +1,5 @@
 // Configuration
+// These are configuration parametes that are used by camera processes and central process.
 {
 	// Number of cameras used
 	"num_cameras" : 4,
@@ -12,17 +13,22 @@
 	// Marker IDs
 	"marker_id" : [1, 5, 6],
 
-	// Marker sizes
-	// "marker_size" : [20.3, 20.3, 20.3],
+    // Length of edge of AR marker in cms
+	"marker_size" : 20.3,
 
-	// Calibration files
-	//"cam_calib_name" : ["Data/camCalib_0.xml",
-	//                    "Data/camCalib_1.xml",
-	//                    "Data/camCalib_2.xml",
-	//                    "Data/camCalib_3.xml"],
-    "cam_calib_name" : "Data/camCalib.xml",
+    // Width of camera frame??
+    "width" : 960, //700, //640,
 
-	// Camera channel names
+    // Height of camera frame??
+    "height" : 720,
+
+	// Calibration files for camera processes
+	"cam_calib_name" : ["Data/camCalib0.xml",
+	                    "Data/camCalib1.xml",
+	                    "Data/camCalib2.xml",
+	                    "Data/camCalib3.xml"],
+
+	// Camera channel names for camera processes to publish data
 	"cam_channel_name" : ["cam0_channel",
 	                      "cam1_channel", 
 	                      "cam2_channel", 
@@ -34,49 +40,54 @@
 	// Debug channel name
 	"debug_channel" : "debug_channel",
 
-	// Origin location
-	"gTworld_origin" : 
-    [
-	    [0, 1, 0, 2.7686],
-	    [-1, 0, 0, 2.3114],
-	    [0, 0, 1, 0],
-	    [0, 0, 0, 1] 
-    ],
-
-	// Origin marker ID
-	"marker_origin_id" : 4,
-
-	// Camera origin ID
-	"camera_origin_id": 0,
-
-	// World to camera matrices
-	"gTworld_cam" : 
+	// Global to camera matrices
+	"gT_global2cam" : 
     [
     	[ 
-            [-0.998209, -0.0232161, -0.0551266, 89.288],
-            [-0.0219696, 0.999491, -0.0231106, 101.508],
-            [0.0556351, -0.0218581, -0.998212, 296.085],
-	        [0, 0, 0, 1]
+            [-0.99683, 0.0137102, -0.0783754, 100.545],
+            [0.00671131, 0.99602, 0.0888749, 87.629],
+            [0.0792819, 0.0880672, -0.992954, 183.634],
+            [0, 0, 0, 1]
+
         ],
     	[ 
-            [0.981348, 0.00231326, 0.192223, 74.5487],  
-	        [0.000432792, -0.999952, 0.00982415, -64.8524],
-	        [0.192237, -0.00955773, -0.981302, 273.846],
-	        [0, 0, 0, 1] 
+            [-0.992213, 0.118691, -0.0377507, -94.5358],
+            [0.117475, 0.992529, 0.0329473, 100.946],
+            [0.0413792, 0.028256, -0.998744, 193.51],
+            [0, 0, 0, 1]
+
         ], 
 	    [ 
-            [-0.999564, 0.0238067, 0.017449, 76.459],  
-	        [0.0123426, 0.874116, -0.48556, 43.9597],
-	        [-0.026812, -0.485134, -0.874029, 273.28],
-	        [0, 0, 0, 1] 
+            [0.999031, -0.0399985, -0.018356, -95.0585],
+            [-0.0367136, -0.987457, 0.15356, 79.458],
+            [-0.0242679, -0.152737, -0.987969, 186.389],
+            [0, 0, 0, 1]
         ],
 	    [ 
-            [0.980693, -0.0429465, 0.190779, 62.4286],  
-	        [-0.0417944, -0.999076, -0.0100601, 99.9049],
-	        [0.191035, 0.00189234, -0.981581, 318.945],
-	        [0, 0, 0, 1] 
+            [0.995379, -0.0302338, 0.0911417, 88.298],
+            [-0.0547738, -0.958351, 0.28029, -14.4904],
+            [0.0788715, -0.283987, -0.955579, 178.002],
+            [0, 0, 0, 1]
+
+            // [0.994021, -0.0165474, 0.107924, 85.2057],
+            // [-0.0438593, -0.965709, 0.255894, 64.6526],
+            // [0.0999891, -0.259097, -0.960662, 194.188],
+            // [0, 0, 0, 1]
         ]  
 	],
+
+    /* World Customization */
+
+    // Origin location (tag transforms are published in the origin frame)
+    // Use this transform to customize the subjective "origin" on the
+    // krang_vision channel.
+    "gT_global2world" : 
+    [
+        [1, 0, 0, 1],  
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1] 
+    ],
 
 	// Marker to sprite matrices
     "gTmarker_sprite" : 

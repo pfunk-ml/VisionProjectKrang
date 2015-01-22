@@ -31,7 +31,7 @@ int main( int argc, char* argv[] )
 {
   // First get json file
   Json::Value config;
-  parseJSONFile("/home/kenneth/VisionProjectKrang/alvarCode/globalStuff/config.json", config);
+  parseJSONFile("globalStuff/config.json", config);
   setGlobalData(config);
 
   // Clean cameras

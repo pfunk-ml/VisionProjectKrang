@@ -1,0 +1,39 @@
+            DEVELOPER NOTES        
+            Project: Vision Krang
+        Author: Nehchal J. (nehchal@gatech.edu)
+                Jan 5, 2015
+
+                   Draft 
+
+Audience: Developer team.
+
+Purpose: These notes are for the developer who wishes to understand or make any changes in the code. The reader is expected to go through the user manual before reading this.
+
+
+
+TABLE OF CONTENTS
+    
+    . Notation
+
+
+NAMING CONVENTIONS
+
+    Variables, function names:
+        camelCase
+        eg. getCameraTrasform()
+
+        Global variable are preceded by letter 'g'
+            eg. gConfParams
+
+    Pose or Point
+
+        P_objname_framename represents Pose or position of object 'objname' in frame 'framename'.
+            eg. P_chair_world
+
+    Transforms 
+
+        T_a2b means transformation from frame a to frame b.
+
+            P_b = T_a2b * P_a
+
+            T_a2c = T_b2c * T_a2b

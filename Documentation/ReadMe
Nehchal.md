@@ -92,10 +92,11 @@ CALIBRATION
         2. Place the checkerboard such that it can be visible in camera view.
         3. Change parameters in the alvarCode/helpers/runCalibration.cpp file.
         4. Compile
-                $ cd path/to/alvarCode/
-                $ cmake .
+                $ cd path/to/alvarCode/build
+                $ cmake ..
                 $ make
         5. Run runCalibration for each camera
+            $ cd path/to/alvarCode
             $ ./bin/runCalibration x
             
             Replace x by camera ID. For example, for Cam 0

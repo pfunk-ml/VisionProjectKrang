@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libcvViewer.a  CMakeFiles/cvViewer.dir/CvTestbed.cpp.o
+/usr/bin/ranlib ../../lib/libcvViewer.a

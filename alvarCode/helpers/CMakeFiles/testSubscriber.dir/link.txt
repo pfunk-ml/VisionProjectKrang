@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++0x     CMakeFiles/testSubscriber.dir/testSubscriber.cpp.o  -o ../bin/testSubscriber -rdynamic -L/usr/local/lib ../lib/libglobalStuff.a -lach -ljsoncpp ../lib/libworldModel.a -Wl,-rpath,/usr/local/lib 

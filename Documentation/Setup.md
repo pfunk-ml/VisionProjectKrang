@@ -22,23 +22,23 @@ SETUP
    4. Build the code. This can be done simply by
 
       * Run CMake to generate Makefile
-         $ cd path/to/alvarCode/
-         $ cmake .
+         $ cd path/to/alvarCode/build
+         $ cmake ..
 
       * Run make for compilation. All binaries executables go to bin/ folder.
-         $ cd path/to/alvarCode/
+         $ cd path/to/alvarCode/build
          $ make
 
       Note: After making any changes to files, 'cmake' need not be re-run. 'make' should be run. If new files are created then changes may be needed to make to CMakeLists.txt file.
 
 
 
-   5. Set the parameters
+   5. Set the parameters in config.json
          
 
    6. Now you can run the script:
-      
-         ./visionClient.sh
+        $ cd path/to/alvarCode
+        $ ./visionClient.sh
 
    6. You should be done.
 

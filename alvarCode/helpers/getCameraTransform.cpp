@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
   /** Setting global data */
   Json::Value config;
-  parseJSONFile("../globalStuff/config.json", config);
+  parseJSONFile("globalStuff/config.json", config);
   setGlobalData(config);
   std::cout << "\t * Setting global data done." << std::endl;
 

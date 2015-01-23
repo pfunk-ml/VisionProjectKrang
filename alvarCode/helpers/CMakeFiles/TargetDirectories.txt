@@ -1,6 +1,0 @@
-/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/generateMarkers.dir
-/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/getCameraTransform.dir
-/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/runCalibration.dir
-/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/testFilter.dir
-/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/testFilterPlot.dir
-/home/nehchal/VisionProjectKrang/alvarCode/helpers/CMakeFiles/testSubscriber.dir

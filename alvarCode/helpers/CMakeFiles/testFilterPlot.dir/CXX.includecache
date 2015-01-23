@@ -1019,6 +1019,8 @@ Object.h
 globalStuff/Object.h
 json/json.h
 globalStuff/json/json.h
+Eigen/Geometry
+-
 
 worldModel/ARCamera.h
 Eigen/Dense

@@ -51,7 +51,6 @@
 
 #include "CameraCentralProcess.h"
 #include "globalStuff/globalData.h"
-#include "globalStuff/globalTransforms.h"
 #include <ach.h>
 
 #include "json/json.h"
@@ -167,19 +166,19 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
       // Set cameras  
       Eigen::Isometry3d Transf;
       std::cout << "Setting cam 0 "<< std::endl;
-      Transf.matrix() = gTworld_cam[0];
+      Transf.matrix() = gTransforms.T_cam2world[0];
       mWorld->getSkeleton("cam0")->setConfig( dart::math::logMap( Transf ) ); 
       
       std::cout << "Setting cam 1 "<< std::endl;
-      Transf.matrix() = gTworld_cam[1];
+      Transf.matrix() = gTransforms.T_cam2world[1];
       mWorld->getSkeleton("cam1")->setConfig( dart::math::logMap( Transf ) ); 
       
       std::cout << "Setting cam 2 "<< std::endl;
-      Transf.matrix() = gTworld_cam[2];
+      Transf.matrix() = gTransforms.T_cam2world[2];
       mWorld->getSkeleton("cam2")->setConfig( dart::math::logMap( Transf ) ); 
       
       std::cout << "Setting cam 3 "<< std::endl;
-      Transf.matrix() = gTworld_cam[3];
+      Transf.matrix() = gTransforms.T_cam2world[3];
       mWorld->getSkeleton("cam3")->setConfig( dart::math::logMap( Transf ) ); 
       
       std::cout <<"SET CAMERAS CORRECTLY" << std::endl;

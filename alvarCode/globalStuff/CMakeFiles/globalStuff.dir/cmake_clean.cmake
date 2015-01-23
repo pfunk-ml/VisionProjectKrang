@@ -1,6 +1,5 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/globalStuff.dir/globalData.cpp.o"
-  "CMakeFiles/globalStuff.dir/globalTransforms.cpp.o"
   "CMakeFiles/globalStuff.dir/optparser.cpp.o"
   "CMakeFiles/globalStuff.dir/Object.cpp.o"
   "../lib/libglobalStuff.pdb"

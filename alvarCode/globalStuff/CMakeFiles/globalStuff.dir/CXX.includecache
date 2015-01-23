@@ -27,22 +27,8 @@ Object.h
 /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/Object.h
 json/json.h
 /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/json/json.h
-
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.cpp
-globalTransforms.h
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.h
-globalData.h
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalData.h
 Eigen/Geometry
 -
-
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.h
-Eigen/Core
--
-vector
--
-json/json.h
-/home/nehchal/VisionProjectKrang/alvarCode/globalStuff/json/json.h
 
 /usr/include/eigen3/Eigen/Cholesky
 Core

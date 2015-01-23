@@ -27,8 +27,16 @@ NAMING CONVENTIONS
 
     Pose or Point
 
+        Pobjname represents Pose or position of object 'objname' in some frame.
+            eg. Ptable
+
+        Pframename represent Pose or position of some object frame 'framename'
+            eg. P_world
+
         P_objname_framename represents Pose or position of object 'objname' in frame 'framename'.
-            eg. P_chair_world
+            eg. Pchair_world
+
+        Confusion might occur where name of object or frame is same. 
 
     Transforms 
 

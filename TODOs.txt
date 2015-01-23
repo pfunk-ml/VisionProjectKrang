@@ -16,6 +16,7 @@ TODOs:
 
 3) [Done] look into cam resolution downsampling params
     - yes resolutions increases if the width and height are increased.
+    - On increasing resolution, the viewing area decreases.
 
 4) [low priority] fix bug in structrure packing for local camProcess messages 
 
@@ -26,4 +27,4 @@ TODOs:
 
 -------------------------
 
-1)  get world set up with objects [2 orange chairs, long rect table, square table]
+1)  Get the world set up with objects [2 orange chairs, long rect table, square table]

@@ -198,30 +198,6 @@ globalTest.cpp.s:
 	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/testGlobals.dir/build.make globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.s
 .PHONY : globalTest.cpp.s
 
-globalTransforms.o: globalTransforms.cpp.o
-.PHONY : globalTransforms.o
-
-# target to build an object file
-globalTransforms.cpp.o:
-	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o
-.PHONY : globalTransforms.cpp.o
-
-globalTransforms.i: globalTransforms.cpp.i
-.PHONY : globalTransforms.i
-
-# target to preprocess a source file
-globalTransforms.cpp.i:
-	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.i
-.PHONY : globalTransforms.cpp.i
-
-globalTransforms.s: globalTransforms.cpp.s
-.PHONY : globalTransforms.s
-
-# target to generate assembly for a file
-globalTransforms.cpp.s:
-	cd /home/nehchal/VisionProjectKrang/alvarCode && $(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.s
-.PHONY : globalTransforms.cpp.s
-
 optparser.o: optparser.cpp.o
 .PHONY : optparser.o
 
@@ -265,9 +241,6 @@ help:
 	@echo "... globalTest.o"
 	@echo "... globalTest.i"
 	@echo "... globalTest.s"
-	@echo "... globalTransforms.o"
-	@echo "... globalTransforms.i"
-	@echo "... globalTransforms.s"
 	@echo "... optparser.o"
 	@echo "... optparser.i"
 	@echo "... optparser.s"

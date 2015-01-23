@@ -1,6 +1,5 @@
 #include "json/json.h"
 #include "globalData.h"
-#include "globalTransforms.h"
 #include "optparser.h"
 
 #include <vector>
@@ -31,11 +30,8 @@ int main()
     cout << "Debug channel: " << DEBUG_CHANNEL << endl;
 
     // Get object info
-    for (int i = 0; i < NUM_OBJECTS; i++)
-    {
+    for (int i = 0; i < NUM_OBJECTS; i++){
         cout << "Object " << i << ": " << gObjects[i].obj_name << endl;
-        cout << "Marker ID: " << MARKER_ID[i] << endl;
-        // cout << "Marker Size: " << MARKER_SIZE[i] << endl;
     }
 
     // Get camera info
@@ -48,11 +44,11 @@ int main()
 
     for (int i = 0; i < NUM_CAMERAS; i++)
     {
-        cout << "gT_cam2world[" << i << "]: " << endl << gTworld_cam[i] << endl;
+        cout << "T_cam2world[" << i << "]: " << endl << gTransforms.T_cam2world[i] << endl;
     }   
     for (int i = 0; i < NUM_OBJECTS; i++)
     { 
-        cout << "gTmarker_sprite[" << i << "]: " << endl << gTmarker_sprite[i] << endl;
+        cout << "T_sprite[" << i << "]: " << endl << gTransforms.T_sprite[i] << endl;
     }
 
     return 0;

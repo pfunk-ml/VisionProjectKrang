@@ -31,8 +31,6 @@ CameraCentralProcess.h
 /home/nehchal/VisionProjectKrang/alvarCode/testSimulation/CameraCentralProcess.h
 globalStuff/globalData.h
 /home/nehchal/VisionProjectKrang/alvarCode/testSimulation/globalStuff/globalData.h
-globalStuff/globalTransforms.h
-/home/nehchal/VisionProjectKrang/alvarCode/testSimulation/globalStuff/globalTransforms.h
 ach.h
 -
 json/json.h
@@ -3983,14 +3981,8 @@ Object.h
 globalStuff/Object.h
 json/json.h
 globalStuff/json/json.h
-
-globalStuff/globalTransforms.h
-Eigen/Core
+Eigen/Geometry
 -
-vector
--
-json/json.h
-globalStuff/json/json.h
 
 globalStuff/optparser.h
 json/json.h

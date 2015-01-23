@@ -201,18 +201,15 @@ CONNECTING THE CAMERAS TO DESKTOP
 
 REFERENCE FRAMES
     
-    They are several frames defined in the system. Each frame is a 3D. Various frames are as follows.
-
+    They are several frames defined in the system. Each frame is a 3D. Various frames are as follows
         
-        Global (G): The origin of this frame lies somewhere near the centre of rectangle formed by 4 cameras. The global marker is placed here during the extrinsic calibration process.
-        
-        World Frame (W): This is the outermost frame.
+      -- World Frame (W): This is the outermost frame.
             
-        Cam0 Frame (C0) 
-        Cam1 Frame (C1)
-        Cam2 Frame (C2)
-        Cam3 Frame (C3)
-            : The origin of camera frame lies somewhere at the respective camera (consider camera as a point). The direction towards which camera is facing is the positive z-axis.
+      -- Camera Frame: The origin of camera frame lies somewhere at the respective camera (consider camera as a point). The direction towards which camera is facing is the positive z-axis.
+                Cam0 Frame (C0) 
+                Cam1 Frame (C1)
+                Cam2 Frame (C2)
+                Cam3 Frame (C3)
 
                 y-axis 
                  ^       
@@ -226,6 +223,10 @@ REFERENCE FRAMES
 
             Fig: The Cam Frame. Origin is at the 
               camera. x-axis is into the paper.
+
+     -- Marker frame: This frame is attached to each AR marker. Origin lies at center of marker. z-axis comes out the marker plane. x and y-axis are aligned in marker plane.
+
+     -- Global (G): The origin of this frame lies somewhere near the centre of rectangle formed by 4 cameras. The global marker is placed here during the extrinsic calibration process. So, in that case the marker frame is same as global frame.
 
     A coodinate frame is defined by position of the origin and orientation of its x, y and z axis.
 

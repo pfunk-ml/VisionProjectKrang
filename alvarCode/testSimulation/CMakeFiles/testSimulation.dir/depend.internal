@@ -429,7 +429,6 @@ testSimulation/CMakeFiles/testSimulation.dir/testSimulation.cpp.o
  basicFilter.h
  globalStuff/Object.h
  globalStuff/globalData.h
- globalStuff/globalTransforms.h
  globalStuff/optparser.h
  worldModel/ARCamera.h
  worldModel/ARMarker.h

@@ -10,12 +10,12 @@
   Example
     $ getCameraTransform 0 0 5
 
-  Extrinsic parameters refers to the world to camera transformation matrix. 
+  Extrinsic parameters refers to the global to camera transformation matrix. 
   The 4x4 transformation matrix is printed in the terminal window.
 
-    P_world = Tworld_cam * P_cam
-
+    P_global = T_cam2global * P_cam
  */
+
 #include <MarkerDetector.h>
 
 #include "viz/CvTestbed.h"
@@ -128,21 +128,24 @@ void videocallback( IplImage *_img ) {
       
       std::cout << "Detected marker with id:"<<gObjID<< std::endl;
       alvar::Pose p = (*(marker_detector.markers))[j].pose;
-      double transf[16];
-      p.GetMatrixGL( transf, false);
+
+      /* Pose of marker in camera frame represents transformation marker frame 
+         to camera frame */
+      double T_marker2cam[16];
+      p.GetMatrixGL( T_marker2cam, false);
       
-      for( int col = 0; col < 4; ++col ) {
+      // Print the transformation matrix
+      for( int row = 0; row < 4; row++ ) {
         std::cout<<'[';
-	      for( int row = 0; row < 4; ++row ) {
-	         std::cout << transf[col+row*4];
-           if (row != 3) 
+	      for( int col = 0; col < 4; ++col ) {
+	         std::cout << T_marker2cam[row + col*4];
+           if (col != 3) 
               std::cout<<", ";
 	      }
 	      std::cout<<']';
-        if(col != 3)
+        if(row != 3)
           cout<<",\n";
-      }
-      
+      }  
       std::cout << std::endl;
       
       double r = 1.0 - double(id+1)/32.0;
@@ -157,17 +160,17 @@ void videocallback( IplImage *_img ) {
       
   } // end of all markers checked
 
-    if( detected == false ) {
-      std::cout << "NO detected marker with id "<< gObjID<<"("<<std::endl;
-    }
+  if( detected == false ) {
+    std::cout << "No detected marker with id "<< gObjID<<"("<<std::endl;
+  }
 
-    // Put image back if it was flipped
-    if (flip_image) {
-      cvFlip(_img);
-      _img->origin = !_img->origin;
-    }
+  // Put image back if it was flipped
+  if (flip_image) {
+    cvFlip(_img);
+    _img->origin = !_img->origin;
+  }
 
-    usleep(1.0*1e6);
+  usleep(1.0*1e6);
 }
 
 

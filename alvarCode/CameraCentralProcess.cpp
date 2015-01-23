@@ -10,7 +10,6 @@
 #include "worldModel/ARMarker.h"
 #include "worldModel/WorldModel.h"
 #include "globalStuff/globalData.h"
-#include "globalStuff/globalTransforms.h"
 #include "json/json.h"
 #include "globalStuff/optparser.h"
 #include <iostream>
@@ -77,9 +76,8 @@ void CameraCentralProcess::initSetup() {
   
   
   /**< Set hard-coded values for cameras */
-  for( int i = 0; i < NUM_CAMERAS; ++i ) {
-    mCameras[i].initializeCamera( gTworld_cam[i] );  
-  }
+  for( int i = 0; i < NUM_CAMERAS; ++i )
+    mCameras[i].initializeCamera( gTransforms.T_cam2world[i] );  
   
   
   /** World */
@@ -212,7 +210,9 @@ bool CameraCentralProcess::grabChannelsInfo() {
   for ( int i = 0; i < mMarkerMsgs.size(); i++)
     mMarkerMsgs[i].clear();
   
-  for( int i = 0; i < mInput_channels.size(); ++i ) { // iterate over all channels
+  //for( int i = 0; i < mInput_channels.size(); ++i ) 
+  int i =0;
+  { // iterate over all channels
     // read the input channel
     r = ach_get( &mInput_channels[i],
                   &tempMm,
@@ -287,12 +287,13 @@ void CameraCentralProcess::createMessage() {
   double x, y, theta;  
   double x_est, y_est, theta_est;
 
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  Eigen::Matrix4d Pmarker_world; // marker pose in world frame 
+  Eigen::Matrix4d Pobj_world; // obj pose in world frame
 
-    Eigen::Matrix4d Tmarker; // marker pose in world frame 
-    Eigen::Matrix4d Tsprite;
-    
-    // If object is not visible, set x,y,theta to zero to signal the filter that these values are not being seen!
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+   
+    /* If object is not visible, set x,y,theta to zero to signal the filter 
+       that these values are not being seen! */
     if( mMarkerMsgs[i].size() == 0 ) {
       x = 0; y = 0; theta = 0;
     }
@@ -300,14 +301,16 @@ void CameraCentralProcess::createMessage() {
       x = 0; y = 0; theta = 0;
     }
     else{
-      Tmarker = mWorldModel->getMarkerPose( mMarkerMsgs[i][0].marker_id );
-      Tsprite = Tmarker * gTmarker_sprite[i];
-      getXYangTriple(Tsprite, x, y, theta);
+      Pmarker_world = mWorldModel->getMarkerPose( 
+                                            mMarkerMsgs[i][0].marker_id );
+      Pobj_world = Pmarker_world * gTransforms.T_sprite[i];
+      getXYangTriple(Pobj_world, x, y, theta);
     }
 
+    // cout<<__func__<<"() "<<__LINE__<<": "<<"x in world frame = "<<x;
+
     // Use filter (one filter per each object!)
-    mBf[i].getEstimate( x, y, theta,
-       	                  x_est, y_est, theta_est );
+    mBf[i].getEstimate( x, y, theta, x_est, y_est, theta_est );
 
     finalMsg[i][0] = x_est;
     finalMsg[i][1] = y_est;

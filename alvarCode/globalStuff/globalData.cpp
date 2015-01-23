@@ -9,8 +9,7 @@
 int NUM_CAMERAS;
 int NUM_OBJECTS;
 
-std::vector<int> MARKER_ID;
-std::vector<double> MARKER_SIZE;
+//std::vector<double> MARKER_SIZE;
 
 std::vector<std::string> CAM_CALIB_NAME;
 std::vector<std::string> CAM_CHANNEL_NAME;
@@ -21,6 +20,7 @@ std::string PERCEPTION_CHANNEL;
 std::string DEBUG_CHANNEL;
 
 ConfParams_t gConfParams;
+Transforms_t gTransforms;
 
 void setGlobalTransforms(Json::Value config) 
 {
@@ -29,11 +29,11 @@ void setGlobalTransforms(Json::Value config)
     {
         for (int c = 0; c < 4; c++)
         {
-            T_global2world(r, c) = config["gT_global2world"].get(r, 0).get(c, 0).asDouble();
+            T_global2world(r, c) = config["T_global2world"].get(r, 0).get(c, 0).asDouble();
         }
     }    
     
-    gTworld_cam.resize(NUM_CAMERAS);
+    gTransforms.T_cam2world.resize(NUM_CAMERAS);
     for (int i = 0; i < NUM_CAMERAS; i++)
     {
         Eigen::Matrix4d T_global2cam;
@@ -43,7 +43,7 @@ void setGlobalTransforms(Json::Value config)
         {
             for (int c = 0; c < 4; c++)
             {
-                T_global2cam(r, c) = config["gT_global2cam"].get(i, 0).get(r, 0).get(c, 0).asDouble();
+                T_global2cam(r, c) = config["T_global2cam"].get(i, 0).get(r, 0).get(c, 0).asDouble();
             }
         }   
 
@@ -52,13 +52,13 @@ void setGlobalTransforms(Json::Value config)
         T_global2cam(1,3) = T_global2cam(1,3) / 100.0;
         T_global2cam(2,3) = T_global2cam(2,3) / 100.0;
     
-        gTworld_cam[i] = T_global2world * T_global2cam.inverse();
+        gTransforms.T_cam2world[i] = T_global2world * T_global2cam.inverse();
     }
 
     Eigen::Matrix4d Ttemp = Eigen::Matrix4d::Identity();
 
     // Transformation from marker to sprite
-    gTmarker_sprite.resize(NUM_OBJECTS);
+    gTransforms.T_sprite.resize(NUM_OBJECTS);
     for (int i = 0; i < NUM_OBJECTS; i++)
     {
         Eigen::Matrix4d Ttemp;
@@ -68,12 +68,12 @@ void setGlobalTransforms(Json::Value config)
         {
             for (int c = 0; c < 4; c++)
             {
-                Ttemp(r, c) = config["gTmarker_sprite"].get(i, 0).get(r, 0).get(c, 0).asDouble();
+                Ttemp(r, c) = config["T_sprite"].get(i, 0).get(r, 0).get(c, 0).asDouble();
             }
         }
 
         // Set sprite transform
-        gTmarker_sprite[i] = Ttemp;
+        gTransforms.T_sprite[i] = Ttemp;
     }
 }
 
@@ -108,19 +108,7 @@ void setGlobalData(Json::Value config)
         std::string name = config["cam_channel_name"].get(i, "chan").asString();
         CAM_CHANNEL_NAME.push_back(name);
     }
-  
-    // IDs
-    MARKER_ID.resize(0);
-    for (int i = 0; i < NUM_OBJECTS; i++)
-    {
-        int id = config["marker_id"].get(i, 0).asInt();
-        MARKER_ID.push_back(id);
-    }   
 
-    if( MARKER_ID.size() != NUM_OBJECTS ) 
-    {
-        std::cout << "[X] Error initializing MARKER_ID!"<< std::endl;
-    }
 
     /**< Initialize objects for each marker */
     for( int i = 0; i < NUM_OBJECTS; ++i ) 
@@ -130,9 +118,8 @@ void setGlobalData(Json::Value config)
         sprintf( obj.obj_name, 
                 "%s", config["object_name"].get(i, "obj").asString().c_str());
 
-        obj.marker_id  = MARKER_ID[i];
+        obj.marker_id  = config["marker_id"].get(i, 0).asInt();;
         obj.visible = -1;
-        //obj.width = MARKER_SIZE[i];
         obj.center[0] = 0; obj.center[1] = 0;
         obj.cam_id = -1;
     

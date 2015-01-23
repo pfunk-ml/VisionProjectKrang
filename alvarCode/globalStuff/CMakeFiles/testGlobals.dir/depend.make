@@ -4,7 +4,6 @@
 globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: globalStuff/Object.h
 globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: globalStuff/globalData.h
 globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: globalStuff/globalTest.cpp
-globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: globalStuff/globalTransforms.h
 globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: globalStuff/optparser.h
 globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: /usr/include/eigen3/Eigen/Cholesky
 globalStuff/CMakeFiles/testGlobals.dir/globalTest.cpp.o: /usr/include/eigen3/Eigen/Core

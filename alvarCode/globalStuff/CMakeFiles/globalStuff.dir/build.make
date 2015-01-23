@@ -72,32 +72,9 @@ globalStuff/CMakeFiles/globalStuff.dir/globalData.cpp.o.provides: globalStuff/CM
 
 globalStuff/CMakeFiles/globalStuff.dir/globalData.cpp.o.provides.build: globalStuff/CMakeFiles/globalStuff.dir/globalData.cpp.o
 
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o: globalStuff/CMakeFiles/globalStuff.dir/flags.make
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o: globalStuff/globalTransforms.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles $(CMAKE_PROGRESS_2)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o"
-	cd /home/nehchal/VisionProjectKrang/alvarCode/globalStuff && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/globalStuff.dir/globalTransforms.cpp.o -c /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.cpp
-
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/globalStuff.dir/globalTransforms.cpp.i"
-	cd /home/nehchal/VisionProjectKrang/alvarCode/globalStuff && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.cpp > CMakeFiles/globalStuff.dir/globalTransforms.cpp.i
-
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/globalStuff.dir/globalTransforms.cpp.s"
-	cd /home/nehchal/VisionProjectKrang/alvarCode/globalStuff && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/globalTransforms.cpp -o CMakeFiles/globalStuff.dir/globalTransforms.cpp.s
-
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.requires:
-.PHONY : globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.requires
-
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.provides: globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.requires
-	$(MAKE) -f globalStuff/CMakeFiles/globalStuff.dir/build.make globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.provides.build
-.PHONY : globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.provides
-
-globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.provides.build: globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o
-
 globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o: globalStuff/CMakeFiles/globalStuff.dir/flags.make
 globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o: globalStuff/optparser.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o"
 	cd /home/nehchal/VisionProjectKrang/alvarCode/globalStuff && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/globalStuff.dir/optparser.cpp.o -c /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/optparser.cpp
 
@@ -120,7 +97,7 @@ globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o.provides.build: globalStu
 
 globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o: globalStuff/CMakeFiles/globalStuff.dir/flags.make
 globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o: globalStuff/Object.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/nehchal/VisionProjectKrang/alvarCode/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o"
 	cd /home/nehchal/VisionProjectKrang/alvarCode/globalStuff && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/globalStuff.dir/Object.cpp.o -c /home/nehchal/VisionProjectKrang/alvarCode/globalStuff/Object.cpp
 
@@ -144,7 +121,6 @@ globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o.provides.build: globalStuff/
 # Object files for target globalStuff
 globalStuff_OBJECTS = \
 "CMakeFiles/globalStuff.dir/globalData.cpp.o" \
-"CMakeFiles/globalStuff.dir/globalTransforms.cpp.o" \
 "CMakeFiles/globalStuff.dir/optparser.cpp.o" \
 "CMakeFiles/globalStuff.dir/Object.cpp.o"
 
@@ -152,7 +128,6 @@ globalStuff_OBJECTS = \
 globalStuff_EXTERNAL_OBJECTS =
 
 lib/libglobalStuff.a: globalStuff/CMakeFiles/globalStuff.dir/globalData.cpp.o
-lib/libglobalStuff.a: globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o
 lib/libglobalStuff.a: globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o
 lib/libglobalStuff.a: globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o
 lib/libglobalStuff.a: globalStuff/CMakeFiles/globalStuff.dir/build.make
@@ -166,7 +141,6 @@ globalStuff/CMakeFiles/globalStuff.dir/build: lib/libglobalStuff.a
 .PHONY : globalStuff/CMakeFiles/globalStuff.dir/build
 
 globalStuff/CMakeFiles/globalStuff.dir/requires: globalStuff/CMakeFiles/globalStuff.dir/globalData.cpp.o.requires
-globalStuff/CMakeFiles/globalStuff.dir/requires: globalStuff/CMakeFiles/globalStuff.dir/globalTransforms.cpp.o.requires
 globalStuff/CMakeFiles/globalStuff.dir/requires: globalStuff/CMakeFiles/globalStuff.dir/optparser.cpp.o.requires
 globalStuff/CMakeFiles/globalStuff.dir/requires: globalStuff/CMakeFiles/globalStuff.dir/Object.cpp.o.requires
 .PHONY : globalStuff/CMakeFiles/globalStuff.dir/requires

@@ -1891,6 +1891,8 @@ Object.h
 globalStuff/Object.h
 json/json.h
 globalStuff/json/json.h
+Eigen/Geometry
+-
 
 globalStuff/optparser.h
 json/json.h

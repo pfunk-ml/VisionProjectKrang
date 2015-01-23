@@ -173,7 +173,7 @@ void CameraCentralProcess::mainLoop() {
   while( true ) {
     
     // Get info from channels
-    if( !this->grabChannelsInfo() ) { break; }
+   this->grabChannelsInfo();
 
     // Calculate the markers transformation
     this->getWorldTransforms();
@@ -186,7 +186,7 @@ void CameraCentralProcess::mainLoop() {
 
     // Send the message
     this->sendMessage();
-
+    
     // Important! If you just run the main loop like crazy it will get you an ACH error
     // crazy: CONTINUOUSLY WITHOUT SLEEP 
     // 10Hz        
@@ -198,20 +198,21 @@ void CameraCentralProcess::mainLoop() {
 /**
  * @function grabChannelsInfo
  * @brief Grab information from camera channels
+ * return val: True if one or more channels were read successfully. False 
+               if message is received from none of the cameras.
  */
 bool CameraCentralProcess::grabChannelsInfo() {
 
-  
   MarkerMsg_t tempMm[NUM_OBJECTS];  // temporary marker msgs
   int r;      // result
   size_t fs;  // frame size
+  bool isMsgRcvd = true;
 
   // Clear earlier messages
   for ( int i = 0; i < mMarkerMsgs.size(); i++)
     mMarkerMsgs[i].clear();
   
-  //for( int i = 0; i < mInput_channels.size(); ++i ) 
-  int i =0;
+  for( int i = 0; i < mInput_channels.size(); ++i ) 
   { // iterate over all channels
     // read the input channel
     r = ach_get( &mInput_channels[i],
@@ -221,23 +222,25 @@ bool CameraCentralProcess::grabChannelsInfo() {
                   NULL, ACH_O_LAST );
     
     if( r != ACH_OK && r != ACH_MISSED_FRAME ) {
-      std::cout << "Error: ACH status bad. EXITING MAIN LOOP" << std::endl;
-      return false;
+      std::cout << "Error: Channel "<<CAM_CHANNEL_NAME[i]<<": ACH status bad" << std::endl;
+      isMsgRcvd = false;
     }
 
     else if( fs != sizeof(tempMm)) {
-      std::cout << "Error: Frame size and message received are not of the same. EXITING MAIN LOOP"<< std::endl;
-      return false;
+      std::cout << "Error: Channel "<<CAM_CHANNEL_NAME[i]<<": Frame size is not same as message received"<< std::endl;
+      isMsgRcvd = false;
     }
     
-    /* Iterate over each object. If object is visible in message read from 
-         current channel, then add it to mMarkerMsgs */
-    for(int j=0; j < NUM_OBJECTS; j++) {     
-      if(tempMm[j].visible == 1)
-        mMarkerMsgs[j].push_back(tempMm[j]);
-    }
-  } // end for with i
-  return true;
+    else{
+      /* Iterate over each object. If object is visible in message read from 
+           current channel, then add it to mMarkerMsgs */
+      for(int j=0; j < NUM_OBJECTS; j++) {     
+        if(tempMm[j].visible == 1)
+          mMarkerMsgs[j].push_back(tempMm[j]);
+      } // end for
+    } // else
+  } // end for
+  return isMsgRcvd;
 }
 
 /**
@@ -292,7 +295,7 @@ void CameraCentralProcess::createMessage() {
 
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
    
-    /* If object is not visible, set x,y,theta to zero to signal the filter 
+    /* If object is not visible, set x, y, theta to zero to signal the filter 
        that these values are not being seen! */
     if( mMarkerMsgs[i].size() == 0 ) {
       x = 0; y = 0; theta = 0;
@@ -328,7 +331,7 @@ void CameraCentralProcess::printMessage() {
   for(i = 0; i < NUM_OBJECTS; i++) {
     printf("%9.3f %9.3f %9.3f\n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2]);
   }
-  std::cout<<"--";
+  std::cout<<"--\n";
   return;
 }
 

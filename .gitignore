@@ -3,3 +3,4 @@
 alvarCode/bin/
 alvarCode/lib/
 */CMakeFiles/
+*.o

@@ -1,2 +1,0 @@
-/usr/bin/ar cr ../lib/libcamCentralProcess.a  CMakeFiles/camCentralProcess.dir/CameraCentralProcess.cpp.o CMakeFiles/camCentralProcess.dir/basicFilter.cpp.o
-/usr/bin/ranlib ../lib/libcamCentralProcess.a

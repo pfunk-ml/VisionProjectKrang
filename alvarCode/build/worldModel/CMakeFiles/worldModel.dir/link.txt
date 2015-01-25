@@ -1,2 +1,0 @@
-/usr/bin/ar cr ../../lib/libworldModel.a  CMakeFiles/worldModel.dir/ARCamera.cpp.o CMakeFiles/worldModel.dir/ARMarker.cpp.o CMakeFiles/worldModel.dir/WorldModel.cpp.o
-/usr/bin/ranlib ../../lib/libworldModel.a

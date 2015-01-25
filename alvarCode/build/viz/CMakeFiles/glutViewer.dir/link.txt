@@ -1,2 +1,0 @@
-/usr/bin/ar cr ../../lib/libglutViewer.a  CMakeFiles/glutViewer.dir/GlutViewer.cpp.o
-/usr/bin/ranlib ../../lib/libglutViewer.a

@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/cleanup.dir/cleanup.cpp.o  -o ../bin/cleanup -rdynamic -L/usr/local/lib ../lib/libglobalStuff.a -lach -lm -ljsoncpp ../lib/libworldModel.a -Wl,-rpath,/usr/local/lib 

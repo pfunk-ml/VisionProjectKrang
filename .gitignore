@@ -3,13 +3,14 @@
 alvarCode/bin/
 alvarCode/lib/
 
-# Object Fiels #
+# Object Files #
 ################
 *.o
 
 # cmake files #
 ###############
-*/CMakeFiles/
-*/cmake_install.cmake
-*/Makefile
-*/CMakeCache.txt
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt

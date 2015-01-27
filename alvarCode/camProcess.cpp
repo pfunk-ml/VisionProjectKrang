@@ -51,7 +51,6 @@ std::vector<MarkerMsg_t> gMarkerMsgs;
 
 /**< Channel to send info */
 ach_channel_t gChan_output;
-std::string gChannelName;
 
 /** Function declarations */
 void videocallback( IplImage *_img );
@@ -68,7 +67,7 @@ bool init( int _devIndex,
   gCalibFilename = CAM_CALIB_NAME[_camIndex];
   std::cout<<"Line "<<__LINE__<<":\n";
 
-  /** Load calibration file */
+  /* Load calibration file */
   std::cout<<"** Loading calibration file: "<< gCalibFilename << std::endl;
   if ( gCam.SetCalib( gCalibFilename.c_str(), 
           gConfParams.width, gConfParams.height) ) {
@@ -79,7 +78,8 @@ bool init( int _devIndex,
   }
  
   /*-- Enumerate possible capture plugins --*/
-  alvar::CaptureFactory::CapturePluginVector plugins = alvar::CaptureFactory::instance()->enumeratePlugins();
+  alvar::CaptureFactory::CapturePluginVector plugins;
+  plugins = alvar::CaptureFactory::instance()->enumeratePlugins();
   if (plugins.size() < 1) {
     std::cout << "\t Could not find any capture plugins." << std::endl;
     return 0;
@@ -91,19 +91,22 @@ bool init( int _devIndex,
   std::cout << std::endl;
   
   std::cout<<"Line:"<<__LINE__<<'\n';
-  /*-- Enumerate possible capture devices --*/
-  alvar::CaptureFactory::CaptureDeviceVector devices = alvar::CaptureFactory::instance()->enumerateDevices();
-  std::cout<<"Line:"<<__LINE__<<'\n';
+  /* Enumerate possible capture devices. This give the following error.
+      HIGHGUI ERROR: V4L: index 4 is not correct! 
+     The error is due to bug in the opencv file CapturePluginHighgui.cpp
+     So, nothing can be done about this. Updating opencv may help. */
+  alvar::CaptureFactory::CaptureDeviceVector devices;
+  devices = alvar::CaptureFactory::instance()->enumerateDevices(plugins.at(1));
+  std::cout<<"Line "<<__LINE__<<": "<<"Number of devices = "<<devices.size()<<'\n';
 
   if (devices.size() < 1) {
     std::cout << "\t [X] Could not find any capture devices." << std::endl;
     return 0;
   }
 
-for( int i = 0; i < devices.size(); ++i ) {
-
+  for( int i = 0; i < devices.size(); ++i ) {
     std::cout << "Device ID: "<< devices[i].id()<< std::endl;
-}
+  }
   
   /*-- Check if _devIndex can be used --*/
   int selectedDevice = -1;
@@ -133,24 +136,34 @@ for( int i = 0; i < devices.size(); ++i ) {
 
 /**
  * @function initAchChannel
+ * Opens the ACH channel to publish data. If ACH channel doesn't exist, it is
+ * created before opening.
+ *
+ * channelName : [IN] name of the channel to publish data
+ * return val  : the channel handler of type ach_channel_t
  */
-void initAchChannel( int _camIndex ) {
+ach_channel_t initAchChannel( const char* channelName ) {
     
-    int r;
-
-    /**< Create output channel, try deleting in case it exists */
-    gChannelName = CAM_CHANNEL_NAME[ _camIndex ];
+    enum ach_status r;
   
+    /* Create ACH channel */
+    r = ach_create( channelName, 10, 512, NULL );
+    /* if channel not created and it doesn't exist */
+    if( ACH_OK != r && ACH_EEXIST != r) {   
+        fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
+        exit(EXIT_FAILURE);
+    }
 
-    /**< Open the channel */
-    r = ach_open( &gChan_output, gChannelName.c_str(), NULL );
-    std::cout<<"r = "<<r<<'\n';
-    if(r==ACH_ENOENT)
-      std::cout<<__FILE__<<':'<<__LINE__<<':'<<"Error: Channel "<<gChannelName.c_str()<<" does not exist.\n";
-    assert(r == ACH_OK);
+    /* Open the channel */
+    ach_channel_t channel;
+    r = ach_open( &channel, channelName, NULL );
+    if( r != ACH_OK ) {
+      fprintf( stderr, "Could not open channel: %s\n", ach_result_to_string(r) );
+      exit(EXIT_FAILURE);
+    }
     
-
-    std::cout << "\t Created channel: "<< gChannelName<< std::endl;
+    std::cout << "\t Created channel: "<< channelName<< std::endl;
+    return channel;
 }
 
 /**
@@ -190,13 +203,14 @@ int main(int argc, char *argv[]) {
   /** Init parameters and camera */
   alvar::Capture *cap;
   init( devIndex, camIndex, &cap);
-  initAchChannel( camIndex );
 
+  /* Initialize ACH channel to publish data */
+  gChan_output = initAchChannel(CAM_CHANNEL_NAME[camIndex].c_str());
 
   // Handle capture lifecycle and start video capture
   if (cap) {
 
-    std::cout << "** Start capture"<< std::endl;
+    std::cout << "** Start capture **"<< std::endl;
     cap->start();
     cap->setResolution(gConfParams.width, gConfParams.height);
     
@@ -205,8 +219,7 @@ int main(int argc, char *argv[]) {
     CvTestbed::Instance().StartVideo(cap, videoTitle );
     
     cap->stop();
-    delete cap;
-    
+    delete cap;  
   } 
   else {
     std::cout << "[X] Could not initialize the selected capture backend." << std::endl;
@@ -235,7 +248,7 @@ void videocallback( IplImage *_img ) {
   marker_detector.SetMarkerSize(gConfParams.markerSize); 
 
   // Perform detection
-  marker_detector.Detect(_img, &gCam, true, true);
+  marker_detector.Detect(_img, &gCam, true, true); // true, true
 
 
   bool detected;

@@ -7,18 +7,9 @@ BIN_DIR="./bin"
 echo "Deleting previous ACH channels, if any ..."
 "${BIN_DIR}/cleanup"
 
-echo "Creating new ACH channels ..."
-# Create channels for 4 cameras to publish data in camera Frame
-ach -C cam0_channel -o 666  -m 10 -n 64
-ach -C cam1_channel -o 666  -m 10 -n 64
-ach -C cam2_channel -o 666  -m 10 -n 64
-ach -C cam3_channel -o 666  -m 10 -n 64
-
 # Create channels for centralProcess to publish
 ach -C krang_vision -o 666  -m 10 -n 64
 ach -C debug_channel -o 666  -m 10 -n 64
-
-
 
 # Fire camera processes. Assuming that:
 # Camera 0 is on /dev/video0

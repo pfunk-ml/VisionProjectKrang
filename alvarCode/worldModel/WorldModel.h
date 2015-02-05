@@ -68,12 +68,16 @@ class WorldModel {
     /* Method to set marker's pose in the world frame
         _cameraID   : [IN] ID of the camera
         _markerID   : [IN] ID of the marker
-        _Tcam_marker: [IN] Input is pose of marker in camera frame */
+        _Tcam_marker: [IN] 4x4 matrix. Pose of marker in camera frame */
     bool setMarkerLoc( const int &_cameraID, 
 		       const int &_markerID, 
 		       const Eigen::Matrix4d &_Tcam_marker );
 
-    // Alternate setMarkerLoc that lets you set multiple poses rather than just the last
+    /* Method to set poses of a marker visible in multiple cameras, in world frame.
+        _cameraID     : [IN] the array of camera IDs
+        _markerID     : [IN] ID of the marker
+        _Tcam_markers : [IN] the array of pose of marker in each camera
+        _confidence   : ??? */
     bool setMarkerLoc( const std::vector<int> &_cameraIDs, 
 		       const int &_markerID, 
 		       const std::vector<Eigen::Matrix4d> &_Tcam_markers,

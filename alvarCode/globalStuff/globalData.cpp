@@ -14,8 +14,6 @@ int NUM_OBJECTS;
 std::vector<std::string> CAM_CALIB_NAME;
 std::vector<std::string> CAM_CHANNEL_NAME;
 
-std::vector<ObjectData_t> gObjects;
-
 std::string PERCEPTION_CHANNEL;
 std::string DEBUG_CHANNEL;
 
@@ -98,8 +96,6 @@ void setGlobalData(Json::Value config)
         std::string name = config["cam_calib_name"].get(i, "calib").asString();
         CAM_CALIB_NAME.push_back(name);
     }
-    
-    // CAM_CALIB_NAME = config["cam_calib_name"].asString();
 
     // Channel names for cameras
     CAM_CHANNEL_NAME.resize(0);
@@ -109,22 +105,11 @@ void setGlobalData(Json::Value config)
         CAM_CHANNEL_NAME.push_back(name);
     }
 
-
-    /**< Initialize objects for each marker */
-    for( int i = 0; i < NUM_OBJECTS; ++i ) 
-    {
-        ObjectData_t obj;
-
-        sprintf( obj.obj_name, 
-                "%s", config["object_name"].get(i, "obj").asString().c_str());
-
-        obj.marker_id  = config["marker_id"].get(i, 0).asInt();;
-        obj.visible = -1;
-        obj.center[0] = 0; obj.center[1] = 0;
-        obj.cam_id = -1;
-    
-        // Add object
-        gObjects.push_back(obj);
+    /* Initialize objects for each object */
+    for( int i = 0; i < NUM_OBJECTS; ++i ) {
+        gConfParams.objectNames.push_back(config["object_name"]
+                                                .get(i, "obj").asString());
+        gConfParams.markerIDs.push_back(config["marker_id"].get(i, 0).asInt());
     }
 
     gConfParams.markerSize = config["marker_size"].asDouble();

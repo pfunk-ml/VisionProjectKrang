@@ -29,11 +29,6 @@ int main()
     cout << "Perception channel: " << PERCEPTION_CHANNEL << endl;
     cout << "Debug channel: " << DEBUG_CHANNEL << endl;
 
-    // Get object info
-    for (int i = 0; i < NUM_OBJECTS; i++){
-        cout << "Object " << i << ": " << gObjects[i].obj_name << endl;
-    }
-
     // Get camera info
     for (int i = 0; i < NUM_CAMERAS; i++)
     {

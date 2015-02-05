@@ -52,6 +52,8 @@ std::vector<MarkerMsg_t> gMarkerMsgs;
 /**< Channel to send info */
 ach_channel_t gChan_output;
 
+bool gIsVisOn; // is visualization on?
+
 /** Function declarations */
 void videocallback( IplImage *_img );
 
@@ -90,14 +92,12 @@ bool init( int _devIndex,
   outputEnumeratedPlugins(plugins);
   std::cout << std::endl;
   
-  std::cout<<"Line:"<<__LINE__<<'\n';
   /* Enumerate possible capture devices. This give the following error.
       HIGHGUI ERROR: V4L: index 4 is not correct! 
      The error is due to bug in the opencv file CapturePluginHighgui.cpp
      So, nothing can be done about this. Updating opencv may help. */
   alvar::CaptureFactory::CaptureDeviceVector devices;
   devices = alvar::CaptureFactory::instance()->enumerateDevices(plugins.at(1));
-  std::cout<<"Line "<<__LINE__<<": "<<"Number of devices = "<<devices.size()<<'\n';
 
   if (devices.size() < 1) {
     std::cout << "\t [X] Could not find any capture devices." << std::endl;
@@ -121,8 +121,7 @@ bool init( int _devIndex,
     std::cout << "Not /dev"<<_devIndex<<" found. Are you sure a camera is connected there?" << std::endl;
     return false;
   } 
-  
-  
+   
   /**- Display capture devices (DEBUG) --*/
   std::cout << "Enumerated Capture Devices:" << std::endl;
   outputEnumeratedDevices(devices, selectedDevice);
@@ -171,14 +170,16 @@ ach_channel_t initAchChannel( const char* channelName ) {
  */
 int main(int argc, char *argv[]) {
   
-  if( argc < 3 ) {
-    std::cout << "Syntax: "<< argv[0] << " devX camX "<< std::endl;
+  if( argc < 4 ) {
+    std::cout << "Syntax: "<< argv[0] << " devX camX visualization"<< std::endl;
+    std::cout << "Syntax: "<< argv[0] << "visualization: 0 for off and 1 for on"<< std::endl;
     return 1;
   }
 
   /** Get device and camera indices from terminal */
   int devIndex = atoi( argv[1] );
   int camIndex = atoi( argv[2] );
+  gIsVisOn = atoi( argv[3] );
 
   /** Setting global data */
   // First get json file
@@ -189,16 +190,17 @@ int main(int argc, char *argv[]) {
   setGlobalData(config);
   std::cout << "\t * Global data has been initialized.\n";
 
+
   /** Set the camera index for this process */
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    gMarkerMsgs.push_back(MarkerMsg_t());
-    gObjects[i].cam_id = camIndex;
+    MarkerMsg_t markerMsg;
+    markerMsg.cam_id = camIndex;
+    gMarkerMsgs.push_back(markerMsg); 
   }
 
   /** Initialise GlutViewer and CvTestbed */
   CvTestbed::Instance().SetVideoCallback(videocallback);
   std::cout << "\t * Initialized GlutViewer and CvTestbed. "<< std::endl;
-
   
   /** Init parameters and camera */
   alvar::Capture *cap;
@@ -248,45 +250,30 @@ void videocallback( IplImage *_img ) {
   marker_detector.SetMarkerSize(gConfParams.markerSize); 
 
   // Perform detection
-  marker_detector.Detect(_img, &gCam, true, true); // true, true
-
+  marker_detector.Detect(_img, &gCam, false, gIsVisOn); // true, true
 
   bool detected;
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
 
-    gMarkerMsgs[i].marker_id = gObjects[i].marker_id;
-    gMarkerMsgs[i].cam_id = gObjects[i].cam_id;
+    gMarkerMsgs[i].marker_id = gConfParams.markerIDs[i];
 
     detected = false;
     for( size_t j=0; j< marker_detector.markers->size(); j++ ) {
       int id = (*(marker_detector.markers))[j].GetId();   
 
-      if( gObjects[i].marker_id == id ) {
-
-      	//std::cout << "Detected marker with id:"<<id<< " ("<< gObjects[i].obj_name <<")"<< std::endl;
+      if( gMarkerMsgs[i].marker_id == id ) {
+        
       	alvar::Pose p = (*(marker_detector.markers))[j].pose;
       	double transf[16];
       	p.GetMatrixGL( transf, false);
 
-
-      	// Set message
-      	gMarkerMsgs[i].trans[0][0] = transf[0];
-      	gMarkerMsgs[i].trans[0][1] = transf[4];
-      	gMarkerMsgs[i].trans[0][2] = transf[8];
-      	gMarkerMsgs[i].trans[0][3] = transf[12];
-
-      	gMarkerMsgs[i].trans[1][0] = transf[1];
-      	gMarkerMsgs[i].trans[1][1] = transf[5];
-      	gMarkerMsgs[i].trans[1][2] = transf[9];
-      	gMarkerMsgs[i].trans[1][3] = transf[13];
-
-      	gMarkerMsgs[i].trans[2][0] = transf[2];
-      	gMarkerMsgs[i].trans[2][1] = transf[6];
-      	gMarkerMsgs[i].trans[2][2] = transf[10];
-      	gMarkerMsgs[i].trans[2][3] = transf[14];
+      	/* Set message. transf[0-3] is first col of transformation matrix and 
+        so on. */
+        for(int k=0; k<16; k++)
+          gMarkerMsgs[i].trans[k%4][k/4] = transf[k];
 
       	gMarkerMsgs[i].visible = 1;
-       
+
       	detected = true;
       	break;
       }
@@ -294,7 +281,6 @@ void videocallback( IplImage *_img ) {
     } // end of all markers checked
 
     if( detected == false ) {
-      //std::cout << "NO detected marker with id "<< gObjects[i].marker_id<<"("<< gObjects[i].obj_name << ")"<<std::endl;
       for( int a = 0; a < 3; ++a ) {
         for( int b = 0; b < 4; ++b ) {
           gMarkerMsgs[i].trans[a][b] = 0;
@@ -317,15 +303,10 @@ void videocallback( IplImage *_img ) {
     gMarkerMsgsPtr[i] = gMarkerMsgs[i];
   }
 
-  // Following cout lines added by Nehchal for debugging. To be removed.
-  // std::cout<<"Line "<<__LINE__<<':'<<"size of MarkerMsg_t = "<<sizeof(MarkerMsg_t)<<'\n';
-  // std::cout<<"Line "<<__LINE__<<':'<<"size of gMarkerMsgPtr = "<<sizeof(gMarkerMsgsPtr)<<'\n';
-  // std::cout<<"Line "<<__LINE__<<':'<<"NUM_OBJECTS = "<<NUM_OBJECTS<<'\n';
-
   /* Print the marker messages */
-  //for(int i=0; i<NUM_OBJECTS; i++)
-  //  Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
-  //std::cout<<"---\n";
+  for(int i=0; i<NUM_OBJECTS; i++)
+    Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
+  std::cout<<"---\n";
 
   /**< Send objects state to channel */
   ach_put( &gChan_output, gMarkerMsgsPtr, sizeof( gMarkerMsgsPtr ) );

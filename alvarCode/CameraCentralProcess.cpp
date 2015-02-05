@@ -15,6 +15,8 @@
 #include <iostream>
 #include <stdio.h>
 
+#include <unistd.h>
+
 
 /**
 * @function CameraCentralProcess
@@ -29,10 +31,14 @@ CameraCentralProcess::CameraCentralProcess()
   setGlobalData(config);
   //setGlobalTransforms(config);
 
+  std::vector<MarkerMsgWrapper_t> temp1;
+
   // Initialize the vectors
   for (int i = 0; i < NUM_OBJECTS; i++)
   {
-    mMarkerMsgs.push_back(std::vector<MarkerMsg_t>());
+    //mMarkerMsgs.push_back(std::vector<MarkerMsg_t>());\
+
+    mMarkerMsgs.push_back(temp1);  
     mMsg.push_back(Planning_output());
     finalMsg.push_back(new double[3]); // x,y,angle // visible,
     debugMsg.push_back(new double[3]);
@@ -70,8 +76,8 @@ void CameraCentralProcess::initSetup() {
   /** Markers WITH ID AS IDENTIFICATION!! */
   mMarkers.clear();
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    ARMarker marker( gObjects[i].marker_id );
-    mMarkers.push_back( marker );
+    ARMarker marker( gConfParams.markerIDs[i] );
+    mMarkers.push_back(marker);
   }
   
   
@@ -135,13 +141,14 @@ bool CameraCentralProcess::setupChannels() {
     r = ach_open( &chan, name.c_str(), NULL );
     if( ACH_OK == r ) {
       mInput_channels.push_back( chan );
+      mCamIDs.push_back(i);
       std::cout << "\t ** Channel "<<name<<" opened successfully. **"<<std::endl;
     }
     
   }
   
   if( mInput_channels.size() == 0 ) {
-    std::cout << "\t XX Not a single channel opened. ERROR XX" << std::endl;
+    std::cout << "\t XX None of the channels opened. ERROR XX" << std::endl;
     return false;
   }
   
@@ -208,7 +215,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
   size_t fs;  // frame size
   bool isMsgRcvd = true;
 
-  // Clear earlier messages
+  // Clear earlier messages. mMarkerMsgs.size() should be equal to # of objects
   for ( int i = 0; i < mMarkerMsgs.size(); i++)
     mMarkerMsgs[i].clear();
   
@@ -234,9 +241,13 @@ bool CameraCentralProcess::grabChannelsInfo() {
     else{
       /* Iterate over each object. If object is visible in message read from 
            current channel, then add it to mMarkerMsgs */
+      MarkerMsgWrapper_t markerMsgWrapper;
+      markerMsgWrapper.camID = mCamIDs[i];
       for(int j=0; j < NUM_OBJECTS; j++) {     
-        if(tempMm[j].visible == 1)
-          mMarkerMsgs[j].push_back(tempMm[j]);
+        if(tempMm[j].visible == 1){         
+          markerMsgWrapper.marker = tempMm[j];
+          mMarkerMsgs[j].push_back(markerMsgWrapper);
+        }
       } // end for
     } // else
   } // end for
@@ -257,9 +268,9 @@ void CameraCentralProcess::getWorldTransforms() {
     for (int ind = 0; ind < mMarkerMsgs[i].size(); ind++) {
 
       // pose of marker in camera frame
-      Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i][ind].trans);
+      Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i][ind].marker.trans);
       
-      int cameraID = mMarkerMsgs[i][ind].cam_id;
+      int cameraID = mMarkerMsgs[i][ind].camID;
          
       // Divide distances (x, y, z) by 100 (so now in meters)
       Tf(0,3) = Tf(0,3) / 100.0;
@@ -271,8 +282,9 @@ void CameraCentralProcess::getWorldTransforms() {
       cameraIDs.push_back(cameraID);
     }
 
-    if (mMarkerMsgs[i].size() > 0) { 
-      if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].marker_id, transforms))
+    if (mMarkerMsgs[i].size() > 0) {
+      /* transform marker pose in cam frame to world frame */
+      if (!mWorldModel->setMarkerLoc(cameraIDs, mMarkerMsgs[i][0].marker.marker_id, transforms))
         std::cout << "[camCentralProcess-- getWorldTransforms] ERROR - CAMERA IS PROBABLY NOT INITIALIZED"<< std::endl;
     }
   }
@@ -300,12 +312,12 @@ void CameraCentralProcess::createMessage() {
     if( mMarkerMsgs[i].size() == 0 ) {
       x = 0; y = 0; theta = 0;
     }
-    else if(mMarkerMsgs[i][0].visible != 1){
+    else if(mMarkerMsgs[i][0].marker.visible != 1){
       x = 0; y = 0; theta = 0;
     }
     else{
       Pmarker_world = mWorldModel->getMarkerPose( 
-                                            mMarkerMsgs[i][0].marker_id );
+                                            mMarkerMsgs[i][0].marker.marker_id );
       Pobj_world = Pmarker_world * gTransforms.T_sprite[i];
       getXYangTriple(Pobj_world, x, y, theta);
     }

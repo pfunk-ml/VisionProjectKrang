@@ -23,7 +23,7 @@ do
     echo "************************************"
     echo "[START] Firing up camera $i [START]"
     echo "************************************"
-    "${BIN_DIR}/camProcess" $i $i &
+    "${BIN_DIR}/camProcess" $i $i 1 &
     sleep 3s
 
     echo "\n[DONE] Finished starting camera $i"
@@ -39,7 +39,7 @@ echo "Starting the main camera process ..."
 echo "************************************"
 
 # Run the camCentralProcessMain. This retrieve the info from the cameras 
-"${BIN_DIR}/camCentralProcessMain" &
+#"${BIN_DIR}/camCentralProcessMain" &
 
 # Sleep just for the heck of it
 sleep 3s

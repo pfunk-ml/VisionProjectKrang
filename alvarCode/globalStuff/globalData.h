@@ -10,13 +10,15 @@
 #include "json/json.h"
  #include <Eigen/Geometry>
 
+ #include <unistd.h>
+
 extern int NUM_CAMERAS;
 extern int NUM_OBJECTS;
 
 extern std::vector<std::string> CAM_CALIB_NAME;
 extern std::vector<std::string> CAM_CHANNEL_NAME;
 
-extern std::vector<ObjectData_t> gObjects;
+
 
 extern std::string PERCEPTION_CHANNEL;
 extern std::string DEBUG_CHANNEL;
@@ -24,8 +26,10 @@ extern std::string DEBUG_CHANNEL;
 // structure for configuration parameters 
 typedef struct {
     float markerSize;   // length of marker edge in cms
+    std::vector<int> markerIDs;  // ID of AR markers
     int width;          // width of camera frame???
     int height;         // height of camera height??
+    std::vector<string> objectNames;
 } ConfParams_t;
 
 // Transforms in the environment

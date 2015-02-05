@@ -26,6 +26,8 @@
 #include "json/json.h"
 #include "globalStuff/optparser.h"
 
+#include <unistd.h>
+
 alvar::Camera gCam;
 Drawable d[32];
 

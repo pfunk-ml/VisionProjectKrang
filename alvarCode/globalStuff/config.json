@@ -28,10 +28,10 @@
 	                    "Data/camCalib3.xml"],
 
 	// Camera channel names for camera processes to publish data
-	"cam_channel_name" : ["cam0_channel",
-	                      "cam1_channel", 
-	                      "cam2_channel", 
-	                      "cam3_channel"],
+	"cam_channel_name" : ["cam0_channel",  // CAM ID 0
+	                      "cam1_channel",  // CAM ID 1
+	                      "cam2_channel",  // CAM ID 2
+	                      "cam3_channel"], // CAM ID 3
 
 	// Perception channel name
 	"perception_channel" : "krang_vision",

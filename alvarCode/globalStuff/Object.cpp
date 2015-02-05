@@ -11,7 +11,7 @@ void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
     double x, y, z, theta;
     Eigen::Matrix4d transMat;
 
-    std::cout<<"Object ID:"<<markerMsg->marker_id<<'\n';
+    std::cout<<"Marker ID:"<<markerMsg->marker_id<<'\n';
     std::cout<<"Is Visible:"<<markerMsg->visible<<'\n';
     std::cout<<"Transformation Matrix\n";
 
@@ -31,7 +31,6 @@ void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
     std::cout<<"y-coorinate: "<<z<<'\n';
     std::cout<<"theta: "<<theta<<'\n';
     
-    std::cout<<"Camera ID:"<<markerMsg->cam_id<<'\n';
     std::cout<<"--\n";
     return;
 }

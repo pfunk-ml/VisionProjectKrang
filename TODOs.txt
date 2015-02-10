@@ -24,6 +24,8 @@ TODOs:
 
 6) [Done] Remove "marker_origin_id" and "camera_origin_id" from config.json? --removed
 
+7) Change config paramters to specify only [x, y, 0] for marker to object tranformation instead of whole object.
+
 
 -------------------------
 

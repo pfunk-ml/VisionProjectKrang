@@ -44,7 +44,6 @@ CameraCentralProcess::CameraCentralProcess()
     debugMsg.push_back(new double[3]);
     mBf.push_back(basicFilter());
   }
-
 }
 
 /**
@@ -130,7 +129,8 @@ bool CameraCentralProcess::setupChannels() {
   mInput_channels.resize(0);
   
   std::cout << "Initializing input channels..." << std::endl;
-  int r; int counter; std::string name;
+  enum ach_status r; 
+  int counter; std::string name;
   
   counter = 0;
   for( int i = 0; i < NUM_CAMERAS; ++i ) {
@@ -160,9 +160,26 @@ bool CameraCentralProcess::setupChannels() {
   char debugChanChar[1024];
   strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
 
+
+  /* Create output ACH channel */
+  r = ach_create( outputChanChar, 10, 512, NULL );
+  /* if channel not created and it doesn't exist */
+  if( ACH_OK != r && ACH_EEXIST != r) {   
+      fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
+      exit(EXIT_FAILURE);
+  }
+
   /**< Open the channel */
   r = ach_open( &mOutput_channel, outputChanChar, NULL );
   assert( ACH_OK == r );
+
+  /* Create debug ACH channel */
+  r = ach_create( debugChanChar, 10, 512, NULL );
+  /* if channel not created and it doesn't exist */
+  if( ACH_OK != r && ACH_EEXIST != r) {   
+      fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
+      exit(EXIT_FAILURE);
+  }
   
   /**< Open the debug channel */
   r = ach_open( &mDebug_channel, debugChanChar, NULL );

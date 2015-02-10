@@ -16,7 +16,7 @@ endif()
 find_package( PkgConfig REQUIRED)
 
 # Find OpenCV
-find_package( OpenCV REQUIRED )
+find_package( OpenCV 2.4.10 REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 

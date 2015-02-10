@@ -304,9 +304,9 @@ void videocallback( IplImage *_img ) {
   }
 
   /* Print the marker messages */
-  for(int i=0; i<NUM_OBJECTS; i++)
-    Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
-  std::cout<<"---\n";
+  // for(int i=0; i<NUM_OBJECTS; i++)
+  //   Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
+  // std::cout<<"---\n";
 
   /**< Send objects state to channel */
   ach_put( &gChan_output, gMarkerMsgsPtr, sizeof( gMarkerMsgsPtr ) );

@@ -26,7 +26,8 @@ int main()
     cout << "Numbers of objects: " << NUM_OBJECTS << endl;
 
     // Channel names
-    cout << "Perception channel: " << PERCEPTION_CHANNEL << endl;
+    cout << "Output object poses channel: " << VISION_OBJ_POSES_CHANNEL << endl;
+    cout << "Output Krang pose channel: " << VISION_KRANG_POSE_CHANNEL << endl;
     cout << "Debug channel: " << DEBUG_CHANNEL << endl;
 
     // Get camera info

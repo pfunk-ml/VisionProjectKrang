@@ -71,7 +71,9 @@ class CameraCentralProcess {
   std::vector<int> mCamIDs; // camera ID of each input channel
 
   // output ACH channel to send marker/object position in ?? frame
-  ach_channel_t mOutput_channel; 
+  // ach_channel_t mOutput_channel; 
+  ach_channel_t mOutput_objPoses_channel; 
+  ach_channel_t mOutput_krangPose_channel; 
 
   ach_channel_t mDebug_channel;  // output ACH channel
 
@@ -81,7 +83,14 @@ class CameraCentralProcess {
   std::vector<std::vector<MarkerMsgWrapper_t> > mMarkerMsgs;
   
   std::vector<Planning_output> mMsg;
-  std::vector<double*> finalMsg; // x,y,angle // visible,
+
+  // has length of 3 * (num of objs)
+  std::vector<double*> objPoses; // x,y,angle // visible,
+
+  // has length of 3
+  std::vector<double*> krangPose;
+
+  
   std::vector<double*> debugMsg;
 
   // Basic filter for smooth tracking of markers

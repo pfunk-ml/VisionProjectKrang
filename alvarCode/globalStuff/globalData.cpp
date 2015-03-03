@@ -14,7 +14,9 @@ int NUM_OBJECTS;
 std::vector<std::string> CAM_CALIB_NAME;
 std::vector<std::string> CAM_CHANNEL_NAME;
 
-std::string PERCEPTION_CHANNEL;
+//std::string PERCEPTION_CHANNEL;
+std::string VISION_OBJ_POSES_CHANNEL;   // channel to write object poses
+std::string VISION_KRANG_POSE_CHANNEL;  // channel to write krang pose
 std::string DEBUG_CHANNEL;
 
 ConfParams_t gConfParams;
@@ -86,7 +88,9 @@ void setGlobalData(Json::Value config)
     NUM_OBJECTS = config.get("num_object", 0).asInt();
 
     // Channel names
-    PERCEPTION_CHANNEL = config.get("perception_channel", "perc").asString();
+    // PERCEPTION_CHANNEL = config.get("perception_channel", "perc").asString();
+    VISION_OBJ_POSES_CHANNEL = config.get("vision_obj_poses_channel", "perc").asString();
+    VISION_KRANG_POSE_CHANNEL = config.get("vision_krang_pose_channel", "perc").asString();
     DEBUG_CHANNEL = config.get("debug_channel", "debug").asString();
 
     // Calibration file

@@ -8,7 +8,9 @@ echo "Deleting previous ACH channels, if any ..."
 "${BIN_DIR}/cleanup"
 
 # Create channels for centralProcess to publish
-ach -C krang_vision -o 666  -m 10 -n 64
+ach -C vision_obj_poses -o 666  -m 10 -n 64
+ach -C vision_krang_pose -o 666  -m 10 -n 64
+# ach -C krang_vision -o 666  -m 10 -n 64
 ach -C debug_channel -o 666  -m 10 -n 64
 
 # Fire camera processes. Assuming that:

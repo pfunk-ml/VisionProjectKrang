@@ -46,7 +46,7 @@ int main(int argc, char* argv[] )
 
   // Copy to char pointers
   char outputChanChar[1024];
-  strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+  strcpy(outputChanChar, VISION_OBJ_POSES_CHANNEL.c_str());
   char debugChanChar[1024];
   strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
 

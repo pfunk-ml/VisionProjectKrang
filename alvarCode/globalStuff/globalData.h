@@ -18,9 +18,10 @@ extern int NUM_OBJECTS;
 extern std::vector<std::string> CAM_CALIB_NAME;
 extern std::vector<std::string> CAM_CHANNEL_NAME;
 
+extern std::string VISION_OBJ_POSES_CHANNEL;   // channel to write object poses
+extern std::string VISION_KRANG_POSE_CHANNEL;  // channel to write krang pose
 
-
-extern std::string PERCEPTION_CHANNEL;
+//extern std::string PERCEPTION_CHANNEL;
 extern std::string DEBUG_CHANNEL;
 
 // structure for configuration parameters 

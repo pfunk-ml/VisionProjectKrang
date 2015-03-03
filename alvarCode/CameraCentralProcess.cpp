@@ -40,7 +40,7 @@ CameraCentralProcess::CameraCentralProcess()
 
     mMarkerMsgs.push_back(temp1);  
     mMsg.push_back(Planning_output());
-    finalMsg.push_back(new double[3]); // x,y,angle // visible,
+    objPoses.push_back(new double[3]); // x,y,angle
     debugMsg.push_back(new double[3]);
     mBf.push_back(basicFilter());
   }
@@ -54,7 +54,7 @@ CameraCentralProcess::~CameraCentralProcess()
 {
   for (int i = 0; i < NUM_OBJECTS; i++)
   {
-    delete finalMsg[i];
+    delete objPoses[i];
     delete debugMsg[i];
   }
 }
@@ -155,28 +155,42 @@ bool CameraCentralProcess::setupChannels() {
   // OUTPUT CHANNEL
 
   // Copy to char pointers
-  char outputChanChar[1024];
-  strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+  // char outputChanChar[1024];
+  //char outputObjPosesChannelName[1024];
+  //strcpy(outputObjPosesChannelName, VISION_OBJ_POSES_CHANNEL.c_str());
+
+  char outputKrangPoseChannelName[1024];
+  strcpy(outputKrangPoseChannelName, VISION_KRANG_POSE_CHANNEL.c_str());
+
   char debugChanChar[1024];
   strcpy(debugChanChar, DEBUG_CHANNEL.c_str());
 
-
-  /* Create output ACH channel */
-  r = ach_create( outputChanChar, 10, 512, NULL );
+  /* Create output ACH channels */
+  r = ach_create( VISION_OBJ_POSES_CHANNEL.c_str(), 10, 512, NULL );
   /* if channel not created and it doesn't exist */
   if( ACH_OK != r && ACH_EEXIST != r) {   
       fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
       exit(EXIT_FAILURE);
   }
 
-  /**< Open the channel */
-  r = ach_open( &mOutput_channel, outputChanChar, NULL );
+  r = ach_create( VISION_KRANG_POSE_CHANNEL.c_str(), 10, 512, NULL );
+  /* if channel not created and it doesn't exist */
+  if( ACH_OK != r && ACH_EEXIST != r) {   
+      fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
+      exit(EXIT_FAILURE);
+  }
+
+  /**< Open the channels */
+  r = ach_open( &mOutput_objPoses_channel, VISION_OBJ_POSES_CHANNEL.c_str(), NULL );
+  assert( ACH_OK == r );
+
+  r = ach_open( &mOutput_krangPose_channel, VISION_KRANG_POSE_CHANNEL.c_str(), NULL );
   assert( ACH_OK == r );
 
   /* Create debug ACH channel */
   r = ach_create( debugChanChar, 10, 512, NULL );
   /* if channel not created and it doesn't exist */
-  if( ACH_OK != r && ACH_EEXIST != r) {   
+  if( ACH_OK != r && ACH_EEXIST != r) { 
       fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
       exit(EXIT_FAILURE);
   }
@@ -257,7 +271,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
     
     else{
       /* Iterate over each object. If object is visible in message read from 
-           current channel, then add it to mMarkerMsgs */
+        current channel, then add it to mMarkerMsgs */
       MarkerMsgWrapper_t markerMsgWrapper;
       markerMsgWrapper.camID = mCamIDs[i];
       for(int j=0; j < NUM_OBJECTS; j++) {     
@@ -344,9 +358,9 @@ void CameraCentralProcess::createMessage() {
     // Use filter (one filter per each object!)
     mBf[i].getEstimate( x, y, theta, x_est, y_est, theta_est );
 
-    finalMsg[i][0] = x_est;
-    finalMsg[i][1] = y_est;
-    finalMsg[i][2] = theta_est;
+    objPoses[i][0] = x_est;
+    objPoses[i][1] = y_est;
+    objPoses[i][2] = theta_est;
 
     debugMsg[i][0] = x;
     debugMsg[i][1] = y;
@@ -358,7 +372,7 @@ void CameraCentralProcess::printMessage() {
   int i;
   printf("  x           y         theta\n");
   for(i = 0; i < NUM_OBJECTS; i++) {
-    printf("%9.3f %9.3f %9.3f\n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2]);
+    printf("%9.3f %9.3f %9.3f\n", objPoses[i][0], objPoses[i][1], objPoses[i][2]);
   }
   std::cout<<"--\n";
   return;
@@ -366,31 +380,42 @@ void CameraCentralProcess::printMessage() {
 
 /**
 * @function sendMessage
-* @brief Send message with objects locations over PERCEPTION_CHANNEL
+* @brief Send message with objects locations over output ACH channel
 */
 void CameraCentralProcess::sendMessage() {
   
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    //printf(" Sending info for Marker [%d] with ID: %d \n", i, mMarkerMsgs[i].marker_id );
-    //printf(" \t Camera id: %d \n", mMarkerMsgs[i].cam_id );
-    //printf(" \t Transformation: x: %f y: %f theta: %f \n", finalMsg[i][0], finalMsg[i][1], finalMsg[i][2] );
+    //printf(" Sending info for Marker [%d] with ID: %d \n", i, mMarkerMsgs[i][0].marker.marker_id );
+    //printf(" \t Camera id: %d \n", mMarkerMsgs[i][0].camID );
+    printf(" \t Transformation: x: %f y: %f theta: %f \n", objPoses[i][0], objPoses[i][1], objPoses[i][2] );
   }
 
-  // Convert finalMsg and debugMsg to double[][]
-  double finalMsgPtr[NUM_OBJECTS][3];
+  // Convert objPoses and debugMsg to double[][]
+  double objPosesPtr[NUM_OBJECTS-1][3];
+  double krangPosePtr[3];
   double debugMsgPtr[NUM_OBJECTS][3];
-  for (int i = 0; i < NUM_OBJECTS; i++)
-  {
-    for (int j = 0; j < 3; j++)
-    {
-      finalMsgPtr[i][j] = finalMsg[i][j];
-      debugMsgPtr[i][j] = debugMsg[i][j];
-    }
+
+  for (int i = 0; i < NUM_OBJECTS-1; i++) {
+      objPosesPtr[i][0] = objPoses[i+1][0];
+      objPosesPtr[i][1] = objPoses[i+1][1];
+      objPosesPtr[i][2] = objPoses[i+1][2];
+
+      debugMsgPtr[i][0] = debugMsg[i+1][0];
+      debugMsgPtr[i][1] = debugMsg[i+1][1];
+      debugMsgPtr[i][2] = debugMsg[i+1][2];
   }
 
-  ach_put( &mOutput_channel,
-	   finalMsgPtr,
-	   sizeof( finalMsgPtr ) );
+  krangPosePtr[0] = objPoses[0][0];
+  krangPosePtr[1] = objPoses[0][1];
+  krangPosePtr[2] = objPoses[0][2];
+
+  ach_put( &mOutput_objPoses_channel,
+	   objPosesPtr,
+	   sizeof( objPosesPtr ) );
+
+  ach_put( &mOutput_krangPose_channel,
+     krangPosePtr,
+     sizeof( krangPosePtr ) );
 
   // Send debug
   ach_put( &mDebug_channel,

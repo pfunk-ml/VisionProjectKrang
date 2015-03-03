@@ -154,14 +154,14 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
 
       // Copy to char pointers
       char outputChanChar[1024];
-      strcpy(outputChanChar, PERCEPTION_CHANNEL.c_str());
+      strcpy(outputChanChar, VISION_OBJ_POSES_CHANNEL.c_str());
 
       // Start our own channel to read
       int r;
       r = ach_open( &mSim_Channel, outputChanChar, NULL );
       assert( ACH_OK == r );
       
-      std::cout << "Opened successfully channel "<< PERCEPTION_CHANNEL << std::endl;
+      std::cout << "Opened successfully channel "<< VISION_OBJ_POSES_CHANNEL << std::endl;
       
       // Set cameras  
       Eigen::Isometry3d Transf;

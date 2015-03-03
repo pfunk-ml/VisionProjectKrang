@@ -9,9 +9,11 @@
 	
 	// Object names. The pose data for markers is sent in same order on the
     // ACH channel
+    // first should always be "robot"
 	"object_name" : ["robot", "table", "chair"],
 	
 	// Marker IDs (in same order as object names)
+    // first one should always be marker id of robot (krang)
 	"marker_id" : [1, 6, 5],
 
     // Length of edge of AR marker in cms
@@ -35,7 +37,10 @@
 	                      "cam3_channel"], // CAM ID 3
 
 	// Perception channel name
-	"perception_channel" : "krang_vision",
+	// "perception_channel" : "krang_vision",
+    "vision_obj_poses_channel" : "vision_obj_poses",
+    "vision_krang_pose_channel" : "vision_krang_pose",
+
 	
 	// Debug channel name
 	"debug_channel" : "debug_channel",

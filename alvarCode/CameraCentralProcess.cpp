@@ -229,6 +229,7 @@ void CameraCentralProcess::mainLoop() {
     // crazy: CONTINUOUSLY WITHOUT SLEEP 
     // 10Hz        
     usleep(0.1*1e6);
+    //usleep(0.1*1e7);
   }
 
 }
@@ -413,9 +414,9 @@ void CameraCentralProcess::sendMessage() {
 	   objPosesPtr,
 	   sizeof( objPosesPtr ) );
 
-  ach_put( &mOutput_krangPose_channel,
-     krangPosePtr,
-     sizeof( krangPosePtr ) );
+  enum ach_status r; 
+
+  r = ach_put( &mOutput_krangPose_channel, krangPosePtr, sizeof( krangPosePtr ) );
 
   // Send debug
   ach_put( &mDebug_channel,

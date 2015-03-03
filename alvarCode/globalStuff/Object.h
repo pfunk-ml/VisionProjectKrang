@@ -16,5 +16,5 @@ struct MarkerMsg_t {
 };
 
 /* Prints the marker message
- *  markerMsg :[IN] ptr to the instance of MarkerMsg_t */
+ * markerMsg :[IN] ptr to the instance of MarkerMsg_t */
 void Object_printMarkerMsg(const MarkerMsg_t *markerMsg);

@@ -19,10 +19,13 @@ find_package( PkgConfig REQUIRED)
 find_package( OpenCV 2.4.10 REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
-
 # Find Eigen
 pkg_check_modules( EIGEN REQUIRED eigen3 )
   include_directories( ${EIGEN_INCLUDE_DIRS} )
+
+# find trajectory_io
+find_library(TRAJECTORY_IO_LIBRARY NAMES trajectory_io REQUIRED)
+message(STATUS "trajectory_io lib detected: [${TRAJECTORY_IO_LIBRARY}].")
 
 # Find ACH
 set( ACH_LIBS ach )
@@ -81,7 +84,7 @@ set_target_properties( camCentralProcess PROPERTIES LIBRARY_OUTPUT_DIRECTORY
 
 # camCentralProcessMain
 add_executable( camCentralProcessMain camCentralProcessMain.cpp )
-target_link_libraries( camCentralProcessMain camCentralProcess globalStuff worldModel ${ACH_LIBS} m)
+target_link_libraries( camCentralProcessMain camCentralProcess globalStuff worldModel trajectory_io ${ACH_LIBS} m)
 set_target_properties( camCentralProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 

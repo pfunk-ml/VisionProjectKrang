@@ -17,6 +17,7 @@
 
 #include <unistd.h>
 
+#include <trajectory_io.h>
 
 /**
 * @function CameraCentralProcess
@@ -144,7 +145,6 @@ bool CameraCentralProcess::setupChannels() {
       mCamIDs.push_back(i);
       std::cout << "\t ** Channel "<<name<<" opened successfully. **"<<std::endl;
     }
-    
   }
   
   if( mInput_channels.size() == 0 ) {
@@ -385,17 +385,16 @@ void CameraCentralProcess::printMessage() {
 */
 void CameraCentralProcess::sendMessage() {
   
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    //printf(" Sending info for Marker [%d] with ID: %d \n", i, mMarkerMsgs[i][0].marker.marker_id );
-    //printf(" \t Camera id: %d \n", mMarkerMsgs[i][0].camID );
-    printf(" \t Transformation: x: %f y: %f theta: %f \n", objPoses[i][0], objPoses[i][1], objPoses[i][2] );
-  }
+  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+    printf(" \t Transformation: x: %f y: %f theta: %f \n", 
+                            objPoses[i][0], objPoses[i][1], objPoses[i][2] );
 
   // Convert objPoses and debugMsg to double[][]
   double objPosesPtr[NUM_OBJECTS-1][3];
   double krangPosePtr[3];
   double debugMsgPtr[NUM_OBJECTS][3];
 
+  // copy the vectors into double arrays
   for (int i = 0; i < NUM_OBJECTS-1; i++) {
       objPosesPtr[i][0] = objPoses[i+1][0];
       objPosesPtr[i][1] = objPoses[i+1][1];
@@ -410,17 +409,25 @@ void CameraCentralProcess::sendMessage() {
   krangPosePtr[1] = objPoses[0][1];
   krangPosePtr[2] = objPoses[0][2];
 
-  ach_put( &mOutput_objPoses_channel,
-	   objPosesPtr,
-	   sizeof( objPosesPtr ) );
+  /* Create formatted message */
+  trajectory_2d_t objPoses_trajectory_2d = {.n = NUM_OBJECTS-1, 
+                                            .m = 3, 
+                                            .data = objPosesPtr[0] };
 
-  enum ach_status r; 
+  char objPoses_str[sizeof(int) * 2 + sizeof(double) * (NUM_OBJECTS-1) * 3];
+  serialize_from_Trajectory2D(&objPoses_trajectory_2d, objPoses_str);
 
-  r = ach_put( &mOutput_krangPose_channel, krangPosePtr, sizeof( krangPosePtr ) );
+  /* Send the messages on the ACH channels */
+  enum ach_status r;
+
+  //r = ach_put( &mOutput_objPoses_channel, objPosesPtr, sizeof(objPosesPtr));
+  r = ach_put( &mOutput_objPoses_channel, objPoses_str, sizeof(objPoses_str));
+  assert(r == ACH_OK);
+
+  r = ach_put( &mOutput_krangPose_channel, krangPosePtr, sizeof(krangPosePtr));
+  assert(r == ACH_OK);
 
   // Send debug
-  ach_put( &mDebug_channel,
-	   debugMsgPtr,
-	   sizeof( debugMsgPtr ) );
-
+  r = ach_put( &mDebug_channel, debugMsgPtr, sizeof( debugMsgPtr ) );
+  assert(r == ACH_OK);
 }

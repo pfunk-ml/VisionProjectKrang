@@ -41,7 +41,7 @@ CameraCentralProcess::CameraCentralProcess()
 
     mMarkerMsgs.push_back(temp1);  
     mMsg.push_back(Planning_output());
-    objPoses.push_back(new double[3]); // x,y,angle
+    objPoses.push_back(new double[4]); // markerId, x,y,angle
     debugMsg.push_back(new double[3]);
     mBf.push_back(basicFilter());
   }
@@ -349,7 +349,7 @@ void CameraCentralProcess::createMessage() {
     }
     else{
       Pmarker_world = mWorldModel->getMarkerPose( 
-                                            mMarkerMsgs[i][0].marker.marker_id );
+                                        mMarkerMsgs[i][0].marker.marker_id );
       Pobj_world = Pmarker_world * gTransforms.T_sprite[i];
       getXYangTriple(Pobj_world, x, y, theta);
     }
@@ -386,20 +386,21 @@ void CameraCentralProcess::printMessage() {
 void CameraCentralProcess::sendMessage() {
   
   for( int i = 0; i < NUM_OBJECTS; ++i ) 
-    printf(" \t Transformation: x: %f y: %f theta: %f \n", 
-                            objPoses[i][0], objPoses[i][1], objPoses[i][2] );
+    printf(" \t Transformation: id: %d x: %f y: %f theta: %f \n", 
+                            gConfParams.markerIDs[i], objPoses[i][0], objPoses[i][1], objPoses[i][2] );
 
   // Convert objPoses and debugMsg to double[][]
-  double objPosesPtr[NUM_OBJECTS-1][3];
+  double objPosesPtr[NUM_OBJECTS-1][4];
   double krangPosePtr[3];
   double debugMsgPtr[NUM_OBJECTS][3];
 
   // copy the vectors into double arrays
   for (int i = 0; i < NUM_OBJECTS-1; i++) {
-      objPosesPtr[i][0] = objPoses[i+1][0];
-      objPosesPtr[i][1] = objPoses[i+1][1];
-      objPosesPtr[i][2] = objPoses[i+1][2];
-
+      objPosesPtr[i][0] = gConfParams.markerIDs[i+1]; // marker id
+      objPosesPtr[i][1] = objPoses[i+1][0];
+      objPosesPtr[i][2] = objPoses[i+1][1];
+      objPosesPtr[i][3] = objPoses[i+1][2];
+      
       debugMsgPtr[i][0] = debugMsg[i+1][0];
       debugMsgPtr[i][1] = debugMsg[i+1][1];
       debugMsgPtr[i][2] = debugMsg[i+1][2];
@@ -411,23 +412,29 @@ void CameraCentralProcess::sendMessage() {
 
   /* Create formatted message */
   trajectory_2d_t objPoses_trajectory_2d = {.n = NUM_OBJECTS-1, 
-                                            .m = 3, 
+                                            .m = 4, 
                                             .data = objPosesPtr[0] };
 
-  char objPoses_str[sizeof(int) * 2 + sizeof(double) * (NUM_OBJECTS-1) * 3];
+  char objPoses_str[sizeof(int) * 2 + sizeof(double) * (NUM_OBJECTS-1) * 4];
   serialize_from_Trajectory2D(&objPoses_trajectory_2d, objPoses_str);
+
+  trajectory_2d_t krangPose_trajectory_2d = {.n = 1, 
+                                             .m = 3, 
+                                             .data = krangPosePtr};                                 
+
+  char krangPose_str[sizeof(int) * 2 + sizeof(double) * 3];
+  serialize_from_Trajectory2D(&krangPose_trajectory_2d, krangPose_str);
 
   /* Send the messages on the ACH channels */
   enum ach_status r;
 
-  //r = ach_put( &mOutput_objPoses_channel, objPosesPtr, sizeof(objPosesPtr));
-  r = ach_put( &mOutput_objPoses_channel, objPoses_str, sizeof(objPoses_str));
+  r = ach_put( &mOutput_objPoses_channel, objPosesPtr, sizeof(objPosesPtr));
   assert(r == ACH_OK);
 
-  r = ach_put( &mOutput_krangPose_channel, krangPosePtr, sizeof(krangPosePtr));
+  r = ach_put( &mOutput_krangPose_channel, krangPose_str, sizeof(krangPose_str));
   assert(r == ACH_OK);
 
   // Send debug
-  r = ach_put( &mDebug_channel, debugMsgPtr, sizeof( debugMsgPtr ) );
+  //r = ach_put( &mDebug_channel, debugMsgPtr, sizeof( debugMsgPtr ) );
   assert(r == ACH_OK);
 }

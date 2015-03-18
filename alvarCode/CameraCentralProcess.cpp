@@ -428,7 +428,7 @@ void CameraCentralProcess::sendMessage() {
   /* Send the messages on the ACH channels */
   enum ach_status r;
 
-  r = ach_put( &mOutput_objPoses_channel, objPosesPtr, sizeof(objPosesPtr));
+  r = ach_put( &mOutput_objPoses_channel, objPoses_str, sizeof(objPoses_str));
   assert(r == ACH_OK);
 
   r = ach_put( &mOutput_krangPose_channel, krangPose_str, sizeof(krangPose_str));

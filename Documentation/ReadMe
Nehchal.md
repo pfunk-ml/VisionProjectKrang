@@ -90,7 +90,7 @@ CALIBRATION
     
         1. Print checkerboard pattern on paper.
         2. Place the checkerboard such that it can be visible in camera view.
-        3. Change parameters in the alvarCode/helpers/runCalibration.cpp file.
+        3. Change parameters of checkerboard in the alvarCode/helpers/runCalibration.cpp file.
         4. Compile
                 $ cd path/to/alvarCode/build
                 $ cmake ..
@@ -103,7 +103,7 @@ CALIBRATION
                 $./bin/runCalibration 0
         
         6. Move the checkerboard in different directions and change orientations, while the program captures different scenes.
-        7. Copy or move the generated calibration file to a Data/ folder named camCalib0.xml .
+        7. Copy or move the generated calibration file to a Data/ folder named camCalib0.xml for cam 0, camCalib1.xml for cam 1 and so on.
 
     
     Extrinsic Parameters

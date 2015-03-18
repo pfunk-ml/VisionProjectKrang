@@ -14,24 +14,21 @@
 // Number of captures needed to perform the calibration
 const int gCalib_count_max = 25;
 
-// Size of marker's edge in cm.
-const int gEtalon_square_size = 3.0;
+// Size of marker's edge in cms.
+const int gEtalon_square_size = 3.1;
 
-// Number of internal corners in the pattern
+// Number of internal corners in the pattern (rows are always less than columns)
 const int gEtalon_rows = 6;
 const int gEtalon_columns = 8;
 
 // Name of calibration file to store the results
 std::stringstream gCalibrationFilename;
 
-
 /**
  * @brief Function to be called for every frame in the video stream.
  */
 void videocallback( IplImage *_img ) {
 
-    //std::cout<<"Line "<<__LINE__<<": "<<__func__<<" entered.\n";
-    
     static bool calibrated = false;
     static int calib_count=0;
     static alvar::Camera cam;

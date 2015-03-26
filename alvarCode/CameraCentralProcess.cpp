@@ -340,13 +340,14 @@ void CameraCentralProcess::createMessage() {
   for( int i = 0; i < NUM_OBJECTS; ++i ) {
    
     /* If object is not visible, set x, y, theta to zero to signal the filter 
-       that these values are not being seen! */
+       that these values are not being seen! 
+       mMarkerMsgs has messages only if they are visible */
     if( mMarkerMsgs[i].size() == 0 ) {
       x = 0; y = 0; theta = 0;
     }
-    else if(mMarkerMsgs[i][0].marker.visible != 1){
-      x = 0; y = 0; theta = 0;
-    }
+    //else if(mMarkerMsgs[i][0].marker.visible != 1){
+    //  x = 0; y = 0; theta = 0;
+    //}
     else{
       Pmarker_world = mWorldModel->getMarkerPose( 
                                         mMarkerMsgs[i][0].marker.marker_id );
@@ -354,10 +355,11 @@ void CameraCentralProcess::createMessage() {
       getXYangTriple(Pobj_world, x, y, theta);
     }
 
-    // cout<<__func__<<"() "<<__LINE__<<": "<<"x in world frame = "<<x;
-
     // Use filter (one filter per each object!)
     mBf[i].getEstimate( x, y, theta, x_est, y_est, theta_est );
+
+    cout<<__LINE__<<"x= "<<x<<" y="<<y<<" theta="<<theta<<'\n';
+    cout<<__LINE__<<"x_est= "<<x_est<<" y_est="<<y_est<<" theta_est="<<theta_est<<'\n';
 
     objPoses[i][0] = x_est;
     objPoses[i][1] = y_est;
@@ -431,10 +433,13 @@ void CameraCentralProcess::sendMessage() {
   r = ach_put( &mOutput_objPoses_channel, objPoses_str, sizeof(objPoses_str));
   assert(r == ACH_OK);
 
-  r = ach_put( &mOutput_krangPose_channel, krangPose_str, sizeof(krangPose_str));
-  assert(r == ACH_OK);
+  // Don't sent the message if robot is not visible
+  if(mMarkerMsgs[0].size() != 0){
+    r = ach_put( &mOutput_krangPose_channel, krangPose_str, sizeof(krangPose_str));
+    assert(r == ACH_OK);
+  }
 
   // Send debug
   //r = ach_put( &mDebug_channel, debugMsgPtr, sizeof( debugMsgPtr ) );
-  assert(r == ACH_OK);
+  //assert(r == ACH_OK);
 }

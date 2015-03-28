@@ -358,9 +358,6 @@ void CameraCentralProcess::createMessage() {
     // Use filter (one filter per each object!)
     mBf[i].getEstimate( x, y, theta, x_est, y_est, theta_est );
 
-    cout<<__LINE__<<"x= "<<x<<" y="<<y<<" theta="<<theta<<'\n';
-    cout<<__LINE__<<"x_est= "<<x_est<<" y_est="<<y_est<<" theta_est="<<theta_est<<'\n';
-
     objPoses[i][0] = x_est;
     objPoses[i][1] = y_est;
     objPoses[i][2] = theta_est;

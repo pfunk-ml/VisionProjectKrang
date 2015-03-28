@@ -1,4 +1,11 @@
-// Configuration
+// Configuration File
+//
+// This file is used by camProcess and camCentralProcessMain
+// 
+
+// ### Adding new object to the scene ###
+// 
+
 // These are configuration parametes that are used by camera processes and central process.
 {
 	// Number of cameras used
@@ -98,7 +105,7 @@
     "T_sprite" : 
     [
 	    [ 
-            [1, 0, 0, -0.063],  
+            [1, 0, 0, 0.26],  
 	        [0, 1, 0, 0],
 	        [0, 0, 1, 0],
 	        [0, 0, 0, 1] 

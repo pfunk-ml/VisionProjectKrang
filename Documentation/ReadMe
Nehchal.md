@@ -14,6 +14,7 @@ TABLE OF CONTENTS
     . Description of Camera Rig
     . Setting Up Camera Rig
 
+    . AR Markers
     . Files and Folders
     . Connecting the Cameras to Desktop
 
@@ -160,6 +161,23 @@ DESCRIPTION OF CAMERA RIG
 
     WebCam model: Logitech Webcam Pro 9000 2MP HD Webcam w/ Mic
 
+AR MARKERS
+    
+    AR Markers are used to track the objects and the robot.
+
+    There are 9 Markers in total with ID 0 to 8. That means maximum 9 objects can be tracked by the vision system.
+
+    Markers are located in .../alvarCode/Data/markers_big/
+
+    Printing the markers
+    --------------------
+        1. Convert to PDF using 'print to file option'
+        2. Print the PDF on the printer.
+
+    Make sure that length of edge of printed marker is 20.3 cm. 
+
+    [ Marker ID 1 is known to perform poorly. Don't use it.
+         -- Nehchal, Mar 24, 2015 ]
 
 FILES AND FOLDERS
 
@@ -220,7 +238,7 @@ REFERENCE FRAMES
             |  | +------------> z-axis
             |__|
 
-            Camera
+            Camera facing towards right
 
             Fig: The Cam Frame. Origin is at the 
               camera. x-axis is into the paper.

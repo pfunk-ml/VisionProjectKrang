@@ -12,16 +12,16 @@
 	"num_cameras" : 4,
 	
 	// Number of tags
-	"num_object" : 3,
+	"num_object" : 4,
 	
 	// Object names. The pose data for markers is sent in same order on the
     // ACH channel
     // first should always be "robot"
-	"object_name" : ["robot", "table", "chair"],
+	"object_name" : ["robot", "table", "chair1", "chair2"],
 	
 	// Marker IDs (in same order as object names)
     // first one should always be marker id of robot (krang)
-	"marker_id" : [2, 6, 5],
+	"marker_id" : [2, 6, 5, 3],
 
     // Length of edge of AR marker in cms
 	"marker_size" : 20.3,
@@ -121,6 +121,13 @@
 	        [1, 0, 0, -0.25],
 	        [0, 0, 1, 0],
 	        [0, 0, 0, 1] 
-        ]	// Chair
+        ],	// Chair
+        [ 
+            [0, -1, 0, 0.50],  
+            [1, 0, 0, -0.25],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1] 
+        ]   // Chair
+    ]
 	]
 }

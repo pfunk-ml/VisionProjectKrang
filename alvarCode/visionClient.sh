@@ -35,7 +35,7 @@ done
 # Sleep for a bit to give the cameras time to run a bit
 echo "************************************"
 echo "Sleep for 2 seconds before starting the central main."
-sleep 2s
+#sleep 2s
 
 echo "Starting the main camera process ..."
 echo "************************************"

@@ -51,7 +51,7 @@ PARAMETERS
     
     There are several parameters that need to be set. These parameters are used both for calibration of cameras and tracking of AR markers.
 
-    All parameters are set in globalStuff/config.json .
+    Most parameters are set in globalStuff/config.json .
 
     This file is read by calibration and tracking programs at the start and global variables are set. No re-compilation is required after making any changes to this file.
 
@@ -106,9 +106,11 @@ CALIBRATION
         6. Move the checkerboard in different directions and change orientations, while the program captures different scenes.
         7. Copy or move the generated calibration file to a Data/ folder named camCalib0.xml for cam 0, camCalib1.xml for cam 1 and so on.
 
-    
+
     Extrinsic Parameters
     --------------------
+
+    Note: If intrinsic calibration is done, then it is recommended to do extrinsic calibration as well.
 
     Extrinsic parameters depend upon the how the camera is mounted. Extrinsic parameters refers to the transformation matrix from world frame to camera frame (Tworld_cam). 
 

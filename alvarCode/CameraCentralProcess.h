@@ -84,8 +84,9 @@ class CameraCentralProcess {
   
   std::vector<Planning_output> mMsg;
 
-  // has length of 3 * (num of objs)
-  std::vector<double*> objPoses; // x,y,angle // visible,
+  // has length of 3 * (num of objs) [x,y,angle]
+  std::vector<double*> objPoses;     // poses of objects 
+  std::vector<double*> mMarkerPoses; // poses of AR markers
 
   // has length of 3
   std::vector<double*> krangPose;

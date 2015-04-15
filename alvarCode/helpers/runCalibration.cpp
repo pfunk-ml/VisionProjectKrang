@@ -12,10 +12,10 @@
 
 
 // Number of captures needed to perform the calibration
-const int gCalib_count_max = 25;
+const int gCalib_count_max = 50;
 
 // Size of marker's edge in cms.
-const int gEtalon_square_size = 3.1;
+const int gEtalon_square_size = 3.0;
 
 // Number of internal corners in the pattern (rows are always less than columns)
 const int gEtalon_rows = 6;

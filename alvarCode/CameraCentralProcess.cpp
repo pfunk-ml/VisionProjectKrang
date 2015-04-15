@@ -41,7 +41,8 @@ CameraCentralProcess::CameraCentralProcess()
 
     mMarkerMsgs.push_back(temp1);  
     mMsg.push_back(Planning_output());
-    objPoses.push_back(new double[4]); // markerId, x,y,angle
+    objPoses.push_back(new double[3]); // x,y,angle
+    mMarkerPoses.push_back(new double[3]);
     debugMsg.push_back(new double[3]);
     mBf.push_back(basicFilter());
   }
@@ -331,7 +332,7 @@ void CameraCentralProcess::getWorldTransforms() {
  */
 void CameraCentralProcess::createMessage() {
 
-  double x, y, theta;  
+  double x, y, theta;
   double x_est, y_est, theta_est;
 
   Eigen::Matrix4d Pmarker_world; // marker pose in world frame 
@@ -353,6 +354,7 @@ void CameraCentralProcess::createMessage() {
                                         mMarkerMsgs[i][0].marker.marker_id );
       Pobj_world = Pmarker_world * gTransforms.T_sprite[i];
       getXYangTriple(Pobj_world, x, y, theta);
+      getXYangTriple(Pmarker_world, mMarkerPoses[i][0], mMarkerPoses[i][1], mMarkerPoses[i][2]);
     }
 
     // Use filter (one filter per each object!)
@@ -370,10 +372,17 @@ void CameraCentralProcess::createMessage() {
 
 void CameraCentralProcess::printMessage() {
   int i;
-  printf("  x           y         theta\n");
-  for(i = 0; i < NUM_OBJECTS; i++) {
-    printf("%9.3f %9.3f %9.3f\n", objPoses[i][0], objPoses[i][1], objPoses[i][2]);
-  }
+  
+  printf("OBJECT Poses\n");
+  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+    printf(" \t id: %d x: %f y: %f theta: %f \n", 
+                            gConfParams.markerIDs[i], objPoses[i][0], objPoses[i][1], objPoses[i][2] );
+
+  printf("MARKER Poses\n");
+  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+    printf(" \t id: %d x: %f y: %f theta: %f \n", 
+                            gConfParams.markerIDs[i], mMarkerPoses[i][0], mMarkerPoses[i][1], mMarkerPoses[i][2] );
+
   std::cout<<"--\n";
   return;
 }
@@ -383,10 +392,6 @@ void CameraCentralProcess::printMessage() {
 * @brief Send message with objects locations over output ACH channel
 */
 void CameraCentralProcess::sendMessage() {
-  
-  for( int i = 0; i < NUM_OBJECTS; ++i ) 
-    printf(" \t Transformation: id: %d x: %f y: %f theta: %f \n", 
-                            gConfParams.markerIDs[i], objPoses[i][0], objPoses[i][1], objPoses[i][2] );
 
   // Convert objPoses and debugMsg to double[][]
   double objPosesPtr[NUM_OBJECTS-1][4];
@@ -435,8 +440,4 @@ void CameraCentralProcess::sendMessage() {
     r = ach_put( &mOutput_krangPose_channel, krangPose_str, sizeof(krangPose_str));
     assert(r == ACH_OK);
   }
-
-  // Send debug
-  //r = ach_put( &mDebug_channel, debugMsgPtr, sizeof( debugMsgPtr ) );
-  //assert(r == ACH_OK);
 }

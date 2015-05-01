@@ -145,19 +145,19 @@ DESCRIPTION OF CAMERA RIG
     The camera rig consists of wooden frame in the shape of English letter 'H'. There are four cameras attached to the rig as shown below.
 
     
-         CAM1 :-|                         |-: CAM3
-                |                         |
-                |                         |
-                |                         |
-                |-------------------------|
-                |                         |
-                |                         |
-                |                         |
-         CAM0 :-|                         |-: CAM2
+         CAM1 :-|             |-: CAM3      |-: CAM5
+                |             |             |       
+                |             |             |       
+                |             |             |       
+                |-------------|-------------|       
+                |             |             |       
+                |             |             |       
+                |             |             |       
+         CAM0 :-|             |-: CAM2      |-: CAM4
 
 
         Fig: Top view of Camera Rig showing position of 
-             four cameras attached to it. The cameras face
+             six cameras attached to it. The cameras face
              into the paper.
 
 
@@ -197,9 +197,7 @@ FILES AND FOLDERS
         
         Following folders are obsolete. 
 
-            * CameraCalibration/ - data stored for old ros calibration. Ignore - see Helpers.md for up to date information on camera calibration
-        
-        
+            * CameraCalibration/ - data stored for old ros calibration. Ignore - see Helpers.md for up to date information on camera calibration       
 
             * camProc/ - old code from ar_toolkit. Defunct when we switched to ALVAR which has less error.
         
@@ -231,6 +229,8 @@ REFERENCE FRAMES
                 Cam1 Frame (C1)
                 Cam2 Frame (C2)
                 Cam3 Frame (C3)
+                Cam4 Frame (C4)
+                Cam5 Frame (C5)
 
                 y-axis 
                  ^       
@@ -247,7 +247,30 @@ REFERENCE FRAMES
 
      -- Marker frame: This frame is attached to each AR marker. Origin lies at center of marker. z-axis comes out the marker plane. x and y-axis are aligned in marker plane.
 
-     -- Global (G): The origin of this frame lies somewhere near the centre of rectangle formed by 4 cameras. The global marker is placed here during the extrinsic calibration process. So, in that case the marker frame is same as global frame.
+     -- Global (G): The origin of this frame lies somewhere near the centre of rectangle formed by cameras 0-3. The global marker is placed here during the extrinsic calibration process. So, in that case the marker frame is same as global frame.  
+
+     -- Auxilliary (A): The origin of this frame lies somewhere near the centre of rectangle formed by cameras 2-5 (i.e. the other rectangle).  The auxilliary marker here during the extrinsic calibration process. This tag is necessary for when calibrating the rig when all cameras can't see a single tag for the purpose of computing their extrinsics.  Instead we use a single tag for the first camera rectangle, and then move/add a marker in the second rectangle and obtain the transforms for the 
+
+     We obtain the (inverse) extrinsics of the first rectangle with respect to a marker we'll call "global":
+     T_cam0_global  <-- given by runCalibration
+     T_cam1_global  <-- given by runCalibration
+     T_cam2_global  <-- given by runCalibration
+     T_cam3_global  <-- given by runCalibration
+
+     We then obtain the extrinsics of the second rectangle with respect to a marker we'll call "auxilliary" as:
+     T_cam4_global = T_cam4_aux * inv(T_cam3_aux) * T_cam3_global
+     T_cam5_global = T_cam5_aux * inv(T_cam3_aux) * T_cam3_global
+     Note: in this example we chose cam3 from the middle cameras for aux calibration.  We could just as well use cam2, but we prefer a single camera in view of both markers to minimize error.  
+
+     Steps:
+     1) Use runCalibration to obtain T_cam[0123]_global and T_cam[345]_aux.
+     2) Use getAuxTransforms.py to obtain T_cam[45]_global
+
+
+     After placing these transforms in config.json, camCentalProcess can obtain each camera's world pose as follows:
+     T_world_cam4 = T_world_global * T_global_cam4
+
+     
 
     A coodinate frame is defined by position of the origin and orientation of its x, y and z axis.
 

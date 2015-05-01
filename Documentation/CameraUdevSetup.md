@@ -1,3 +1,6 @@
+
+CAMERA UDEV SETUP
+
 One of the annoyances of using /dev/video* names to identify cameras is that they are dynamically assigned during startup and usb events.  The original work-around for this was to un-plug and re-plug the cameras in the proper order.  However, Linux provides for persistent-naming machinery for this scenario using udev.  
 
 After a bit of googling (see links below), the following steps offered a solution:
@@ -30,14 +33,22 @@ RESOURCES
 --------------------------------------------------------------------------
 contents of /etc/udev/rules.d/10-camera.rules:
 
-# camera 0
-SUBSYSTEM=="video4linux", ATTRS{serial}=="1054FC68", NAME="krangcam0", SYMLINK="krangcam0"
+# camera 5
+SUBSYSTEM=="video4linux", ATTRS{serial}=="83E16B6B", NAME="video3" SYMLINK+="video3"
 
-# camera 1
-SUBSYSTEM=="video4linux", ATTRS{serial}=="5E51EA65", NAME="krangcam1", SYMLINK="krangcam1"
-
-# camera 2
-SUBSYSTEM=="video4linux", ATTRS{serial}=="59A0EA61", NAME="krangcam2", SYMLINK="krangcam2"
+# camera 4
+SUBSYSTEM=="video4linux", ATTRS{serial}=="99B35E63", NAME="video3" SYMLINK+="video3"
 
 # camera 3
-SUBSYSTEM=="video4linux", ATTRS{serial}=="C6E35E63", NAME="krangcam3", SYMLINK="krangcam3"
+SUBSYSTEM=="video4linux", ATTRS{serial}=="35506B6F", NAME="video3" SYMLINK+="video3"
+
+# camera 2
+SUBSYSTEM=="video4linux", ATTRS{serial}=="C6E35E63", NAME="video2" SYMLINK+="video2"
+
+# camera 1
+SUBSYSTEM=="video4linux", ATTRS{serial}=="5E51EA65", NAME="video1" SYMLINK+="video1" 
+
+# camera 0
+SUBSYSTEM=="video4linux", ATTRS{serial}=="59A0EA61", NAME="video0" SYMLINK+="video0"
+
+

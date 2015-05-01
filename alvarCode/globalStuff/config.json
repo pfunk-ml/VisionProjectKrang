@@ -9,7 +9,7 @@
 // These are configuration parametes that are used by camera processes and central process.
 {
 	// Number of cameras used
-	"num_cameras" : 4,
+	"num_cameras" : 6,
 	
 	// Number of tags
 	"num_object" : 5,
@@ -35,13 +35,17 @@
 	"cam_calib_name" : ["Data/camCalib0.xml",
 	                    "Data/camCalib1.xml",
 	                    "Data/camCalib2.xml",
-	                    "Data/camCalib3.xml"],
+	                    "Data/camCalib3.xml",
+                        "Data/camCalib4.xml",
+                        "Data/camCalib5.xml"],
 
 	// Camera channel names for camera processes to publish data
 	"cam_channel_name" : ["cam0_channel",  // CAM ID 0
 	                      "cam1_channel",  // CAM ID 1
 	                      "cam2_channel",  // CAM ID 2
-	                      "cam3_channel"], // CAM ID 3
+	                      "cam3_channel",  // CAM ID 3
+                          "cam4_channel",  // CAM ID 4
+                          "cam5_channel"], // CAM ID 5
 
 	// Perception channel name
 	// "perception_channel" : "krang_vision",
@@ -54,7 +58,7 @@
 
 	// Global to camera transformation matrices
     // x, y, z in last columns are in cms.
-	"T_global2cam" :
+	"T_global2cam" : // i.e T_cam_global
     [
     	[   // camera 0
             [0.999805, 0.0161266, 0.0113891, 109.332],
@@ -79,7 +83,19 @@
             [0.0232075, 0.998606, 0.0474097, 90.5699],
             [0.0995405, 0.0448787, -0.994021, 173.314],
             [0, 0, 0, 1]
-        ]  
+        ],
+        [   // camera 4
+            [-0.994763, 0.0277879, -0.0983602, 90.5076],
+            [0.0232075, 0.998606, 0.0474097, 90.5699],
+            [0.0995405, 0.0448787, -0.994021, 173.314],
+            [0, 0, 0, 1]
+        ],
+        [   // camera 5
+            [-0.994763, 0.0277879, -0.0983602, 90.5076],
+            [0.0232075, 0.998606, 0.0474097, 90.5699],
+            [0.0995405, 0.0448787, -0.994021, 173.314],
+            [0, 0, 0, 1]
+        ]
 	],
 
     /* World Customization */

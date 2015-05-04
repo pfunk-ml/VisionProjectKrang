@@ -45,11 +45,86 @@ import numpy as np
 import os
 import time
 
+def get_marker_transform_hc(cam_id, marker_id, timeout=5):
+	'''
+	Hard-coded version of get_marker_transform.  
+	The original version seems to cause usb problems with
+	the cameras due to issues with v4l on ubuntu 12.04, and 
+	we can never get 6 consecutive calls to getCameraTransform
+	to work successfully.  
+	If you can get it to run at all though, paste in the 
+	transforms here and the rest of the calibration 
+	process should work.
+	'''
+	if cam_id == 0 and marker_id == 6:
+		return np.array([
+			[0.00301466, -0.999006, 0.0444647, 98.1307],
+			[-0.918255, 0.0148417, 0.395711, 86.7363],
+			[-0.395978, -0.0420229, -0.917298, 241.414],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 1 and marker_id == 6:
+		return np.array([
+			[0.0264212, -0.999625, 0.00723629, -90.3013],
+			[-0.947547, -0.0227369, 0.318806, 90.3835],
+			[-0.318521, -0.0152799, -0.947793, 227.253],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 2 and marker_id == 6:
+		return np.array([
+			[0.0171995, -0.997923, -0.0620855, 102.191],
+			[-0.998809, -0.0143131, -0.0466397, -37.1821],
+			[0.0456542, 0.0628137, -0.996981, 181.257],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 3 and marker_id == 6:
+		return np.array([
+			[-0.00318377, -0.99919, 0.0401201, -91.5387],
+			[-0.99962, 0.00208108, -0.0274965, -49.6838],
+			[0.0273907, -0.0401924, -0.998816, 183.519],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 2 and marker_id == 4:
+		return np.array([
+			[0.995278, -0.0112632, -0.0964085, 98.8891],
+			[-0.0170429, -0.998092, -0.0593375, 60.1939],
+			[-0.0955563, 0.0607004, -0.993572, 178.075],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 3 and marker_id == 4:
+		return np.array([
+			[0.999751, -0.00344481, 0.0220513, -94.7126],
+			[-0.00365603, -0.999948, 0.00954557, 47.4743],
+			[0.0220173, -0.00962381, -0.999711, 181.201],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 4 and marker_id == 4:
+		return np.array([
+			[0.99997, 0.00341812, -0.00701323, 91.793],
+			[-0.000231135, -0.885545, -0.464554, -59.6358],
+			[-0.00779843, 0.464542, -0.885517, 236.009],
+			[0, 0, 0, 1]
+			])
+
+	elif cam_id == 5 and marker_id == 4:
+		return np.array([
+			[0.998853, 0.0469302, 0.00950442, -80.3105],
+			[0.0468563, -0.917106, -0.395879, -81.4092],
+			[-0.00986211, 0.39587, -0.918253, 230.785],
+			[0, 0, 0, 1]
+			])
+
 def parse_transform_str(transform_str_lines):
 	return np.array([[float(el) for el in L.strip('[').strip('],\n').split(',')] for L in transform_str_lines])
 
 def get_marker_transform(cam_id, marker_id, timeout=5):
-	return np.eye(4)
+	# return np.eye(4)
 	cmd = './bin/getCameraTransform %d %d %d' % (cam_id, cam_id, marker_id)
 	process = subprocess.Popen(cmd, 
 			stdin=subprocess.PIPE, 
@@ -68,7 +143,7 @@ def get_marker_transform(cam_id, marker_id, timeout=5):
 
 			# process.terminate() # doen't work for some reason
 			os.system("pkill getCameraTransf")
-			time.sleep(1) # necessary?  why do the camera's keep crashing?!?
+			time.sleep(10) # necessary?  why do the camera's keep crashing?!?
 			break
 		else:
 			if time.time() - start_time > timeout:
@@ -110,14 +185,14 @@ def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
 	T_rect1_globals = []
 	T_rect1_auxs = []
 	for r1id in rect1_ids:
-		T_rect1_globals.append(get_marker_transform(r1id, global_id))
-		T_rect1_auxs.append(get_marker_transform(r1id, aux_id))
+		T_rect1_globals.append(get_marker_transform_hc(r1id, global_id))
+		T_rect1_auxs.append(get_marker_transform_hc(r1id, aux_id))
 
 	# obtain transform of "aux" marker in each camera frame from 
 	# the second rectangle.
 	T_rect2_auxs = []
 	for r2id in rect2_ids:
-		T_rect2_auxs.append(get_marker_transform(r2id, aux_id))
+		T_rect2_auxs.append(get_marker_transform_hc(r2id, aux_id))
 
 	# use the common camera (defaults to first in intersection between
 	# rect1_ids and rect2_ids) to obtain global pose in the far rect
@@ -151,7 +226,8 @@ def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
 		T = all_transforms[all_ids.index(sorted(all_ids)[0])]
 		print "   [   // camera %d" % cid
 		for i in range(4):
-			print "      ", T[i], 
+			# print "      ", ','.join([str(T[i][j]) for j in range(4)]), 
+			print "       [%4.6f, %4.6f, %4.6f, %4.6f]" % (T[i,0], T[i,1], T[i,2], T[i,3]),
 			print "," if i < 3 else ""
 		print "   ]," if idx < len(all_ids)-1 else "   ]" 
 	print "],"

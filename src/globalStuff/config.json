@@ -1,0 +1,154 @@
+// Configuration File
+//
+// This file is used by camProcess and camCentralProcessMain
+// 
+
+// ### Adding new object to the scene ###
+// Make changes to: num_object, object_name, marker_id, T_sprite
+
+// These are configuration parametes that are used by camera processes and central process.
+{
+	// Number of cameras used
+	"num_cameras" : 6,
+	
+	// Number of tags
+	"num_object" : 5,
+	
+	// Object names. The pose data for markers is sent in same order on the
+    // ACH channel
+    // first should always be "robot"
+	"object_name" : ["robot", "table", "chair1", "chair2", "sqTable"],
+	
+	// Marker IDs (in same order as object names)
+    // first one should always be marker id of robot (krang)
+	"marker_id" : [2, 6, 5, 3, 4],
+
+    // Length of edge of AR marker in cms
+	"marker_size" : 20.3,
+
+    // Set resolution in pixels. Some of possible values are 640x480, 960x720 
+    // and others.
+    "width" : 640,
+    "height" : 480,
+
+	// Calibration files for camera processes
+	"cam_calib_name" : ["Data/camCalib0.xml",
+	                    "Data/camCalib1.xml",
+	                    "Data/camCalib2.xml",
+	                    "Data/camCalib3.xml",
+                        "Data/camCalib4.xml",
+                        "Data/camCalib5.xml"],
+
+	// Camera channel names for camera processes to publish data
+	"cam_channel_name" : ["cam0_channel",  // CAM ID 0
+	                      "cam1_channel",  // CAM ID 1
+	                      "cam2_channel",  // CAM ID 2
+	                      "cam3_channel",  // CAM ID 3
+                          "cam4_channel",  // CAM ID 4
+                          "cam5_channel"], // CAM ID 5
+
+	// Perception channel name
+	// "perception_channel" : "krang_vision",
+    "vision_obj_poses_channel" : "vision_obj_poses",
+    "vision_krang_pose_channel" : "vision_krang_pose",
+
+	
+	// Debug channel name
+	"debug_channel" : "debug_channel",
+
+	// Global to camera transformation matrices
+	// x, y, z in last columns are in cms.
+	"T_global2cam" : // i.e T_cam_global
+	[
+	   [   // camera 0
+	       [0.003015, -0.999006, 0.044465, 98.130700] ,
+	       [-0.918255, 0.014842, 0.395711, 86.736300] ,
+	       [-0.395978, -0.042023, -0.917298, 241.414000] ,
+	       [0.000000, 0.000000, 0.000000, 1.000000] 
+	   ],
+	   [   // camera 1
+	       [0.003015, -0.999006, 0.044465, 98.130700] ,
+	       [-0.918255, 0.014842, 0.395711, 86.736300] ,
+	       [-0.395978, -0.042023, -0.917298, 241.414000] ,
+	       [0.000000, 0.000000, 0.000000, 1.000000] 
+	   ],
+	   [   // camera 2
+	       [0.003015, -0.999006, 0.044465, 98.130700] ,
+	       [-0.918255, 0.014842, 0.395711, 86.736300] ,
+	       [-0.395978, -0.042023, -0.917298, 241.414000] ,
+	       [0.000000, 0.000000, 0.000000, 1.000000] 
+	   ],
+	   [   // camera 3
+	       [0.003015, -0.999006, 0.044465, 98.130700] ,
+	       [-0.918255, 0.014842, 0.395711, 86.736300] ,
+	       [-0.395978, -0.042023, -0.917298, 241.414000] ,
+	       [0.000000, 0.000000, 0.000000, 1.000000] 
+	   ],
+	   [   // camera 4
+	       [0.003015, -0.999006, 0.044465, 98.130700] ,
+	       [-0.918255, 0.014842, 0.395711, 86.736300] ,
+	       [-0.395978, -0.042023, -0.917298, 241.414000] ,
+	       [0.000000, 0.000000, 0.000000, 1.000000] 
+	   ],
+	   [   // camera 5
+	       [0.003015, -0.999006, 0.044465, 98.130700] ,
+	       [-0.918255, 0.014842, 0.395711, 86.736300] ,
+	       [-0.395978, -0.042023, -0.917298, 241.414000] ,
+	       [0.000000, 0.000000, 0.000000, 1.000000] 
+	   ]
+	],
+
+    /* World Customization */
+
+    // Transform from world origin to global origin (pose of global frame 
+    // origin relative to world origin). The global origin corresponds to pose
+    // of global marker used during extrinsic camera calibration. This is used to 
+    // transform marker poses reported by each camera to pose in world frame.
+    // x, y, z in last column are in meters.
+    "T_global2world" : 
+    [
+        [1, 0, 0, 2.7],
+        [0, 1, 0, 2.43],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+    ],
+
+	// Pose of object in the marker frame. Once the markers are fixed to the
+    // object, these matrices need to be configured. These are used to get 
+    // object pose from marker pose. Object frame is defined by 2D object model
+    // used in the simulator.
+    // x, y, z in last column are in meters.
+    "T_sprite" : 
+    [
+	    [ 
+            [1, 0, 0, 0.26],  
+	        [0, 1, 0, 0],
+	        [0, 0, 1, 0],
+	        [0, 0, 0, 1] 
+        ],	// Robot
+	    [ 
+            [0, -1, 0, 0.30],  
+	        [1, 0, 0, -0.91],
+	        [0, 0, 1, 0],
+	        [0, 0, 0, 1] 
+        ],	// Table
+	    [ 
+            [0, -1, 0, 0.50],  
+	        [1, 0, 0, -0.25],
+	        [0, 0, 1, 0],
+	        [0, 0, 0, 1] 
+        ],	// Chair
+        [ 
+            [0, -1, 0, 0.50],  
+            [1, 0, 0, -0.25],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1] 
+        ],   // Chair
+                [ 
+            [0, -1, 0, 0.43],  
+            [1, 0, 0, -0.43],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1] 
+        ],  // sqTable
+    ]
+}

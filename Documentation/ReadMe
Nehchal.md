@@ -75,11 +75,13 @@ CALIBRATION
     Intrinsic parameters of a camera don't depend on how the camera is mounted. Theoretically, all cameras of same model should have same intrinsic parameters. But, there may be small variations in lens position, sensor position, etc. So, it is preferable calibrate each of the camera separately. 
 
     Each camera needs to be calibrated. Each camera has single calibration file located in 'Data' folder.
-    Currently there are 4 calibration files, one for each of the camera. There is a naming convention for the calibration file.
+    Currently there are 6 calibration files, one for each of the camera. There is a naming convention for the calibration file.
         Data/camCalib0.xml
         Data/camCalib1.xml
         Data/camCalib2.xml
         Data/camCalib3.xml
+        Data/camCalib4.xml
+        Data/camCalib5.xml
 
     Each calibration file contains:
         Intrinsic Matrix (3 x 3 Matrix)
@@ -249,7 +251,7 @@ REFERENCE FRAMES
 
      -- Global (G): The origin of this frame lies somewhere near the centre of rectangle formed by cameras 0-3. The global marker is placed here during the extrinsic calibration process. So, in that case the marker frame is same as global frame.  
 
-     -- Auxilliary (A): The origin of this frame lies somewhere near the centre of rectangle formed by cameras 2-5 (i.e. the other rectangle).  The auxilliary marker here during the extrinsic calibration process. This tag is necessary for when calibrating the rig when all cameras can't see a single tag for the purpose of computing their extrinsics.  Instead we use a single tag for the first camera rectangle, and then move/add a marker in the second rectangle and obtain the transforms for the 
+     -- Auxilliary (A): The origin of this frame lies somewhere near the centre of rectangle formed by cameras 2-5 (i.e. the other rectangle).  The auxilliary marker here during the extrinsic calibration process. This tag is necessary for when calibrating the rig when all cameras can't see a single tag for the purpose of computing their extrinsics.  Instead we use a single tag for the first camera rectangle, and then move/add a marker in the second rectangle and obtain the transforms for the remaining cameras.
 
      We obtain the (inverse) extrinsics of the first rectangle with respect to a marker we'll call "global":
      T_cam0_global  <-- given by runCalibration

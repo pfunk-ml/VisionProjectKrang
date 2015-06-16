@@ -179,20 +179,23 @@ def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
 	:param aux_id: The "auxilliary" marker which is used to calibrate 
 		cameras which are not in view of the global marker
 	'''
+	# select method for obtaining marker transforms:
+	get_marker_transform_func = get_marker_transform
+	# get_marker_transform_func = get_marker_transform_hc
 
 	# obtain transform of "global" marker in each camera frame from 
 	# the first rectangle.
 	T_rect1_globals = []
 	T_rect1_auxs = []
 	for r1id in rect1_ids:
-		T_rect1_globals.append(get_marker_transform_hc(r1id, global_id))
-		T_rect1_auxs.append(get_marker_transform_hc(r1id, aux_id))
+		T_rect1_globals.append(get_marker_transform_func(r1id, global_id))
+		T_rect1_auxs.append(get_marker_transform_func(r1id, aux_id))
 
 	# obtain transform of "aux" marker in each camera frame from 
 	# the second rectangle.
 	T_rect2_auxs = []
 	for r2id in rect2_ids:
-		T_rect2_auxs.append(get_marker_transform_hc(r2id, aux_id))
+		T_rect2_auxs.append(get_marker_transform_func(r2id, aux_id))
 
 	# use the common camera (defaults to first in intersection between
 	# rect1_ids and rect2_ids) to obtain global pose in the far rect

@@ -56,7 +56,7 @@ Commonly occurring issues and problems
          Following error appears:
             libv4l2: error turning on stream: Invalid argument
 
-      The problem occured when previous intance of camProcess was terminated by pressing Ctrl + C .
+      The problem occured when previous intance of camProcess was terminated by pressing Ctrl+C or $ pkill camProcess
 
     * Solution
         No reported solution.

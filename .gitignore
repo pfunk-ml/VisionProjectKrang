@@ -1,8 +1,8 @@
 *~
 *#
-alvarCode/bin/
-alvarCode/lib/
-alvarCode/build/
+src/bin/
+src/lib/
+src/build/
 
 # Object Files #
 ################

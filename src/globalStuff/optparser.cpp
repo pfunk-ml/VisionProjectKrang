@@ -13,7 +13,8 @@ void parseJSONFile(const char* filename, Json::Value& config)
     bool parsingSuccessful = configParser.parse(config_string, config);
     if (!parsingSuccessful)
     {
-        cout << "Failed to parse JSON file: \n" << filename << endl << configParser.getFormattedErrorMessages();
+        cout << __FILE__ << __LINE__ <<": Failed to parse JSON file: " 
+            << filename << endl << configParser.getFormattedErrorMessages();
         return;
     }
 

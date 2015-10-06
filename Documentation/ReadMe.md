@@ -24,6 +24,7 @@ TABLE OF CONTENTS
     . Calibration
     . Running One Camera
     . Running Multiple Cameras
+    . Trouble shooting
     
     . Notation
     . Reference Frames
@@ -46,6 +47,20 @@ DEPENDENCIES
    * opengl
    * eigen
 
+BUILDING AND COMPILING
+    
+    $ cd path/to/VisionProjectKrang/src
+    $ mkdir build
+    $ cd build
+    $ cmake ..
+    $ make
+
+    The executable are created in src/bin folder
+
+RUNNING THE CODE
+    
+    $ cd path/to/VisionProjectKrang/src
+    $ ./visionClient.sh
 
 PARAMETERS
     
@@ -141,6 +156,11 @@ CALIBRATION
             Folder for markers: Data/patterns
             There are 8 markers. Digit at end of file name, denotes the marker ID.
 
+RUNNING ONE CAMERA
+
+    Details Here
+
+RUNNING MULTIPLCE CAMERAS
 
 DESCRIPTION OF CAMERA RIG
 

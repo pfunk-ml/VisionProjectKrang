@@ -37,7 +37,24 @@
 
 #include "json/json.h"
 #include "globalStuff/optparser.h"
-    
+
+
+/* Keep the webcam from locking up when you interrupt a frame capture.
+ * This function will be called when SIGINT signal is sent by the OS
+ * (when Ctrl-C is pressed). 
+ * Refence:
+ *  https://lawlorcode.wordpress.com/2014/04/08/opencv-fix-for-v4l-vidioc_s_crop-error/
+ */
+volatile int quit_signal=0;
+#ifdef __unix__
+#include <signal.h>
+extern "C" void quit_signal_handler(int signum) {
+ if (quit_signal!=0) exit(0); // just exit already
+ quit_signal=1;
+ printf("Will quit at next camera frame (repeat to kill now)\n");
+}
+#endif
+
 alvar::Camera gCam;
 
 char gConfigFile[] = "globalStuff/config.json";
@@ -169,7 +186,13 @@ ach_channel_t initAchChannel( const char* channelName ) {
  * @function main
  */
 int main(int argc, char *argv[]) {
-  
+
+  // Register the interrupt handler
+  #ifdef __unix__
+    signal(SIGINT,quit_signal_handler); // listen for ctrl-C
+    signal(SIGTERM,quit_signal_handler); // if pkill or kill command is used
+  #endif
+
   if( argc < 4 ) {
     std::cout << "Syntax: "<< argv[0] << " devX camX visualization"<< std::endl;
     std::cout << "Syntax: "<< argv[0] << "visualization: 0 for off and 1 for on"<< std::endl;
@@ -303,12 +326,8 @@ void videocallback( IplImage *_img ) {
     gMarkerMsgsPtr[i] = gMarkerMsgs[i];
   }
 
-  /* Print the marker messages */
-  // for(int i=0; i<NUM_OBJECTS; i++)
-  //   Object_printMarkerMsg(&gMarkerMsgsPtr[i]);
-  // std::cout<<"---\n";
-
   /**< Send objects state to channel */
   ach_put( &gChan_output, gMarkerMsgsPtr, sizeof( gMarkerMsgsPtr ) );
 
+  if (quit_signal) exit(0); // exit cleanly on interrupt
 }

@@ -11,18 +11,40 @@
 
 
 
+/* ======== START OF PARAMETERS ========*/
+
 // Number of captures needed to perform the calibration
 const int gCalib_count_max = 15;
 
 // Size of marker's edge in cms.
-const int gEtalon_square_size = 7.9;
+const int gEtalon_square_size = 6.4; //7.9;
 
 // Number of internal corners in the pattern (rows are always less than columns)
+// For 8x8 chessboard, number of internal corners is 7.
 const int gEtalon_rows = 6;
 const int gEtalon_columns = 8;
 
+/* ======== END OF PARAMETERS ======== */
+
+
 // Name of calibration file to store the results
 std::stringstream gCalibrationFilename;
+
+/* Keep the webcam from locking up when you interrupt a frame capture.
+ * This function will be called when SIGINT signal is sent by the OS
+ * (when Ctrl-C is pressed). 
+ * Refence:
+ *  https://lawlorcode.wordpress.com/2014/04/08/opencv-fix-for-v4l-vidioc_s_crop-error/
+ */
+volatile int quit_signal=0;
+#ifdef __unix__
+#include <signal.h>
+extern "C" void quit_signal_handler(int signum) {
+ if (quit_signal!=0) exit(0); // just exit already
+ quit_signal=1;
+ printf("Will quit at next camera frame\n");
+}
+#endif
 
 /**
  * @brief Function to be called for every frame in the video stream.
@@ -101,6 +123,8 @@ void videocallback( IplImage *_img ) {
         cvFlip(_img);
         _img->origin = !_img->origin;
     }
+
+    if (quit_signal) exit(0); // exit cleanly on interrupt
 }
 
 /**
@@ -109,6 +133,12 @@ void videocallback( IplImage *_img ) {
 int main( int argc, char *argv[] ){
     
     int devIndex = argc > 1 ? atoi(argv[1]) : 0;
+
+    // Register the interrupt handler
+    #ifdef __unix__
+        signal(SIGINT,quit_signal_handler); // listen for ctrl-C
+        signal(SIGTERM,quit_signal_handler); // if pkill or kill command is used
+    #endif
 
     try {
 

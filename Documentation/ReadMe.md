@@ -108,13 +108,13 @@ CALIBRATION
     
         1. Print checkerboard pattern on paper.
         2. Place the checkerboard such that it can be visible in camera view.
-        3. Change parameters of checkerboard in the alvarCode/helpers/runCalibration.cpp file.
+        3. Change parameters of checkerboard in the src/helpers/runCalibration.cpp file.
         4. Compile
-                $ cd path/to/alvarCode/build
+                $ cd path/to/src/build
                 $ cmake ..
                 $ make
         5. Run runCalibration for each camera
-            $ cd path/to/alvarCode
+            $ cd path/to/src
             $ ./bin/runCalibration x
             
             Replace x by camera ID. For example, for Cam 0
@@ -142,7 +142,7 @@ CALIBRATION
             1. Print a global AR marker with some ID on paper.
             2. Place it such that it is completely visible in the view of all cameras.
             3. Get transform for each camera.
-                $ cd path/to/alvarCode
+                $ cd path/to/src
                 $ ./bin/getCameraTransform devX camX  OBJ_ID
                 
                For example, for devX = 0, camX = 0 and marker ID = 5
@@ -153,7 +153,8 @@ CALIBRATION
             Global marker ID is given as ID during the caliration step. Any marker can be used as global marker.
 
         Which ID corresponds to which marker?
-            Folder for markers: Data/patterns
+            Folder for markers: src/Data/markers_big
+                                src/Data/markers_small
             There are 8 markers. Digit at end of file name, denotes the marker ID.
 
 RUNNING ONE CAMERA

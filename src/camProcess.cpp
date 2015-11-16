@@ -51,7 +51,7 @@ volatile int quit_signal=0;
 extern "C" void quit_signal_handler(int signum) {
  if (quit_signal!=0) exit(0); // just exit already
  quit_signal=1;
- printf("Will quit at next camera frame (repeat to kill now)\n");
+ printf("Will quit at next camera frame\n");
 }
 #endif
 

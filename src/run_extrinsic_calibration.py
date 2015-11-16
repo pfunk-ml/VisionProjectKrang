@@ -45,6 +45,8 @@ import numpy as np
 import os
 import time
 
+import logging
+
 def get_marker_transform_hc(cam_id, marker_id, timeout=5):
 	'''
 	Hard-coded version of get_marker_transform.  
@@ -125,6 +127,9 @@ def parse_transform_str(transform_str_lines):
 
 def get_marker_transform(cam_id, marker_id, timeout=5):
 	# return np.eye(4)
+	print "------------------------------------------"
+	logging.info("Obtaining transform for Camera ID: " + str(cam_id) + " Marker ID: " + str(marker_id))
+
 	cmd = './bin/getCameraTransform %d %d %d' % (cam_id, cam_id, marker_id)
 	process = subprocess.Popen(cmd, 
 			stdin=subprocess.PIPE, 
@@ -135,7 +140,7 @@ def get_marker_transform(cam_id, marker_id, timeout=5):
 	start_time = time.time()
 	while True:
 		line = process.stdout.readline()
-		print 'read: ', line,
+		#print 'read: ', line,
 		if 'Detected marker with id:%d' % marker_id in line: 
 			# if marker detected, grap the next 4 lines containing the transform
 			for i in range(4):
@@ -143,14 +148,18 @@ def get_marker_transform(cam_id, marker_id, timeout=5):
 
 			# process.terminate() # doen't work for some reason
 			os.system("pkill getCameraTransf")
-			time.sleep(10) # necessary?  why do the camera's keep crashing?!?
+			time.sleep(5) # necessary?  why do the camera's keep crashing?!?
 			break
 		else:
 			if time.time() - start_time > timeout:
-				print "No marker found before timeout"
+				os.system("pkill getCameraTransf")
+				time.sleep(5)
+				logging.error("No marker found before timeout (" + str(timeout) + ' secs)')
 				return None
 
 	T_cam_marker = parse_transform_str(transform_str_lines)
+	logging.info(str(T_cam_marker))
+	print '\n'
 	return T_cam_marker
 
 def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
@@ -238,4 +247,12 @@ def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
 	# import ipdb;ipdb.set_trace()
 
 if __name__ == '__main__':
-	calibrate_all([2,3,4,5], [0,1,2,3], global_id=4, aux_id=6)
+
+	    # setup up the python logging module
+    # levels of logging are: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    logging.basicConfig(level = logging.DEBUG,
+                        format = "%(filename)s %(lineno)s: [%(levelname)s] %(message)s" )
+
+    logging.info("Extrinsic Calibration Started.")
+    
+    calibrate_all([2,3,4,5], [0,1,2,3], global_id=4, aux_id=6)

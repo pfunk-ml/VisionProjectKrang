@@ -38,6 +38,7 @@
 #include "json/json.h"
 #include "globalStuff/optparser.h"
 
+#include <argp.h> // for command line arguments
 
 /* Keep the webcam from locking up when you interrupt a frame capture.
  * This function will be called when SIGINT signal is sent by the OS
@@ -73,6 +74,69 @@ bool gIsVisOn; // is visualization on?
 
 /** Function declarations */
 void videocallback( IplImage *_img );
+
+// context struct
+typedef struct {
+  // set by command line arguments
+  int opt_verbosity;
+  int opt_devid;
+  int opt_camid;
+  bool opt_visualize;
+
+} arguments_t;
+
+/* GLOBAL VARIABLES (Ideally, global variables should be as minimum as 
+   possible) */
+arguments_t arguments = {
+  .opt_verbosity = 0,
+  .opt_devid = 0,
+  .opt_camid = 0,
+  .opt_visualize = false
+};
+
+
+// options
+static struct argp_option options[] = {
+  {"verbose", 'v', 0, 0, "Produce verbose output"},
+  {"devid", 'd', "DEVICE_ID", 0, "Device ID"},
+  {"camid", 'c', "CAMERA_ID", 0, "Camera ID"},
+  {"visualize", 't', 0, 0, "Show visualization"},
+  {0}
+};
+
+/// parser (fxn to parse single command line argument)
+static int parse_opt( int key, char *arg, struct argp_state *state) {
+  arguments_t *arguments = (arguments_t*)state->input;
+  switch(key) {
+  case 'v':
+    arguments->opt_verbosity++;
+    break;
+  case 'd':
+    arguments->opt_devid = atoi(arg);
+    break;
+  case 'c':
+    arguments->opt_camid = atoi(arg);
+    break;
+  case 't':
+    arguments->opt_visualize = true;
+    break;
+  default:
+    return ARGP_ERR_UNKNOWN;
+  }
+  
+  //somatic_d_argp_parse( key, arg, &cx->d_opts );
+  return 0;
+}
+
+/// argp program version
+const char *argp_program_version = "Krang Vision 1.0.0";
+/// argp program bug address
+const char *argp_program_bug_address = "nehchal@gatech.edu";
+const char args_doc[] = "";
+/// argp program doc line
+static char doc[] = "Overhead vision system.";
+/// argp object
+static struct argp argp = {options, parse_opt, args_doc, doc};
 
 /** 
  * @function init
@@ -187,22 +251,29 @@ ach_channel_t initAchChannel( const char* channelName ) {
  */
 int main(int argc, char *argv[]) {
 
+  //argp_parse(&argp, argc, argv, 0, NULL, &cx);
+  argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
   // Register the interrupt handler
   #ifdef __unix__
     signal(SIGINT,quit_signal_handler); // listen for ctrl-C
     signal(SIGTERM,quit_signal_handler); // if pkill or kill command is used
   #endif
 
-  if( argc < 4 ) {
-    std::cout << "Syntax: "<< argv[0] << " devX camX visualization"<< std::endl;
-    std::cout << "Syntax: "<< argv[0] << "visualization: 0 for off and 1 for on"<< std::endl;
-    return 1;
-  }
+  //if( argc < 4 ) {
+  //  std::cout << "Syntax: "<< argv[0] << " devX camX visualization"<< std::endl;
+  //  std::cout << "Syntax: "<< argv[0] << "visualization: 0 for off and 1 for on"<< std::endl;
+  //  return 1;
+  //}
 
   /** Get device and camera indices from terminal */
-  int devIndex = atoi( argv[1] );
-  int camIndex = atoi( argv[2] );
-  gIsVisOn = atoi( argv[3] );
+  int devIndex = arguments.opt_devid;
+  int camIndex = arguments.opt_camid;
+  gIsVisOn = arguments.opt_visualize;
+
+  //int devIndex = atoi( argv[1] );
+  //int camIndex = atoi( argv[2] );
+  //gIsVisOn = atoi( argv[3] );
 
   /** Setting global data */
   // First get json file
@@ -275,8 +346,11 @@ void videocallback( IplImage *_img ) {
   // Perform detection
   marker_detector.Detect(_img, &gCam, false, gIsVisOn); // true, true
 
+  if(arguments.opt_verbosity)
+    printf("----\nMARKER Poses\n");
+
   bool detected;
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {  // For each marker
 
     gMarkerMsgs[i].marker_id = gConfParams.markerIDs[i];
 
@@ -312,6 +386,9 @@ void videocallback( IplImage *_img ) {
       gMarkerMsgs[i].visible = -1;
     }
 
+    // Print the marker details
+    if(arguments.opt_verbosity)
+      Object_printMarkerMsgSingleLine(&gMarkerMsgs[i]);
   } // end for all objects
 
   // Put image back if it was flipped

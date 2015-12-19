@@ -24,8 +24,7 @@ void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
     std::cout<<'\n';
 
     transMat = getDoubleArrAsMat(markerMsg->trans);
-    getXYangTriple(transMat, x, y, theta);
-    z = markerMsg->trans[2][3];
+    getXYZAng(transMat, x, y, z, theta);
     std::cout<<"x-coorinate: "<<x<<'\n';
     std::cout<<"y-coorinate: "<<y<<'\n';
     std::cout<<"y-coorinate: "<<z<<'\n';
@@ -33,4 +32,14 @@ void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
     
     std::cout<<"--\n";
     return;
+}
+
+void Object_printMarkerMsgSingleLine(const MarkerMsg_t *markerMsg) {
+    double x, y, z, theta;
+    Eigen::Matrix4d transMat;
+
+    transMat = getDoubleArrAsMat(markerMsg->trans);
+    getXYZAng(transMat, x, y, z, theta);
+    printf(" \t id: %d x: %.4f y: %.4f z: %.4f theta: %.4f \n", 
+                            markerMsg->marker_id, x, y, z, theta); 
 }

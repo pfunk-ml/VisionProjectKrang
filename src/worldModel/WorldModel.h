@@ -22,13 +22,15 @@ double** getMatAsDouble( const Eigen::Matrix4d &_mat );
 Eigen::Matrix4d getDoubleArrAsMat( const double _trans[3][4] );
 
 /* Obtain x, y and theta from transformation matrix.
-    _Tf : [IN]  the ptr to homogenous transformation matrix
+    _Tf : [IN]  the ptr to 4x4 homogenous transformation matrix
     _x  : [OUT] x-coordinate
     _y  : [OUT] y-coordinate
+    _z  : [OUT] z-coordinate
     _ang: [OUT] the angle about z-axis */
-void getXYangTriple( const Eigen::Matrix4d &_Tf, 
+void getXYZAng( const Eigen::Matrix4d &_Tf, 
 		     double& _x, 
 		     double& _y, 
+             double& _z,
 		     double& _ang );
 Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf);
 Eigen::Matrix4d getAverageAffine(std::vector<Eigen::Matrix4d> _tf, std::vector<double> _wt);

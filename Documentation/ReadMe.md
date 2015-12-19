@@ -157,6 +157,10 @@ CALIBRATION
                                 src/Data/markers_small
             There are 8 markers. Digit at end of file name, denotes the marker ID.
 
+
+    Python Script has been written to do all above extrinsic calibration. See run_extrinsic_calibration.py file.
+
+
 RUNNING ONE CAMERA
 
     Details Here

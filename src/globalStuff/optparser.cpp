@@ -9,6 +9,7 @@ void parseJSONFile(const char* filename, Json::Value& config)
     cout << filename << endl;
     ifstream file(filename);
     string config_string((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
+    file.close();
 
     bool parsingSuccessful = configParser.parse(config_string, config);
     if (!parsingSuccessful)

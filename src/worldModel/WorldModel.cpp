@@ -50,16 +50,18 @@ Eigen::Matrix4d getDoubleArrAsMat( const double _trans[3][4] ) {
 }
 
 /**
- * @function getXYangTriple
+ * @function getXYZAng
  */
-void getXYangTriple( const Eigen::Matrix4d &_Tf, 
+void getXYZAng( const Eigen::Matrix4d &_Tf, 
 		     double& _x, 
 		     double& _y, 
+             double& _z,
 		     double& _ang ) {
     
     // Get x and y from rotation matrix
     _x = _Tf(0,3);
     _y = _Tf(1,3);
+    _z = _Tf(2,3);
 
     // Get Euler angles
     Eigen::Matrix3d transformMat = _Tf.block(0, 0, 3, 3);

@@ -61,6 +61,9 @@ class CameraCentralProcess {
   
  private:
 
+  void printDistances(double* pose1, double* pose2);
+  int getIndex(int markerID);
+
   /**< Environemnt */
   WorldModel* mWorldModel;
   std::vector<ARCamera> mCameras;

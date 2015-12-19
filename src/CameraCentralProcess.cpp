@@ -42,7 +42,7 @@ CameraCentralProcess::CameraCentralProcess()
     mMarkerMsgs.push_back(temp1);  
     mMsg.push_back(Planning_output());
     objPoses.push_back(new double[3]); // x,y,angle
-    mMarkerPoses.push_back(new double[3]);
+    mMarkerPoses.push_back(new double[4]); // x, y, z, angle
     debugMsg.push_back(new double[3]);
     mBf.push_back(basicFilter());
   }
@@ -332,7 +332,7 @@ void CameraCentralProcess::getWorldTransforms() {
  */
 void CameraCentralProcess::createMessage() {
 
-  double x, y, theta;
+  double x, y, z, theta;
   double x_est, y_est, theta_est;
 
   Eigen::Matrix4d Pmarker_world; // marker pose in world frame 
@@ -344,17 +344,16 @@ void CameraCentralProcess::createMessage() {
        that these values are not being seen! 
        mMarkerMsgs has messages only if they are visible */
     if( mMarkerMsgs[i].size() == 0 ) {
-      x = 0; y = 0; theta = 0;
+      x = 0; y = 0; z = 0;theta = 0;
     }
-    //else if(mMarkerMsgs[i][0].marker.visible != 1){
-    //  x = 0; y = 0; theta = 0;
-    //}
+
     else{
       Pmarker_world = mWorldModel->getMarkerPose( 
                                         mMarkerMsgs[i][0].marker.marker_id );
       Pobj_world = Pmarker_world * gTransforms.T_sprite[i];
-      getXYangTriple(Pobj_world, x, y, theta);
-      getXYangTriple(Pmarker_world, mMarkerPoses[i][0], mMarkerPoses[i][1], mMarkerPoses[i][2]);
+      getXYZAng(Pobj_world, x, y, z, theta);
+      getXYZAng(Pmarker_world, mMarkerPoses[i][0], mMarkerPoses[i][1], 
+                                mMarkerPoses[i][2], mMarkerPoses[i][3]);
     }
 
     // Use filter (one filter per each object!)
@@ -370,18 +369,61 @@ void CameraCentralProcess::createMessage() {
   } // end for
 }
 
+/* Prints the linear and angular distances between two poses */
+void CameraCentralProcess::printDistances(double* pose1, double* pose2) {
+
+  double linDist = sqrt(pow(pose1[0] - pose2[0], 2) + pow(pose1[1] - pose2[1], 2)
+                          + pow(pose1[2] - pose2[2], 2) );
+  double rotDist = pose2[3] - pose1[3];
+
+  printf("Linear: %.4f Angular: %.4f\n", linDist, rotDist);
+
+}
+
+/* Returns the index of marker ID in gConfParams.markerIDs.
+ * Returns -1 if markerID not found. */
+int CameraCentralProcess::getIndex(int markerID) {
+  for(int i = 0; i < NUM_OBJECTS; ++i)
+    if(gConfParams.markerIDs[i] == markerID)
+      return i;
+  return -1;
+}
+
 void CameraCentralProcess::printMessage() {
   int i;
   
+  printf("All dimensions are in metres and radians\n");
+
+  /* Print poses of the objects */
   printf("OBJECT Poses\n");
   for( int i = 0; i < NUM_OBJECTS; ++i ) 
-    printf(" \t id: %d x: %f y: %f theta: %f \n", 
-                            gConfParams.markerIDs[i], objPoses[i][0], objPoses[i][1], objPoses[i][2] );
+    printf(" \t id: %d x: %.4f y: %.4f theta: %.4f \n", 
+                            gConfParams.markerIDs[i], objPoses[i][0], 
+                            objPoses[i][1], objPoses[i][2] );
 
+  /* Print poses of the markers */
   printf("MARKER Poses\n");
   for( int i = 0; i < NUM_OBJECTS; ++i ) 
-    printf(" \t id: %d x: %f y: %f theta: %f \n", 
-                            gConfParams.markerIDs[i], mMarkerPoses[i][0], mMarkerPoses[i][1], mMarkerPoses[i][2] );
+    printf(" \t id: %d x: %.4f y: %.4f z: %.4f theta: %.4f \n", 
+                            gConfParams.markerIDs[i], mMarkerPoses[i][0], 
+                            mMarkerPoses[i][1], mMarkerPoses[i][2], 
+                            mMarkerPoses[i][3]);
+
+  /* Print the distances between markers. Useful to test calibration */
+  printf("Distances between markers\n");
+  
+  int index2 = getIndex(2);
+  int index3 = getIndex(3);
+  int index4 = getIndex(4);
+  int index6 = getIndex(6);
+  
+  if(index2 >=0 && index6 >= 0)
+    printf(" \t IDs 2 and 6: ");
+    printDistances(mMarkerPoses[index2], mMarkerPoses[index6]);
+
+  if(index3 >=0 && index4 >= 0)
+    printf(" \t IDs 3 and 4: ");
+    printDistances(mMarkerPoses[index3], mMarkerPoses[index4]);
 
   std::cout<<"--\n";
   return;

@@ -47,6 +47,7 @@ import time
 
 import logging
 
+"""
 def get_marker_transform_hc(cam_id, marker_id, timeout=5):
 	'''
 	Hard-coded version of get_marker_transform.  
@@ -121,6 +122,7 @@ def get_marker_transform_hc(cam_id, marker_id, timeout=5):
 			[-0.0106836, 0.402015, -0.915571, 231.816],
 			[0, 0, 0, 1]
 			])
+"""
 
 def parse_transform_str(transform_str_lines):
 	return np.array([[float(el) for el in L.strip('[').strip('],\n').split(',')] for L in transform_str_lines])
@@ -222,6 +224,7 @@ def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
 		T_fc_aux = T_rect2_auxs[rect2_ids.index(fc)]
 		T_aux_cc = np.linalg.inv(T_cc_aux)
 		T_fc_global = T_fc_aux.dot(T_aux_cc).dot(T_cc_global)
+		print "Hey hey!", T_aux_cc.dot(T_cc_global)
 		T_fc_globals.append(T_fc_global)
 	
 	# pack up results
@@ -255,4 +258,5 @@ if __name__ == '__main__':
 
     logging.info("Extrinsic Calibration Started.")
     
-    calibrate_all([2,3,4,5], [0,1,2,3], global_id=4, aux_id=6)
+    #calibrate_all([2,3,4,5], [0,1,2,3], global_id=4, aux_id=6)
+    calibrate_all([2,3,4,5], [0,1,2,3], global_id=6, aux_id=4)

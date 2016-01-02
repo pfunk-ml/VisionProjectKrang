@@ -1,0 +1,55 @@
+    CAMERA CALIBRATION TESTING
+
+Date: __________
+
+Actual Distance: 70.5 cm
+Actual Angular Distance: 1.57 rad
+
+Instructions
+    1. cd to src/ folder
+    2. Run
+        $ ./bin/camProcess -v --camid=CAM_ID --devid=DEV_ID --visualize
+
+Calibration to Test (circle one):  Intrinsic       Extrinsic
+
+=============================================================================
+
+Camera ID: _____
+
+Camera ID (in case of extrinsic): ____
+
+ Trial 1
+    
+    Marker 1 Pose: x: __________   y: __________  z: __________ theta: __________
+    Market 2 Pose: x: __________   y: __________  z: __________ theta: __________
+    Linear Dist: _________
+    Angular Dist: _________
+
+ Trial 2
+    
+    Marker 1 Pose: x: __________   y: __________  z: __________ theta: __________
+    Market 2 Pose: x: __________   y: __________  z: __________ theta: __________
+    Linear Dist: _________
+    Angular Dist: _________
+
+=============================================================================
+
+Camera ID: _____
+
+Camera ID (in case of extrinsic): ____
+
+ Trial 1
+    
+    Marker 1 Pose: x: __________   y: __________  z: __________ theta: __________
+    Market 2 Pose: x: __________   y: __________  z: __________ theta: __________
+    Linear Dist: _________
+    Angular Dist: _________
+
+ Trial 2
+    
+    Marker 1 Pose: x: __________   y: __________  z: __________ theta: __________
+    Market 2 Pose: x: __________   y: __________  z: __________ theta: __________
+    Linear Dist: _________
+    Angular Dist: _________
+
+=============================================================================

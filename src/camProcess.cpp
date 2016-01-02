@@ -20,6 +20,9 @@
     file.
 
  */
+
+#include <camProcess.h>
+
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
@@ -28,6 +31,7 @@
 #include <ach.h>
 
 #include <MarkerDetector.h>
+#include <utils.h>
 
 #include "viz/CvTestbed.h"
 #include "viz/Shared.h"
@@ -40,29 +44,20 @@
 
 #include <argp.h> // for command line arguments
 
-/* Keep the webcam from locking up when you interrupt a frame capture.
- * This function will be called when SIGINT signal is sent by the OS
- * (when Ctrl-C is pressed). 
- * Refence:
- *  https://lawlorcode.wordpress.com/2014/04/08/opencv-fix-for-v4l-vidioc_s_crop-error/
- */
-volatile int quit_signal=0;
-#ifdef __unix__
-#include <signal.h>
-extern "C" void quit_signal_handler(int signum) {
- if (quit_signal!=0) exit(0); // just exit already
- quit_signal=1;
- printf("Will quit at next camera frame\n");
-}
-#endif
 
 alvar::Camera gCam;
 
-char gConfigFile[] = "globalStuff/config.json";
+/* Verbosity level */
+int gVerbosity;
+
+/* Pointer to quit_signal*/
+volatile int *gQuit_signal_ptr;
 
 /**< Camera details */
 std::string gCalibFilename;
 
+// has length of 3 * (num of objs) [x,y,angle]
+std::vector<double*> mMarkerPoses; // poses of AR markers
 
 /**< Marker messages to be sent */
 std::vector<MarkerMsg_t> gMarkerMsgs;
@@ -75,77 +70,57 @@ bool gIsVisOn; // is visualization on?
 /** Function declarations */
 void videocallback( IplImage *_img );
 
-// context struct
-typedef struct {
-  // set by command line arguments
-  int opt_verbosity;
-  int opt_devid;
-  int opt_camid;
-  bool opt_visualize;
-
-} arguments_t;
-
-/* GLOBAL VARIABLES (Ideally, global variables should be as minimum as 
-   possible) */
-arguments_t arguments = {
-  .opt_verbosity = 0,
-  .opt_devid = 0,
-  .opt_camid = 0,
-  .opt_visualize = false
-};
-
-
-// options
-static struct argp_option options[] = {
-  {"verbose", 'v', 0, 0, "Produce verbose output"},
-  {"devid", 'd', "DEVICE_ID", 0, "Device ID"},
-  {"camid", 'c', "CAMERA_ID", 0, "Camera ID"},
-  {"visualize", 't', 0, 0, "Show visualization"},
-  {0}
-};
-
-/// parser (fxn to parse single command line argument)
-static int parse_opt( int key, char *arg, struct argp_state *state) {
-  arguments_t *arguments = (arguments_t*)state->input;
-  switch(key) {
-  case 'v':
-    arguments->opt_verbosity++;
-    break;
-  case 'd':
-    arguments->opt_devid = atoi(arg);
-    break;
-  case 'c':
-    arguments->opt_camid = atoi(arg);
-    break;
-  case 't':
-    arguments->opt_visualize = true;
-    break;
-  default:
-    return ARGP_ERR_UNKNOWN;
-  }
+/**
+ * @function initAchChannel
+ * Opens the ACH channel to publish data. If ACH channel doesn't exist, it is
+ * created before opening.
+ *
+ * channelName : [IN] name of the channel to publish data
+ * return val  : the channel handler of type ach_channel_t
+ */
+ach_channel_t initAchChannel( const char* channelName ) {
+    
+    enum ach_status r;
   
-  //somatic_d_argp_parse( key, arg, &cx->d_opts );
-  return 0;
+    /* Create ACH channel */
+    r = ach_create( channelName, 10, 512, NULL );
+    /* if channel not created and it doesn't exist */
+    if( ACH_OK != r && ACH_EEXIST != r) {   
+        fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
+        exit(EXIT_FAILURE);
+    }
+
+    /* Open the channel */
+    ach_channel_t channel;
+    r = ach_open( &channel, channelName, NULL );
+    if( r != ACH_OK ) {
+      fprintf( stderr, "Could not open channel: %s\n", ach_result_to_string(r) );
+      exit(EXIT_FAILURE);
+    }
+    
+    std::cout << "\t Created channel: "<< channelName<< std::endl;
+    return channel;
 }
 
-/// argp program version
-const char *argp_program_version = "Krang Vision 1.0.0";
-/// argp program bug address
-const char *argp_program_bug_address = "nehchal@gatech.edu";
-const char args_doc[] = "";
-/// argp program doc line
-static char doc[] = "Overhead vision system.";
-/// argp object
-static struct argp argp = {options, parse_opt, args_doc, doc};
-
-/** 
- * @function init
- * @brief Initialize required parameters
- */
 bool init( int _devIndex,
            int _camIndex,
-           alvar::Capture **_cap ) {
+           alvar::Capture **_cap,
+           int verbosity,
+           volatile int *quit_signal_ptr,
+           bool vis,
+           string channel_name) {
   
+  gVerbosity = verbosity;
+  gQuit_signal_ptr = quit_signal_ptr;
+  gIsVisOn = vis;
+
+  /** Set the camera index for this process */
+  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+    MarkerMsg_t markerMsg;
+    markerMsg.cam_id = _camIndex;
+    gMarkerMsgs.push_back(markerMsg); 
+  }
+
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;
   gCalibFilename = CAM_CALIB_NAME[_camIndex];
   std::cout<<"Line "<<__LINE__<<":\n";
@@ -211,119 +186,19 @@ bool init( int _devIndex,
   /*-- Create capture object from camera --*/
    *_cap = CaptureFactory::instance()->createCapture( devices[selectedDevice] );
 
+  /* Initialize ACH channel to publish data */
+  gChan_output = initAchChannel(channel_name.c_str());
+
   return true;
 }
 
-/**
- * @function initAchChannel
- * Opens the ACH channel to publish data. If ACH channel doesn't exist, it is
- * created before opening.
- *
- * channelName : [IN] name of the channel to publish data
- * return val  : the channel handler of type ach_channel_t
- */
-ach_channel_t initAchChannel( const char* channelName ) {
-    
-    enum ach_status r;
-  
-    /* Create ACH channel */
-    r = ach_create( channelName, 10, 512, NULL );
-    /* if channel not created and it doesn't exist */
-    if( ACH_OK != r && ACH_EEXIST != r) {   
-        fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
-        exit(EXIT_FAILURE);
-    }
-
-    /* Open the channel */
-    ach_channel_t channel;
-    r = ach_open( &channel, channelName, NULL );
-    if( r != ACH_OK ) {
-      fprintf( stderr, "Could not open channel: %s\n", ach_result_to_string(r) );
-      exit(EXIT_FAILURE);
-    }
-    
-    std::cout << "\t Created channel: "<< channelName<< std::endl;
-    return channel;
-}
-
-/**
- * @function main
- */
-int main(int argc, char *argv[]) {
-
-  //argp_parse(&argp, argc, argv, 0, NULL, &cx);
-  argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-  // Register the interrupt handler
-  #ifdef __unix__
-    signal(SIGINT,quit_signal_handler); // listen for ctrl-C
-    signal(SIGTERM,quit_signal_handler); // if pkill or kill command is used
-  #endif
-
-  //if( argc < 4 ) {
-  //  std::cout << "Syntax: "<< argv[0] << " devX camX visualization"<< std::endl;
-  //  std::cout << "Syntax: "<< argv[0] << "visualization: 0 for off and 1 for on"<< std::endl;
-  //  return 1;
-  //}
-
-  /** Get device and camera indices from terminal */
-  int devIndex = arguments.opt_devid;
-  int camIndex = arguments.opt_camid;
-  gIsVisOn = arguments.opt_visualize;
-
-  //int devIndex = atoi( argv[1] );
-  //int camIndex = atoi( argv[2] );
-  //gIsVisOn = atoi( argv[3] );
-
-  /** Setting global data */
-  // First get json file
-  std::cout<<"Reading global data from "<<gConfigFile<<'\n';
-  Json::Value config;
-  parseJSONFile(gConfigFile, config);
-  
-  setGlobalData(config);
-  std::cout << "\t * Global data has been initialized.\n";
-
-
-  /** Set the camera index for this process */
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
-    MarkerMsg_t markerMsg;
-    markerMsg.cam_id = camIndex;
-    gMarkerMsgs.push_back(markerMsg); 
-  }
-
-  /** Initialise GlutViewer and CvTestbed */
-  CvTestbed::Instance().SetVideoCallback(videocallback);
-  std::cout << "\t * Initialized GlutViewer and CvTestbed. "<< std::endl;
-  
-  /** Init parameters and camera */
-  alvar::Capture *cap;
-  init( devIndex, camIndex, &cap);
-
-  /* Initialize ACH channel to publish data */
-  gChan_output = initAchChannel(CAM_CHANNEL_NAME[camIndex].c_str());
-
-  // Handle capture lifecycle and start video capture
-  if (cap) {
-
-    std::cout << "** Start capture **"<< std::endl;
-    cap->start();
-    cap->setResolution(gConfParams.width, gConfParams.height);
-    
-    char videoTitle[100];
-    sprintf( videoTitle, "Marker Detector for camera %d", camIndex );    
-    CvTestbed::Instance().StartVideo(cap, videoTitle );
-    
-    cap->stop();
-    delete cap;  
-  } 
-  else {
-    std::cout << "[X] Could not initialize the selected capture backend." << std::endl;
-    return 1;
-  }
-  
-  return 0;
-  
+/* Returns the index of marker ID in gConfParams.markerIDs.
+ * Returns -1 if markerID not found. */
+int getIndex(int markerID) {
+  for(int i = 0; i < NUM_OBJECTS; ++i)
+    if(gConfParams.markerIDs[i] == markerID)
+      return i;
+  return -1;
 }
 
 /**
@@ -346,7 +221,7 @@ void videocallback( IplImage *_img ) {
   // Perform detection
   marker_detector.Detect(_img, &gCam, false, gIsVisOn); // true, true
 
-  if(arguments.opt_verbosity)
+  if(gVerbosity)
     printf("----\nMARKER Poses\n");
 
   bool detected;
@@ -354,7 +229,9 @@ void videocallback( IplImage *_img ) {
 
     gMarkerMsgs[i].marker_id = gConfParams.markerIDs[i];
 
-    detected = false;
+    //detected = false;
+    gMarkerMsgs[i].visible = -1;
+
     for( size_t j=0; j< marker_detector.markers->size(); j++ ) {
       int id = (*(marker_detector.markers))[j].GetId();   
 
@@ -371,25 +248,30 @@ void videocallback( IplImage *_img ) {
 
       	gMarkerMsgs[i].visible = 1;
 
-      	detected = true;
+      	//detected = true;
       	break;
       }
         
     } // end of all markers checked
 
-    if( detected == false ) {
-      for( int a = 0; a < 3; ++a ) {
-        for( int b = 0; b < 4; ++b ) {
-          gMarkerMsgs[i].trans[a][b] = 0;
-        }
-      }
-      gMarkerMsgs[i].visible = -1;
-    }
+    //if( detected == false ) {
+    //  for( int a = 0; a < 3; ++a ) {
+    //    for( int b = 0; b < 4; ++b ) {
+    //      gMarkerMsgs[i].trans[a][b] = 0;
+    //    }
+    //  }
+    //  gMarkerMsgs[i].visible = -1;
+    //}
 
     // Print the marker details
-    if(arguments.opt_verbosity)
+    if(gVerbosity)
       Object_printMarkerMsgSingleLine(&gMarkerMsgs[i]);
   } // end for all objects
+
+  /* Print distance between markers */
+
+
+
 
   // Put image back if it was flipped
   if (flip_image) {
@@ -403,8 +285,8 @@ void videocallback( IplImage *_img ) {
     gMarkerMsgsPtr[i] = gMarkerMsgs[i];
   }
 
-  /**< Send objects state to channel */
+  /* Publish markers poses to ACH channel */
   ach_put( &gChan_output, gMarkerMsgsPtr, sizeof( gMarkerMsgsPtr ) );
 
-  if (quit_signal) exit(0); // exit cleanly on interrupt
+  if (*gQuit_signal_ptr) exit(0); // exit cleanly on interrupt
 }

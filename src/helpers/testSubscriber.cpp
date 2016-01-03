@@ -40,8 +40,8 @@ int main(int argc, char* argv[] )
   r = ach_flush(&debug_channel);
 
   // test receive
-  double rtraj[NUM_OBJECTS][NDIM];
-  memset(rtraj, 0, NUM_OBJECTS*NDIM*sizeof(double));
+  double rtraj[gConfParams.numObjects][NDIM];
+  memset(rtraj, 0, gConfParams.numObjects*NDIM*sizeof(double));
   size_t frame_size;
 
   while( true ) {
@@ -53,7 +53,7 @@ int main(int argc, char* argv[] )
 		 ACH_O_WAIT );
     
     std::cout << "Received traj (visible, x, y, angle): " << std::endl; 
-    print_arr_2d( rtraj, NUM_OBJECTS );
+    print_arr_2d( rtraj, gConfParams.numObjects );
 
     // DEBUG CHANNEL
     r = ach_get( &debug_channel, &rtraj, 
@@ -63,16 +63,14 @@ int main(int argc, char* argv[] )
 		 ACH_O_WAIT );
     
     std::cout << "[DEBUG] Received traj (visible, x, y, angle): " << std::endl; 
-    print_arr_2d( rtraj, NUM_OBJECTS );
+    print_arr_2d( rtraj, gConfParams.numObjects );
 
 
     // Read every second
     usleep(1.0*1e6);
 
   }
-
 }
-
 
 /** print_arr_2d */
 void print_arr_2d(double A[][NDIM], int n) {

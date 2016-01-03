@@ -191,7 +191,7 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
     case id_button_querySim : {
       
       /*
-      Planning_output po[NUM_OBJECTS];
+      Planning_output po[gConfParams.numObjects];
       size_t fs; int r; 
       
       r = ach_get( &mSim_Channel, 
@@ -203,7 +203,7 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
 	      sizeof( po ) == fs );
       
       std::cout << "Reading objects less the first (origin) one" << std::endl;
-      for( int i = 0; i < NUM_OBJECTS; ++i ) {
+      for( int i = 0; i < gConfParams.numObjects; ++i ) {
 	
 	Eigen::Matrix4d Tf = Eigen::Matrix4d::Identity();
 	if( po[i].visible == -1 ) { 
@@ -234,7 +234,7 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
       std::cout << "Finished setting objects "<<std::endl;
       */
 
-      double po[NUM_OBJECTS][3];
+      double po[gConfParams.numObjects][3];
       size_t fs; int r; 
       
       r = ach_get( &mSim_Channel, 
@@ -248,7 +248,7 @@ void testSimulation::OnButton(wxCommandEvent & _evt) {
 
       
       std::cout << "Reading objects global location" << std::endl;
-      for( int i = 0; i < NUM_OBJECTS; ++i ) {
+      for( int i = 0; i < gConfParams.numObjects; ++i ) {
 	
 	Eigen::Matrix4d Tf = Eigen::Matrix4d::Identity();
 	if( po[i][0] == 0 && po[i][1] == 0 && po[i][2] == 0 ) { 

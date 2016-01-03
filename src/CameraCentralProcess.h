@@ -10,7 +10,7 @@
 #include <cstring>
 
 #include "globalStuff/globalData.h"
-#include "globalStuff/Object.h"
+#include "Object.h"
 #include "basicFilter.h"
 
 class ARMarker;
@@ -61,7 +61,7 @@ class CameraCentralProcess {
   
  private:
 
-  void printDistances(double* pose1, double* pose2);
+  void computeDistances(double* pose1, double* pose2);
   int getIndex(int markerID);
 
   /**< Environemnt */
@@ -87,7 +87,7 @@ class CameraCentralProcess {
   
   std::vector<Planning_output> mMsg;
 
-  // has length of 3 * (num of objs) [x,y,angle]
+  // has length of 4 * (num of objs) [x, y, z, angle]
   std::vector<double*> objPoses;     // poses of objects 
   std::vector<double*> mMarkerPoses; // poses of AR markers
 

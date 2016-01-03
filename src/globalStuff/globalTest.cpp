@@ -20,10 +20,10 @@ int main()
     //setGlobalTransforms(config);
 
     // Get number of cameras
-    cout << "Number of cameras: " << NUM_CAMERAS << endl;
+    cout << "Number of cameras: " << gConfParams.numCameras << endl;
     
     // Get number of objects
-    cout << "Numbers of objects: " << NUM_OBJECTS << endl;
+    cout << "Numbers of objects: " << gConfParams.numObjects << endl;
 
     // Channel names
     cout << "Output object poses channel: " << VISION_OBJ_POSES_CHANNEL << endl;
@@ -31,18 +31,18 @@ int main()
     cout << "Debug channel: " << DEBUG_CHANNEL << endl;
 
     // Get camera info
-    for (int i = 0; i < NUM_CAMERAS; i++)
+    for (int i = 0; i < gConfParams.numCameras; i++)
     {
         cout << "Camera " << i << endl;
         cout << "Calibration File: " << CAM_CALIB_NAME[i] << endl;
         cout << "Channel Name: " << CAM_CHANNEL_NAME[i] << endl; 
     }
 
-    for (int i = 0; i < NUM_CAMERAS; i++)
+    for (int i = 0; i < gConfParams.numCameras; i++)
     {
         cout << "T_cam2world[" << i << "]: " << endl << gTransforms.T_cam2world[i] << endl;
     }   
-    for (int i = 0; i < NUM_OBJECTS; i++)
+    for (int i = 0; i < gConfParams.numObjects; i++)
     { 
         cout << "T_sprite[" << i << "]: " << endl << gTransforms.T_sprite[i] << endl;
     }

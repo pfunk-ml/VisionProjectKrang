@@ -13,10 +13,11 @@ Purpose: These notes are for the developer who wishes to understand or make any 
 
 TABLE OF CONTENTS
     
-    . Notation
+    . Naming Convention
+    . Class Diagram
 
 
-NAMING CONVENTIONS
+NAMING CONVENTION
 
     Variables, function names:
         camelCase
@@ -45,3 +46,7 @@ NAMING CONVENTIONS
             P_b = T_a2b * P_a
 
             T_a2c = T_b2c * T_a2b
+
+CLASS DIAGRAMS
+    
+    

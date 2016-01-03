@@ -36,7 +36,7 @@ int main( int argc, char* argv[] )
 
   // Clean cameras
   int r;
-  for( int i = 0; i < NUM_CAMERAS; ++i ) {
+  for( int i = 0; i < gConfParams.numCameras; ++i ) {
    
     r = ach_unlink( CAM_CHANNEL_NAME[i].c_str() ); 
     if( r == ACH_OK ) {

@@ -18,6 +18,7 @@
 #include <unistd.h>
 
 #include <trajectory_io.h>
+#include <utils.h>
 
 /**
 * @function CameraCentralProcess
@@ -35,7 +36,7 @@ CameraCentralProcess::CameraCentralProcess()
   std::vector<MarkerMsgWrapper_t> temp1;
 
   // Initialize the vectors
-  for (int i = 0; i < NUM_OBJECTS; i++)
+  for (int i = 0; i < gConfParams.numObjects; i++)
   {
     //mMarkerMsgs.push_back(std::vector<MarkerMsg_t>());\
 
@@ -54,7 +55,7 @@ CameraCentralProcess::CameraCentralProcess()
  */
 CameraCentralProcess::~CameraCentralProcess() 
 {
-  for (int i = 0; i < NUM_OBJECTS; i++)
+  for (int i = 0; i < gConfParams.numObjects; i++)
   {
     delete objPoses[i];
     delete debugMsg[i];
@@ -69,21 +70,21 @@ void CameraCentralProcess::initSetup() {
    
   /** Cameras */
   mCameras.clear();
-  for( int i = 0; i < NUM_CAMERAS; ++i ) {
+  for( int i = 0; i < gConfParams.numCameras; ++i ) {
     ARCamera cam(i);
     mCameras.push_back( cam );
   }
   
   /** Markers WITH ID AS IDENTIFICATION!! */
   mMarkers.clear();
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {
     ARMarker marker( gConfParams.markerIDs[i] );
     mMarkers.push_back(marker);
   }
   
   
   /**< Set hard-coded values for cameras */
-  for( int i = 0; i < NUM_CAMERAS; ++i )
+  for( int i = 0; i < gConfParams.numCameras; ++i )
     mCameras[i].initializeCamera( gTransforms.T_cam2world[i] );  
   
   
@@ -92,7 +93,7 @@ void CameraCentralProcess::initSetup() {
 
   /** Set filter default weights */
   // (simple ramp shape)
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {
   	mBf[i].set_default_weights( GAUSSIAN_LEFT );
   }
 }
@@ -135,7 +136,7 @@ bool CameraCentralProcess::setupChannels() {
   int counter; std::string name;
   
   counter = 0;
-  for( int i = 0; i < NUM_CAMERAS; ++i ) {
+  for( int i = 0; i < gConfParams.numCameras; ++i ) {
     
     name = CAM_CHANNEL_NAME[i]; 
     
@@ -153,13 +154,6 @@ bool CameraCentralProcess::setupChannels() {
     return false;
   }
   
-  // OUTPUT CHANNEL
-
-  // Copy to char pointers
-  // char outputChanChar[1024];
-  //char outputObjPosesChannelName[1024];
-  //strcpy(outputObjPosesChannelName, VISION_OBJ_POSES_CHANNEL.c_str());
-
   char outputKrangPoseChannelName[1024];
   strcpy(outputKrangPoseChannelName, VISION_KRANG_POSE_CHANNEL.c_str());
 
@@ -243,7 +237,7 @@ void CameraCentralProcess::mainLoop() {
  */
 bool CameraCentralProcess::grabChannelsInfo() {
 
-  MarkerMsg_t tempMm[NUM_OBJECTS];  // temporary marker msgs
+  MarkerMsg_t tempMm[gConfParams.numObjects];  // temporary marker msgs
   int r;      // result
   size_t fs;  // frame size
   bool isMsgRcvd = true;
@@ -276,8 +270,8 @@ bool CameraCentralProcess::grabChannelsInfo() {
         current channel, then add it to mMarkerMsgs */
       MarkerMsgWrapper_t markerMsgWrapper;
       markerMsgWrapper.camID = mCamIDs[i];
-      for(int j=0; j < NUM_OBJECTS; j++) {     
-        if(tempMm[j].visible == 1){         
+      for(int j=0; j < gConfParams.numObjects; j++) {     
+        if(tempMm[j].visible){         
           markerMsgWrapper.marker = tempMm[j];
           mMarkerMsgs[j].push_back(markerMsgWrapper);
         }
@@ -293,7 +287,7 @@ bool CameraCentralProcess::grabChannelsInfo() {
  */
 void CameraCentralProcess::getWorldTransforms() {
   
-  for( int i = 0; i < NUM_OBJECTS; ++i )  {   // iterate over objects
+  for( int i = 0; i < gConfParams.numObjects; ++i )  {   // iterate over objects
     
     std::vector<Eigen::Matrix4d> transforms;
     std::vector<int> cameraIDs;
@@ -301,7 +295,7 @@ void CameraCentralProcess::getWorldTransforms() {
     for (int ind = 0; ind < mMarkerMsgs[i].size(); ind++) {
 
       // pose of marker in camera frame
-      Eigen::Matrix4d Tf = getDoubleArrAsMat(mMarkerMsgs[i][ind].marker.trans);
+      Eigen::Matrix4d Tf = utils_getDoubleArrAsMat(mMarkerMsgs[i][ind].marker.trans);
       
       int cameraID = mMarkerMsgs[i][ind].camID;
          
@@ -338,7 +332,7 @@ void CameraCentralProcess::createMessage() {
   Eigen::Matrix4d Pmarker_world; // marker pose in world frame 
   Eigen::Matrix4d Pobj_world; // obj pose in world frame
 
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {
    
     /* If object is not visible, set x, y, theta to zero to signal the filter 
        that these values are not being seen! 
@@ -351,8 +345,8 @@ void CameraCentralProcess::createMessage() {
       Pmarker_world = mWorldModel->getMarkerPose( 
                                         mMarkerMsgs[i][0].marker.marker_id );
       Pobj_world = Pmarker_world * gTransforms.T_sprite[i];
-      getXYZAng(Pobj_world, x, y, z, theta);
-      getXYZAng(Pmarker_world, mMarkerPoses[i][0], mMarkerPoses[i][1], 
+      utils_getXYZAng(Pobj_world, x, y, z, theta);
+      utils_getXYZAng(Pmarker_world, mMarkerPoses[i][0], mMarkerPoses[i][1], 
                                 mMarkerPoses[i][2], mMarkerPoses[i][3]);
     }
 
@@ -365,28 +359,8 @@ void CameraCentralProcess::createMessage() {
 
     debugMsg[i][0] = x;
     debugMsg[i][1] = y;
-    debugMsg[i][2] = theta;      
+    debugMsg[i][2] = theta;
   } // end for
-}
-
-/* Prints the linear and angular distances between two poses */
-void CameraCentralProcess::printDistances(double* pose1, double* pose2) {
-
-  double linDist = sqrt(pow(pose1[0] - pose2[0], 2) + pow(pose1[1] - pose2[1], 2)
-                          + pow(pose1[2] - pose2[2], 2) );
-  double rotDist = pose2[3] - pose1[3];
-
-  printf("Linear: %.4f Angular: %.4f\n", linDist, rotDist);
-
-}
-
-/* Returns the index of marker ID in gConfParams.markerIDs.
- * Returns -1 if markerID not found. */
-int CameraCentralProcess::getIndex(int markerID) {
-  for(int i = 0; i < NUM_OBJECTS; ++i)
-    if(gConfParams.markerIDs[i] == markerID)
-      return i;
-  return -1;
 }
 
 void CameraCentralProcess::printMessage() {
@@ -396,14 +370,14 @@ void CameraCentralProcess::printMessage() {
 
   /* Print poses of the objects */
   printf("OBJECT Poses\n");
-  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+  for( int i = 0; i < gConfParams.numObjects; ++i ) 
     printf(" \t id: %d x: %.4f y: %.4f theta: %.4f \n", 
                             gConfParams.markerIDs[i], objPoses[i][0], 
                             objPoses[i][1], objPoses[i][2] );
 
   /* Print poses of the markers */
   printf("MARKER Poses\n");
-  for( int i = 0; i < NUM_OBJECTS; ++i ) 
+  for( int i = 0; i < gConfParams.numObjects; ++i ) 
     printf(" \t id: %d x: %.4f y: %.4f z: %.4f theta: %.4f \n", 
                             gConfParams.markerIDs[i], mMarkerPoses[i][0], 
                             mMarkerPoses[i][1], mMarkerPoses[i][2], 
@@ -412,18 +386,24 @@ void CameraCentralProcess::printMessage() {
   /* Print the distances between markers. Useful to test calibration */
   printf("Distances between markers\n");
   
-  int index2 = getIndex(2);
-  int index3 = getIndex(3);
-  int index4 = getIndex(4);
-  int index6 = getIndex(6);
+  int index2 = GlobalData_getIndex(2);
+  int index3 = GlobalData_getIndex(3);
+  int index4 = GlobalData_getIndex(4);
+  int index6 = GlobalData_getIndex(6);
   
+  double linDist = 0, rotDist = 0;
+
   if(index2 >=0 && index6 >= 0)
-    printf(" \t IDs 2 and 6: ");
-    printDistances(mMarkerPoses[index2], mMarkerPoses[index6]);
+    utils_computeDistances(mMarkerPoses[index2], mMarkerPoses[index6], &linDist, &rotDist);
+    printf(" \t IDs 2 and 6: Linear: %.4f Angular: %.4f\n", linDist, rotDist);
 
   if(index3 >=0 && index4 >= 0)
-    printf(" \t IDs 3 and 4: ");
-    printDistances(mMarkerPoses[index3], mMarkerPoses[index4]);
+    utils_computeDistances(mMarkerPoses[index3], mMarkerPoses[index4], &linDist, &rotDist);
+    printf(" \t IDs 3 and 4: Linear: %.4f Angular: %.4f\n", linDist, rotDist);
+
+  if(index6 >=0 && index4 >= 0)
+    utils_computeDistances(mMarkerPoses[index6], mMarkerPoses[index4], &linDist, &rotDist);
+    printf(" \t IDs 6 and 4: Linear: %.4f Angular: %.4f\n", linDist, rotDist);
 
   std::cout<<"--\n";
   return;
@@ -436,12 +416,12 @@ void CameraCentralProcess::printMessage() {
 void CameraCentralProcess::sendMessage() {
 
   // Convert objPoses and debugMsg to double[][]
-  double objPosesPtr[NUM_OBJECTS-1][4];
+  double objPosesPtr[gConfParams.numObjects-1][4];
   double krangPosePtr[3];
-  double debugMsgPtr[NUM_OBJECTS][3];
+  double debugMsgPtr[gConfParams.numObjects][3];
 
   // copy the vectors into double arrays
-  for (int i = 0; i < NUM_OBJECTS-1; i++) {
+  for (int i = 0; i < gConfParams.numObjects-1; i++) {
       objPosesPtr[i][0] = gConfParams.markerIDs[i+1]; // marker id
       objPosesPtr[i][1] = objPoses[i+1][0];
       objPosesPtr[i][2] = objPoses[i+1][1];
@@ -457,11 +437,11 @@ void CameraCentralProcess::sendMessage() {
   krangPosePtr[2] = objPoses[0][2];
 
   /* Create formatted message */
-  trajectory_2d_t objPoses_trajectory_2d = {.n = NUM_OBJECTS-1, 
+  trajectory_2d_t objPoses_trajectory_2d = {.n = gConfParams.numObjects-1, 
                                             .m = 4, 
                                             .data = objPosesPtr[0] };
 
-  char objPoses_str[sizeof(int) * 2 + sizeof(double) * (NUM_OBJECTS-1) * 4];
+  char objPoses_str[sizeof(int) * 2 + sizeof(double) * (gConfParams.numObjects-1) * 4];
   serialize_from_Trajectory2D(&objPoses_trajectory_2d, objPoses_str);
 
   trajectory_2d_t krangPose_trajectory_2d = {.n = 1, 

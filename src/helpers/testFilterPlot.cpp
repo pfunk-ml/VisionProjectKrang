@@ -31,7 +31,7 @@ void closeFiles() {
 
   // Close files for debug
   printf("Closing files! \n");
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {
     fclose( pF[i] );
   }
 
@@ -60,14 +60,14 @@ int main(int argc, char* argv[] )
   r = ach_flush(&debug_channel);
 
   // test receive
-  double percep[NUM_OBJECTS][NDIM];
-  memset(percep, 0, NUM_OBJECTS*NDIM*sizeof(double));
-  double debug[NUM_OBJECTS][NDIM];
-  memset(debug, 0, NUM_OBJECTS*NDIM*sizeof(double));
+  double percep[gConfParams.numObjects][NDIM];
+  memset(percep, 0, gConfParams.numObjects*NDIM*sizeof(double));
+  double debug[gConfParams.numObjects][NDIM];
+  memset(debug, 0, gConfParams.numObjects*NDIM*sizeof(double));
   size_t frame_size;
 
   // Open files for debug
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {
    char name[50];
    sprintf( name, "logging_est%d.txt", i );
    pF.push_back(fopen( name, "w+"));
@@ -89,7 +89,7 @@ int main(int argc, char* argv[] )
 		 ACH_O_WAIT );
     
     std::cout << "Received traj (visible, x, y, angle): " << std::endl; 
-    print_arr_2d( percep, NUM_OBJECTS );
+    print_arr_2d( percep, gConfParams.numObjects );
 
     // DEBUG CHANNEL
     r = ach_get( &debug_channel, &debug, 
@@ -99,11 +99,11 @@ int main(int argc, char* argv[] )
 		 ACH_O_WAIT );
     
     std::cout << "[DEBUG] Received traj (visible, x, y, angle): " << std::endl; 
-    print_arr_2d( debug, NUM_OBJECTS );
+    print_arr_2d( debug, gConfParams.numObjects );
 
 
     // Store them (to cm and to degrees)
-    for( int i = 0; i < NUM_OBJECTS; ++i ) {
+    for( int i = 0; i < gConfParams.numObjects; ++i ) {
        fprintf( pF[i], " %f %f %f %f %f %f \n", percep[i][0]*100.0, percep[i][1]*100.0, percep[i][2]*57.3, debug[i][0]*100.0, debug[i][1]*100.0, debug[i][2]*57.3 );
     }
 

@@ -25,15 +25,19 @@
 
 int main( int argc, char* argv[] ) {
 
-    CameraCentralProcess mCc;
+    CameraCentralProcess cameraCentralProcess;
+
     std::cout << "* Init setup" <<std::endl;
-    mCc.initSetup();
+    cameraCentralProcess.initSetup();
+
     std::cout << "* Setup channels" <<std::endl;
-    mCc.setupChannels();
+    cameraCentralProcess.setupChannels();
+
     std::cout << "* Sleep 1 seconds before starting loop"<< std::endl;
     sleep(1);
+    
     std::cout << "Start main loop" <<std::endl;
-    mCc.mainLoop();
+    cameraCentralProcess.mainLoop();
 
     return 0;
 }

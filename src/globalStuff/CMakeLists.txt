@@ -17,7 +17,7 @@ find_library(jsoncpp NAMES jsoncpp HINTS jsoncpp/lib)
 add_executable( testGlobals globalTest.cpp )
 target_link_libraries( testGlobals globalStuff jsoncpp)
 
-add_library( globalStuff globalData.cpp optparser.cpp Object.cpp)
+add_library( globalStuff globalData.cpp optparser.cpp)
 target_link_libraries( globalStuff jsoncpp worldModel)
 set_target_properties( globalStuff PROPERTIES LIBRARY_OUTPUT_DIRECTORY
   ${CMAKE_SOURCE_DIR}/lib ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib )

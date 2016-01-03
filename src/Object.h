@@ -3,7 +3,8 @@
  */
 #pragma once
 
-#include "worldModel/WorldModel.h"
+//#include "worldModel/WorldModel.h"
+#include "utils.h"
 
 /**< Message to be sent for each marker */
 struct MarkerMsg_t {
@@ -11,7 +12,9 @@ struct MarkerMsg_t {
     /* The 4x4 homogenous affine transformation matrix in the camGlobal frame.
     Only first three rows used. The fourth row is [0 0 0 1]. */
     double trans[3][4];
-    int visible;        // is the marker visible in camera view
+
+    // is marker visible in camera view. True if visible, false otherwise
+    bool visible;
     int cam_id;         // id of the camera
 };
 

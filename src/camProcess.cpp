@@ -37,13 +37,14 @@
 #include "viz/Shared.h"
 
 #include "globalStuff/globalData.h"
-#include "globalStuff/Object.h"
+#include "Object.h"
 
 #include "json/json.h"
 #include "globalStuff/optparser.h"
 
 #include <argp.h> // for command line arguments
 
+using namespace std;
 
 alvar::Camera gCam;
 
@@ -115,7 +116,7 @@ bool init( int _devIndex,
   gIsVisOn = vis;
 
   /** Set the camera index for this process */
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {
     MarkerMsg_t markerMsg;
     markerMsg.cam_id = _camIndex;
     gMarkerMsgs.push_back(markerMsg); 
@@ -195,11 +196,45 @@ bool init( int _devIndex,
 /* Returns the index of marker ID in gConfParams.markerIDs.
  * Returns -1 if markerID not found. */
 int getIndex(int markerID) {
-  for(int i = 0; i < NUM_OBJECTS; ++i)
+  for(int i = 0; i < gConfParams.numObjects; ++i)
     if(gConfParams.markerIDs[i] == markerID)
       return i;
   return -1;
 }
+
+/* Prints the linear and rotational distance between every pair of marker IDs. */
+void printDistances() {
+  double pose1[4], pose2[4]; /* Poses of the markers */
+  double linDist, rotDist; 
+
+  /* Print the distances between markers. Useful to test calibration */
+  printf("Distances between markers\n");
+
+  for(int i=0; i < gConfParams.numObjects; ++i)
+    for(int j = i+1; j < gConfParams.numObjects; ++j) {
+      
+      printf(" \t IDs %d and %d: ", gMarkerMsgs[i].marker_id, gMarkerMsgs[j].marker_id);
+
+      if(!gMarkerMsgs[i].visible || !gMarkerMsgs[j].visible){
+        printf("[At least one marker not visible.]\n");
+        continue;
+      }
+
+      /* Get both poses */
+      utils_getXYZAng( utils_getDoubleArrAsMat(gMarkerMsgs[i].trans), 
+        pose1[0], pose1[1], pose1[2], pose1[3]);
+      
+      utils_getXYZAng( utils_getDoubleArrAsMat(gMarkerMsgs[j].trans), 
+        pose2[0], pose2[1], pose2[2], pose2[3]);
+
+      utils_computeDistances(pose1, pose2, &linDist, &rotDist);
+
+      printf("Linear: %.4f Angular: %.4f\n", 
+        linDist, rotDist);
+    }
+}
+
+
 
 /**
  * @function videocallback
@@ -221,57 +256,39 @@ void videocallback( IplImage *_img ) {
   // Perform detection
   marker_detector.Detect(_img, &gCam, false, gIsVisOn); // true, true
 
-  if(gVerbosity)
-    printf("----\nMARKER Poses\n");
+  if(gVerbosity) printf("----\nMARKER Poses\n");
 
-  bool detected;
-  for( int i = 0; i < NUM_OBJECTS; ++i ) {  // For each marker
+  for( int i = 0; i < gConfParams.numObjects; ++i ) {  // For each marker
 
     gMarkerMsgs[i].marker_id = gConfParams.markerIDs[i];
 
-    //detected = false;
-    gMarkerMsgs[i].visible = -1;
+    gMarkerMsgs[i].visible = false;
 
-    for( size_t j=0; j< marker_detector.markers->size(); j++ ) {
-      int id = (*(marker_detector.markers))[j].GetId();   
+    for( size_t j=0; j< marker_detector.markers->size(); j++ ) {   
 
-      if( gMarkerMsgs[i].marker_id == id ) {
+      if(gMarkerMsgs[i].marker_id == (*(marker_detector.markers))[j].GetId()) {
         
       	alvar::Pose p = (*(marker_detector.markers))[j].pose;
       	double transf[16];
-      	p.GetMatrixGL( transf, false);
+      	p.GetMatrixGL(transf, false);
 
       	/* Set message. transf[0-3] is first col of transformation matrix and 
         so on. */
         for(int k=0; k<16; k++)
           gMarkerMsgs[i].trans[k%4][k/4] = transf[k];
 
-      	gMarkerMsgs[i].visible = 1;
-
-      	//detected = true;
+      	gMarkerMsgs[i].visible = true;
       	break;
       }
         
     } // end of all markers checked
 
-    //if( detected == false ) {
-    //  for( int a = 0; a < 3; ++a ) {
-    //    for( int b = 0; b < 4; ++b ) {
-    //      gMarkerMsgs[i].trans[a][b] = 0;
-    //    }
-    //  }
-    //  gMarkerMsgs[i].visible = -1;
-    //}
-
     // Print the marker details
-    if(gVerbosity)
-      Object_printMarkerMsgSingleLine(&gMarkerMsgs[i]);
+    if(gVerbosity) Object_printMarkerMsgSingleLine(&gMarkerMsgs[i]);
   } // end for all objects
 
   /* Print distance between markers */
-
-
-
+  if(gVerbosity) printDistances();
 
   // Put image back if it was flipped
   if (flip_image) {
@@ -280,8 +297,8 @@ void videocallback( IplImage *_img ) {
   }
 
   // Convert gMarkerMsgs to pointer
-  MarkerMsg_t gMarkerMsgsPtr[NUM_OBJECTS];
-  for (int i = 0; i < NUM_OBJECTS; i++){
+  MarkerMsg_t gMarkerMsgsPtr[gConfParams.numObjects];
+  for (int i = 0; i < gConfParams.numObjects; i++){
     gMarkerMsgsPtr[i] = gMarkerMsgs[i];
   }
 

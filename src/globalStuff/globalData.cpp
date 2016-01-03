@@ -5,12 +5,6 @@
 #include <iostream>
 #include "globalData.h"
 
-/** Global */
-int NUM_CAMERAS;
-int NUM_OBJECTS;
-
-//std::vector<double> MARKER_SIZE;
-
 std::vector<std::string> CAM_CALIB_NAME;
 std::vector<std::string> CAM_CHANNEL_NAME;
 
@@ -33,8 +27,8 @@ void setGlobalTransforms(Json::Value config)
         }
     }    
     
-    gTransforms.T_cam2world.resize(NUM_CAMERAS);
-    for (int i = 0; i < NUM_CAMERAS; i++)
+    gTransforms.T_cam2world.resize(gConfParams.numCameras);
+    for (int i = 0; i < gConfParams.numCameras; i++)
     {
         Eigen::Matrix4d T_global2cam;
 
@@ -58,8 +52,8 @@ void setGlobalTransforms(Json::Value config)
     Eigen::Matrix4d Ttemp = Eigen::Matrix4d::Identity();
 
     // Transformation from marker to sprite
-    gTransforms.T_sprite.resize(NUM_OBJECTS);
-    for (int i = 0; i < NUM_OBJECTS; i++)
+    gTransforms.T_sprite.resize(gConfParams.numObjects);
+    for (int i = 0; i < gConfParams.numObjects; i++)
     {
         Eigen::Matrix4d Ttemp;
 
@@ -84,8 +78,8 @@ void setGlobalTransforms(Json::Value config)
 void setGlobalData(Json::Value config) 
 {
     // Numbers of things
-    NUM_CAMERAS = config.get("num_cameras", 0).asInt();
-    NUM_OBJECTS = config.get("num_object", 0).asInt();
+    gConfParams.numCameras = config.get("num_cameras", 0).asInt();
+    gConfParams.numObjects = config.get("num_objects", 0).asInt();
 
     // Channel names
     // PERCEPTION_CHANNEL = config.get("perception_channel", "perc").asString();
@@ -95,7 +89,7 @@ void setGlobalData(Json::Value config)
 
     // Calibration file
     CAM_CALIB_NAME.resize(0);
-    for( int i = 0; i < NUM_CAMERAS; ++i ) 
+    for( int i = 0; i < gConfParams.numCameras; ++i ) 
     {
         std::string name = config["cam_calib_name"].get(i, "calib").asString();
         CAM_CALIB_NAME.push_back(name);
@@ -103,14 +97,14 @@ void setGlobalData(Json::Value config)
 
     // Channel names for cameras
     CAM_CHANNEL_NAME.resize(0);
-    for( int i = 0; i < NUM_CAMERAS; ++i ) 
+    for( int i = 0; i < gConfParams.numCameras; ++i ) 
     {
         std::string name = config["cam_channel_name"].get(i, "chan").asString();
         CAM_CHANNEL_NAME.push_back(name);
     }
 
     /* Initialize objects for each object */
-    for( int i = 0; i < NUM_OBJECTS; ++i ) {
+    for( int i = 0; i < gConfParams.numObjects; ++i ) {
         gConfParams.objectNames.push_back(config["object_name"]
                                                 .get(i, "obj").asString());
         gConfParams.markerIDs.push_back(config["marker_id"].get(i, 0).asInt());
@@ -121,4 +115,11 @@ void setGlobalData(Json::Value config)
     gConfParams.height = config["height"].asInt();
 
     setGlobalTransforms(config);
+}
+
+int GlobalData_getIndex(int markerID) {
+  for(int i = 0; i < gConfParams.numObjects; ++i)
+    if(gConfParams.markerIDs[i] == markerID)
+      return i;
+  return -1;
 }

@@ -12,9 +12,6 @@
 
  #include <unistd.h>
 
-extern int NUM_CAMERAS;
-extern int NUM_OBJECTS;
-
 extern std::vector<std::string> CAM_CALIB_NAME;
 extern std::vector<std::string> CAM_CHANNEL_NAME;
 
@@ -28,9 +25,15 @@ extern std::string DEBUG_CHANNEL;
 typedef struct {
     float markerSize;   // length of marker edge in cms
     std::vector<int> markerIDs;  // ID of AR markers
-    int width;          // width of camera frame???
-    int height;         // height of camera height??
-    std::vector<string> objectNames;
+
+    // Camera resolution parameters
+    int width;
+    int height;
+    
+    std::vector<std::string> objectNames;
+
+    int numObjects; // Number of objects in the scene
+    int numCameras; // Number of cameras
 } ConfParams_t;
 
 // Transforms in the environment
@@ -44,3 +47,7 @@ extern Transforms_t gTransforms;
 
 /** Set values to global data */
 void setGlobalData(Json::Value config);
+
+/* Returns the index of marker ID in gConfParams.markerIDs.
+ * Returns -1 if markerID not found. */
+int GlobalData_getIndex(int markerID);

@@ -28,6 +28,8 @@
 
 #include <unistd.h>
 
+using namespace std;
+
 alvar::Camera gCam;
 Drawable d[32];
 

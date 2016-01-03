@@ -25,7 +25,7 @@ do
     echo "************************************"
     echo "[START] Firing up camera $i [START]"
     echo "************************************"
-    "${BIN_DIR}/camProcess" --visualize --devid=$i --camid=$i &
+    "${BIN_DIR}/camProcessMain" --visualize --devid=$i --camid=$i &
     sleep 3s
 
     echo "\n[DONE] Finished starting camera $i"

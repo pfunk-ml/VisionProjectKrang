@@ -23,29 +23,10 @@ void Object_printMarkerMsg(const MarkerMsg_t *markerMsg) {
     }
     std::cout<<'\n';
 
-    transMat = utils_getDoubleArrAsMat(markerMsg->trans);
-    utils_getXYZAng(transMat, x, y, z, theta);
-    std::cout<<"x-coorinate: "<<x<<'\n';
-    std::cout<<"y-coorinate: "<<y<<'\n';
-    std::cout<<"y-coorinate: "<<z<<'\n';
-    std::cout<<"theta: "<<theta<<'\n';
-    
-    std::cout<<"--\n";
+    utils_printPose(markerMsg->trans, markerMsg->marker_id, markerMsg->visible);
     return;
 }
 
 void Object_printMarkerMsgSingleLine(const MarkerMsg_t *markerMsg) {
-    double x, y, z, theta;
-    Eigen::Matrix4d transMat;
-
-    printf(" \t id: %d ", markerMsg->marker_id);
-
-    if (!markerMsg->visible){
-        printf("[Marker not visible.]\n");
-        return;
-    }
-
-    transMat = utils_getDoubleArrAsMat(markerMsg->trans);
-    utils_getXYZAng(transMat, x, y, z, theta);
-    printf("x: %.4f y: %.4f z: %.4f theta: %.4f \n", x, y, z, theta);
+    utils_printPose(markerMsg->trans, markerMsg->marker_id, markerMsg->visible);
 }

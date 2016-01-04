@@ -31,13 +31,13 @@ class WorldModel {
         _cameraID   : [IN] ID of the camera
         _markerID   : [IN] ID of the marker
         _Tcam_marker: [IN] Pose of marker in camera frame */
-    bool setOrigin( const int &_cameraID, 
-		    const int &_markerID, 
+    bool setOrigin(int _cameraID, int _markerID, 
 		    const Eigen::Matrix4d &_Tcam_marker );
 
-    // Method to initialize a camera to the world frame
-    bool initCamera( const int &_cam2_id, // Unknown camera 
-		     const int &_cam1_id, // Known camera
+    /* Method to initialize a camera to the world frame
+        _cam1_id : [IN] Unknown camera
+        _cam2_id : [IN] Known camera */
+    bool initCamera(int _cam2_id, int _cam1_id,
 		     const Eigen::Matrix4d &_Tc2_marker, 
 		     const Eigen::Matrix4d &_Tc1_marker);
     
@@ -45,8 +45,7 @@ class WorldModel {
         _cameraID   : [IN] ID of the camera
         _markerID   : [IN] ID of the marker
         _Tcam_marker: [IN] 4x4 matrix. Pose of marker in camera frame */
-    bool setMarkerLoc( const int &_cameraID, 
-		       const int &_markerID, 
+    bool setMarkerLoc(int _cameraID, int _markerID, 
 		       const Eigen::Matrix4d &_Tcam_marker );
 
     /* Method to set poses of a marker visible in multiple cameras, in world frame.
@@ -55,28 +54,28 @@ class WorldModel {
         _Tcam_markers : [IN] the array of pose of marker in each camera
         _confidence   : ??? */
     bool setMarkerLoc( const std::vector<int> &_cameraIDs, 
-		       const int &_markerID, 
+		       int _markerID, 
 		       const std::vector<Eigen::Matrix4d> &_Tcam_markers,
                const std::vector<double> &_confidences );
 
     // Same as previous but assumes same confidence
     bool setMarkerLoc( const std::vector<int> &_cameraIDs, 
-		       const int &_markerID, 
+		       int _markerID, 
 		       const std::vector<Eigen::Matrix4d> &_Tcam_markers);
 
     // Method to get the location of a marker relative to the world marker
-    Eigen::Vector3d getMarkerLoc( const int &_markerID );
+    Eigen::Vector3d getMarkerLoc(int _markerID );
     
     /* Returns marker pose in world frame
         _markerID : [IN] marker ID
         return val: 4x4 matrix. Marker pose in world frame. */
-    Eigen::Matrix4d getMarkerPose( const int &_markerID );
+    Eigen::Matrix4d getMarkerPose(int _markerID );
     
     
  private:
     // Method to get the position of a particular camera
-    int getCamInd( const int &_ID );
+    int getCamInd(int _ID );
     
     // Method to get the position of a particular marker
-    int getMarkInd( const int &_ID );
+    int getMarkInd(int _ID );
 };

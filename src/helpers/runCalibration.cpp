@@ -17,7 +17,7 @@
 const int gCalib_count_max = 50;
 
 // Size of marker's edge in cms.
-const int gEtalon_square_size = 6.456; //7.9;
+const int gEtalon_square_size = 6.44; //7.9;
 
 // Number of internal corners in the pattern (rows are always less than columns)
 // For 8x8 chessboard, number of internal corners is 7.

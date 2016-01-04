@@ -2,10 +2,15 @@
  * @file
  * @brief WorldModel Implementations
  */
-#include "WorldModel.h"
+
+#include <math.h>
+#include <stdio.h>
+
 #include "ARCamera.h"
 #include "ARMarker.h"
-#include <math.h>
+
+#include "utils.h"
+#include "WorldModel.h"
 
 /************************************/
 
@@ -118,8 +123,7 @@ WorldModel::WorldModel( const std::vector<ARCamera> &_cameras,
  * @function setOrigin
  * @brief Set marker ID that shows origin and camera ID that visualizes it
  */
-bool WorldModel::setOrigin( const int &_cameraID, 
-			    const int &_markerID, 
+bool WorldModel::setOrigin(int _cameraID, int _markerID, 
 			    const Eigen::Matrix4d &_transform ) {
 
     // Initialize camera with World to Camera transform (given in input)
@@ -136,8 +140,7 @@ bool WorldModel::setOrigin( const int &_cameraID,
  * @brief Initialize camera to world transformation from a known cam and marker
           visible to both
  */
-bool WorldModel::initCamera( const int &_cam2_id, 
-			     const int &_cam1_id, 
+bool WorldModel::initCamera(int _cam2_id, int _cam1_id, 
 			     const Eigen::Matrix4d &_Tc2_marker, 
 			     const Eigen::Matrix4d &_Tc1_marker ) {
 
@@ -160,8 +163,7 @@ bool WorldModel::initCamera( const int &_cam2_id,
  * @function setMarkerPose
  * @brief Set marker (with ID _markerID) pose
  */
-bool WorldModel::setMarkerLoc( const int &_cameraID, 
-			       const int &_markerID, 
+bool WorldModel::setMarkerLoc( int _cameraID, int _markerID, 
 			       const Eigen::Matrix4d &_Tcam_marker ) {
 
     // Check that camera is initialized
@@ -182,9 +184,9 @@ bool WorldModel::setMarkerLoc( const int &_cameraID,
  * @brief Set marker (with ID _markerID) pose
  */
 bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs, 
-		       const int &_markerID, 
+		       int _markerID, 
 		       const std::vector<Eigen::Matrix4d> &_Tcam_markers,
-               const std::vector<double> &_confidences ) {
+               const std::vector<double> &_confidences) {
 
     // Check that cameras are initialized
     for (int i = 0; i < _cameraIDs.size(); i++)
@@ -194,14 +196,21 @@ bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs,
             return false;
     }
 
+    printf("Marker ID: %d\n", _markerID);
+
     // Get world to marker matrices
     std::vector<Eigen::Matrix4d> world_mats;
+    double pose[4];
     for (int i = 0; i < _Tcam_markers.size(); i++)
     {
         Eigen::Matrix4d _Tcam_marker = _Tcam_markers[i];
         int _cameraID = _cameraIDs[i];
         Eigen::Matrix4d Tworld_marker = cameras[getCamInd(_cameraID)].getCam2World() * _Tcam_marker;
         world_mats.push_back(Tworld_marker);
+
+        utils_getXYZAng(Tworld_marker, pose);
+        printf("  Cam ID: %d x: %.4f y: %.4f z: %.4f theta: %.4f\n", 
+            _cameraIDs[i], pose[0], pose[1], pose[2], pose[3]);
     }
 
     // Now get the "average"
@@ -214,7 +223,7 @@ bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs,
 }
 
 bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs, 
-		       const int &_markerID, 
+		       int _markerID, 
 		       const std::vector<Eigen::Matrix4d> &_Tcam_markers) {
     // Make them all equal weight
     std::vector<double> weights(_Tcam_markers.size(), 1.0);
@@ -225,7 +234,7 @@ bool WorldModel::setMarkerLoc( const std::vector<int> &_cameraIDs,
  * @function getMarkerLoc
  * @brief Retrieve marker (with ID _markerID) 3D position
  */
-Eigen::Vector3d WorldModel::getMarkerLoc( const int &_markerID ) {
+Eigen::Vector3d WorldModel::getMarkerLoc(int _markerID ) {
     return markers[this->getMarkInd(_markerID)].getLocInWorld();
 }
 
@@ -233,7 +242,7 @@ Eigen::Vector3d WorldModel::getMarkerLoc( const int &_markerID ) {
  * @function getMarkerPose
  * @brief Retrieve marker (with ID _markerID) pose
  */
-Eigen::Matrix4d WorldModel::getMarkerPose( const int &_markerID) {
+Eigen::Matrix4d WorldModel::getMarkerPose(int _markerID) {
     return markers[this->getMarkInd(_markerID)].getMarkerPose();
 } 
 
@@ -241,7 +250,7 @@ Eigen::Matrix4d WorldModel::getMarkerPose( const int &_markerID) {
  * @function getCamInd
  * @brief Get camera index in the cameras vector in World
  */
-int WorldModel::getCamInd( const int &_ID ) {
+int WorldModel::getCamInd(int _ID ) {
 
     for (int i = 0; i < cameras.size(); i++) {
         if (cameras[i].getID() == _ID)
@@ -257,7 +266,7 @@ int WorldModel::getCamInd( const int &_ID ) {
  * @function getMarkInd
  * @brief Get marker index in the markers vector in world
  */
-int WorldModel::getMarkInd( const int &_ID) {
+int WorldModel::getMarkInd(int _ID) {
 
     for (int i = 0; i < markers.size(); i++) {
         if (markers[i].getID() == _ID)

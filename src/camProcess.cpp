@@ -68,6 +68,8 @@ ach_channel_t gChan_output;
 
 bool gIsVisOn; // is visualization on?
 
+static alvar::MarkerDetector<alvar::MarkerData> marker_detector;
+
 /** Function declarations */
 void videocallback( IplImage *_img );
 
@@ -187,6 +189,10 @@ bool init( int _devIndex,
   /*-- Create capture object from camera --*/
    *_cap = CaptureFactory::instance()->createCapture( devices[selectedDevice] );
 
+  // Setup the marker detector
+  //marker_detector.SetMarkerSize(gConfParams.markerSize);
+  marker_detector.SetMarkerSize(gConfParams.markerSize, 5, 2.0);
+
   /* Initialize ACH channel to publish data */
   gChan_output = initAchChannel(channel_name.c_str());
 
@@ -248,10 +254,6 @@ void videocallback( IplImage *_img ) {
     cvFlip(_img);
     _img->origin = !_img->origin;
   }
-  
-  // Setup the marker detector
-  static alvar::MarkerDetector<alvar::MarkerData> marker_detector;
-  marker_detector.SetMarkerSize(gConfParams.markerSize); 
 
   // Perform detection
   marker_detector.Detect(_img, &gCam, false, gIsVisOn); // true, true

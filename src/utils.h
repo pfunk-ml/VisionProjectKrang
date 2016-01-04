@@ -14,9 +14,9 @@
 //double** getMatAsDouble( const Eigen::Matrix4d &_mat );
 
 /* Converts a 3x4 double array to Matrix4d matrix
-    _trans    : [IN] the 3x4 transformation matrix
+    T    : [IN] the 3x4 transformation matrix
     return val: the 4x4 homogenous matrix */
-Eigen::Matrix4d utils_getDoubleArrAsMat( const double _trans[3][4] );
+Eigen::Matrix4d utils_getDoubleArrAsMat(const double T[3][4]);
 
 /* Obtain x, y, z and theta from transformation matrix.
     _Tf : [IN]  the ptr to 4x4 homogenous transformation matrix
@@ -46,3 +46,10 @@ pose1.
  * rotDist: [OUT] Rotational distance between two poses */ 
 void utils_computeDistances(const double* pose1, 
     const double* pose2, double* linDist, double *rotDist);
+
+/* Prints the x, y, z and theta. No new line character is printed at the end.
+    pose : [IN] Pose (x, y, z, theta in order) 
+    T : [IN] Transformation matrix (last row is assumed [0 0 0 1] 
+    isVisible : [IN] True if marker is visible in camera field of view.*/
+void utils_printPose(const double pose[4], int markerId, bool isVisible);
+void utils_printPose(const double T[3][4], int markerId, bool isVisible);

@@ -369,19 +369,15 @@ void CameraCentralProcess::printMessage() {
   printf("All dimensions are in metres and radians\n");
 
   /* Print poses of the objects */
-  printf("OBJECT Poses\n");
+  printf("OBJECT Poses (in world frame)\n");
   for( int i = 0; i < gConfParams.numObjects; ++i ) 
-    printf(" \t id: %d x: %.4f y: %.4f theta: %.4f \n", 
-                            gConfParams.markerIDs[i], objPoses[i][0], 
-                            objPoses[i][1], objPoses[i][2] );
+    utils_printPose(objPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() == 0);
 
   /* Print poses of the markers */
-  printf("MARKER Poses\n");
-  for( int i = 0; i < gConfParams.numObjects; ++i ) 
-    printf(" \t id: %d x: %.4f y: %.4f z: %.4f theta: %.4f \n", 
-                            gConfParams.markerIDs[i], mMarkerPoses[i][0], 
-                            mMarkerPoses[i][1], mMarkerPoses[i][2], 
-                            mMarkerPoses[i][3]);
+  printf("MARKER Poses (in world frame)\n");
+  for( int i = 0; i < gConfParams.numObjects; ++i )
+    utils_printPose(mMarkerPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() == 0);
+
 
   /* Print the distances between markers. Useful to test calibration */
   printf("Distances between markers\n");

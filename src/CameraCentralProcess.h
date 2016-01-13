@@ -31,6 +31,12 @@ typedef struct {
 
 /**
  * @class CameraCentralProcess
+ * This class does following:
+    . Read poses of markers in camera frames published by several cameras.
+    . Calculate the markers poses in world frame.
+    . Calculate the object poses in world frame.
+    . Publish object poses to ach channel.
+
  */
 class CameraCentralProcess {
   
@@ -56,6 +62,8 @@ class CameraCentralProcess {
     
     void createMessage();
     void printMessage();
+
+    /* Send message with objects locations over output ACH channel */
     void sendMessage();
     
   
@@ -63,6 +71,7 @@ class CameraCentralProcess {
 
   void computeDistances(double* pose1, double* pose2);
   int getIndex(int markerID);
+  void printDistances();
 
   /**< Environemnt */
   WorldModel* mWorldModel;
@@ -87,7 +96,7 @@ class CameraCentralProcess {
   
   std::vector<Planning_output> mMsg;
 
-  // has length of 4 * (num of objs) [x, y, z, angle]
+  // has length of (num of objs) * 4 [x, y, z, angle]
   std::vector<double*> objPoses;     // poses of objects 
   std::vector<double*> mMarkerPoses; // poses of AR markers
 

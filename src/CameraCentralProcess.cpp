@@ -363,6 +363,28 @@ void CameraCentralProcess::createMessage() {
   } // end for
 }
 
+/* Print the distances between markers. Useful to test calibration */
+void CameraCentralProcess::printDistances() {
+  double linDist, rotDist;
+
+  printf("Distances between markers\n");
+
+    for(int i=0; i < gConfParams.numObjects; ++i)
+      for(int j = i+1; j < gConfParams.numObjects; ++j) {
+
+        printf(" \t IDs %d and %d: ", gConfParams.markerIDs[i], gConfParams.markerIDs[j]);
+
+        if(mMarkerMsgs[i].size() == 0 || mMarkerMsgs[j].size() == 0){
+          printf("[At least one marker not visible.]\n");
+        continue;
+        }
+
+        utils_computeDistances(mMarkerPoses[i], mMarkerPoses[j], 
+          &linDist, &rotDist);
+        printf("Linear: %.4f Angular: %.4f\n", linDist, rotDist);
+      }
+}
+
 void CameraCentralProcess::printMessage() {
   int i;
   
@@ -371,13 +393,12 @@ void CameraCentralProcess::printMessage() {
   /* Print poses of the objects */
   printf("OBJECT Poses (in world frame)\n");
   for( int i = 0; i < gConfParams.numObjects; ++i ) 
-    utils_printPose(objPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() == 0);
+    utils_printPose(objPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() != 0);
 
   /* Print poses of the markers */
   printf("MARKER Poses (in world frame)\n");
   for( int i = 0; i < gConfParams.numObjects; ++i )
-    utils_printPose(mMarkerPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() == 0);
-
+    utils_printPose(mMarkerPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() != 0);
 
   /* Print the distances between markers. Useful to test calibration */
   printf("Distances between markers\n");
@@ -386,28 +407,16 @@ void CameraCentralProcess::printMessage() {
   int index3 = GlobalData_getIndex(3);
   int index4 = GlobalData_getIndex(4);
   int index6 = GlobalData_getIndex(6);
+
+  printDistances();
   
-  double linDist = 0, rotDist = 0;
-
-  if(index2 >=0 && index6 >= 0)
-    utils_computeDistances(mMarkerPoses[index2], mMarkerPoses[index6], &linDist, &rotDist);
-    printf(" \t IDs 2 and 6: Linear: %.4f Angular: %.4f\n", linDist, rotDist);
-
-  if(index3 >=0 && index4 >= 0)
-    utils_computeDistances(mMarkerPoses[index3], mMarkerPoses[index4], &linDist, &rotDist);
-    printf(" \t IDs 3 and 4: Linear: %.4f Angular: %.4f\n", linDist, rotDist);
-
-  if(index6 >=0 && index4 >= 0)
-    utils_computeDistances(mMarkerPoses[index6], mMarkerPoses[index4], &linDist, &rotDist);
-    printf(" \t IDs 6 and 4: Linear: %.4f Angular: %.4f\n", linDist, rotDist);
-
   std::cout<<"--\n";
   return;
 }
 
 /**
 * @function sendMessage
-* @brief Send message with objects locations over output ACH channel
+* @brief 
 */
 void CameraCentralProcess::sendMessage() {
 
@@ -453,7 +462,7 @@ void CameraCentralProcess::sendMessage() {
   r = ach_put( &mOutput_objPoses_channel, objPoses_str, sizeof(objPoses_str));
   assert(r == ACH_OK);
 
-  // Don't sent the message if robot is not visible
+  // Don't send the message if robot is not visible
   if(mMarkerMsgs[0].size() != 0){
     r = ach_put( &mOutput_krangPose_channel, krangPose_str, sizeof(krangPose_str));
     assert(r == ACH_OK);

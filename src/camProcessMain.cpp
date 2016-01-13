@@ -5,7 +5,7 @@
  */
 
 
-#include <camProcess.h>
+#include <CamProcess.h>
 
 #include "viz/CvTestbed.h"
 #include "globalStuff/globalData.h"
@@ -127,17 +127,21 @@ int main(int argc, char *argv[]) {
   setGlobalData(config);
   std::cout << "\t * Global data has been initialized.\n";
 
+  CamProcess camProcess;
+
   /** Initialise GlutViewer and CvTestbed */
-  CvTestbed::Instance().SetVideoCallback(videocallback);
+  CvTestbed::Instance().SetVideoCallback(camProcess.videocallback);
   std::cout << "\t * Initialized GlutViewer and CvTestbed. "<< std::endl;
 
   /** Init parameters and camera */
   alvar::Capture *cap;
-  init( devIndex, camIndex, &cap, 
+  camProcess.init( devIndex, camIndex, &cap, 
     arguments.opt_verbosity, 
     &quit_signal, 
     arguments.opt_visualize,
     CAM_CHANNEL_NAME[camIndex]);
+
+  std::cout << __FILE__ << ' ' << __LINE__ << ": Reached here.\n";
 
   // Handle capture lifecycle and start video capture
   if (cap) {

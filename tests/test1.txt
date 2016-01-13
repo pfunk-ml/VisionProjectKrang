@@ -1,0 +1,21 @@
+    MARKER POSE ESTIMATION ACCURACY TESTING
+
+Date: Jan 5, 2016
+
+All distances in meters.
+
+
+   Actual              Estimated              Difference         CAM ID
+  x   |    y    |    x    |     y      |  delta_x | delta_y |   
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |
+      |         |         |            |          |         |

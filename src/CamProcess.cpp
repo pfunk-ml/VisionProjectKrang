@@ -1,5 +1,5 @@
 /**
- * @function camProcess.cpp
+ * @function CamProcess.cpp
  *
     This is a program for a single camera that detects AR marker(s) in the 
     camera view and outputs the marker(s) details to a ACH channel. It reads 
@@ -21,26 +21,25 @@
 
  */
 
-#include <camProcess.h>
+#include <CamProcess.h>
 
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
 #include <stdint.h>
 #include <assert.h>
-#include <ach.h>
 
 #include <MarkerDetector.h>
 #include <utils.h>
+#include "json/json.h"
 
 #include "viz/CvTestbed.h"
 #include "viz/Shared.h"
 
 #include "globalStuff/globalData.h"
 #include "Object.h"
-
-#include "json/json.h"
 #include "globalStuff/optparser.h"
+#include "BasicFilter2.h"
 
 #include <argp.h> // for command line arguments
 
@@ -48,30 +47,39 @@ using namespace std;
 
 alvar::Camera gCam;
 
-/* Verbosity level */
-int gVerbosity;
-
 /* Pointer to quit_signal*/
 volatile int *gQuit_signal_ptr;
 
 /**< Camera details */
 std::string gCalibFilename;
 
-// has length of 3 * (num of objs) [x,y,angle]
+// has size of 3 * (num of objs) [x,y,angle]
 std::vector<double*> mMarkerPoses; // poses of AR markers
 
-/**< Marker messages to be sent */
+/* List of marker messages to be sent for each object */
 std::vector<MarkerMsg_t> gMarkerMsgs;
 
 /**< Channel to send info */
 ach_channel_t gChan_output;
 
-bool gIsVisOn; // is visualization on?
+/* Filters for x, y and z of each marker */
+std::vector<BasicFilter2> gFilters_x;
+std::vector<BasicFilter2> gFilters_y;
+std::vector<BasicFilter2> gFilters_z;
 
 static alvar::MarkerDetector<alvar::MarkerData> marker_detector;
 
-/** Function declarations */
-void videocallback( IplImage *_img );
+struct context {
+  int verbosity; // Verbosity level
+  bool isVisOn; // is visualization on
+
+} cx; // context
+
+/* Constructor */
+CamProcess::CamProcess() {}
+
+/* Destructor */
+CamProcess::~CamProcess() {}
 
 /**
  * @function initAchChannel
@@ -81,31 +89,31 @@ void videocallback( IplImage *_img );
  * channelName : [IN] name of the channel to publish data
  * return val  : the channel handler of type ach_channel_t
  */
-ach_channel_t initAchChannel( const char* channelName ) {
+ach_channel_t CamProcess::initAchChannel( const char* channelName ) {
     
-    enum ach_status r;
-  
-    /* Create ACH channel */
-    r = ach_create( channelName, 10, 512, NULL );
-    /* if channel not created and it doesn't exist */
-    if( ACH_OK != r && ACH_EEXIST != r) {   
-        fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
-        exit(EXIT_FAILURE);
-    }
+  enum ach_status r;
 
-    /* Open the channel */
-    ach_channel_t channel;
-    r = ach_open( &channel, channelName, NULL );
-    if( r != ACH_OK ) {
-      fprintf( stderr, "Could not open channel: %s\n", ach_result_to_string(r) );
+  /* Create ACH channel */
+  r = ach_create( channelName, 10, 512, NULL );
+  /* if channel not created and it doesn't exist */
+  if( ACH_OK != r && ACH_EEXIST != r) {   
+      fprintf( stderr, "Could not create channel: %s\n", ach_result_to_string(r) );
       exit(EXIT_FAILURE);
-    }
-    
-    std::cout << "\t Created channel: "<< channelName<< std::endl;
-    return channel;
+  }
+
+  /* Open the channel */
+  ach_channel_t channel;
+  r = ach_open( &channel, channelName, NULL );
+  if( r != ACH_OK ) {
+    fprintf( stderr, "Could not open channel: %s\n", ach_result_to_string(r) );
+    exit(EXIT_FAILURE);
+  }
+  
+  std::cout << "\t Created channel: "<< channelName<< std::endl;
+  return channel;
 }
 
-bool init( int _devIndex,
+bool CamProcess::init( int _devIndex,
            int _camIndex,
            alvar::Capture **_cap,
            int verbosity,
@@ -113,15 +121,22 @@ bool init( int _devIndex,
            bool vis,
            string channel_name) {
   
-  gVerbosity = verbosity;
+  cx.verbosity = verbosity;
   gQuit_signal_ptr = quit_signal_ptr;
-  gIsVisOn = vis;
+  cx.isVisOn = vis;
+
+  BasicFilter2 basicFilter2 = BasicFilter2(10, false);
+  basicFilter2.set_default_weights(BasicFilter2::RAMP);
+
+  MarkerMsg_t markerMsg;
+  markerMsg.cam_id = _camIndex;
 
   /** Set the camera index for this process */
-  for( int i = 0; i < gConfParams.numObjects; ++i ) {
-    MarkerMsg_t markerMsg;
-    markerMsg.cam_id = _camIndex;
-    gMarkerMsgs.push_back(markerMsg); 
+  for(int i = 0; i < gConfParams.numObjects; ++i) {
+    gMarkerMsgs.push_back(markerMsg);
+    gFilters_x.push_back(basicFilter2);
+    gFilters_y.push_back(basicFilter2);
+    gFilters_z.push_back(basicFilter2);
   }
 
   std::cout << "Reading /dev/video"<<_devIndex<<" and camera "<<_camIndex<< std::endl;
@@ -181,16 +196,15 @@ bool init( int _devIndex,
     return false;
   } 
    
-  /**- Display capture devices (DEBUG) --*/
+  /* Display capture devices (DEBUG) */
   std::cout << "Enumerated Capture Devices:" << std::endl;
   outputEnumeratedDevices(devices, selectedDevice);
   std::cout << std::endl;
   
-  /*-- Create capture object from camera --*/
-   *_cap = CaptureFactory::instance()->createCapture( devices[selectedDevice] );
+  /* Create capture object from camera */
+  *_cap = CaptureFactory::instance()->createCapture( devices[selectedDevice] );
 
   // Setup the marker detector
-  //marker_detector.SetMarkerSize(gConfParams.markerSize);
   marker_detector.SetMarkerSize(gConfParams.markerSize, 5, 2.0);
 
   /* Initialize ACH channel to publish data */
@@ -201,7 +215,7 @@ bool init( int _devIndex,
 
 /* Returns the index of marker ID in gConfParams.markerIDs.
  * Returns -1 if markerID not found. */
-int getIndex(int markerID) {
+int CamProcess::getIndex(int markerID) {
   for(int i = 0; i < gConfParams.numObjects; ++i)
     if(gConfParams.markerIDs[i] == markerID)
       return i;
@@ -235,8 +249,7 @@ void printDistances() {
 
       utils_computeDistances(pose1, pose2, &linDist, &rotDist);
 
-      printf("Linear: %.4f Angular: %.4f\n", 
-        linDist, rotDist);
+      printf("Linear: %.4f Angular: %.4f\n", linDist, rotDist);
     }
 }
 
@@ -246,7 +259,9 @@ void printDistances() {
  * @function videocallback
  * @brief Repeat at every captured frame
  */
-void videocallback( IplImage *_img ) {
+void CamProcess::videocallback( IplImage *_img ) {
+
+  if (*gQuit_signal_ptr) exit(0); // exit cleanly on interrupt
 
   // Flip the image if needed
   bool flip_image = (_img->origin ? true : false);
@@ -256,9 +271,7 @@ void videocallback( IplImage *_img ) {
   }
 
   // Perform detection
-  marker_detector.Detect(_img, &gCam, false, gIsVisOn); // true, true
-
-  if(gVerbosity) printf("----\nMARKER Poses\n");
+  marker_detector.Detect(_img, &gCam, false, cx.isVisOn); // true, true
 
   for( int i = 0; i < gConfParams.numObjects; ++i ) {  // For each marker
 
@@ -281,21 +294,36 @@ void videocallback( IplImage *_img ) {
 
       	gMarkerMsgs[i].visible = true;
       	break;
-      }
-        
+      }    
     } // end of all markers checked
 
-    // Print the marker details
-    if(gVerbosity) Object_printMarkerMsgSingleLine(&gMarkerMsgs[i]);
+    // Apply the filter to smooth the values. Currenty applying on to 
+    // x, y and z dimension and not to rotation values.
+    gMarkerMsgs[i].trans[0][3] = gFilters_x[i].getEstimate(gMarkerMsgs[i].trans[0][3]);
+    gMarkerMsgs[i].trans[1][3] = gFilters_y[i].getEstimate(gMarkerMsgs[i].trans[1][3]);
+    gMarkerMsgs[i].trans[2][3] = gFilters_z[i].getEstimate(gMarkerMsgs[i].trans[2][3]);
+
   } // end for all objects
 
-  /* Print distance between markers */
-  if(gVerbosity) printDistances();
-
-  // Put image back if it was flipped
+    // Put image back if it was flipped
   if (flip_image) {
     cvFlip(_img);
     _img->origin = !_img->origin;
+  }
+
+  /* If filters haven't received sufficient data to make reasonable estimates,
+   then don't print of publish the poses. Checking only for one of the filters.
+   */
+  if(! gFilters_x[0].isSufficientDataReceived())
+    return;
+
+  /* Print marker details and distance between markers */
+  if(cx.verbosity) {
+    printf("----\nMARKER Poses\n");
+    for (int i=0; i < gConfParams.numObjects; ++i) 
+      Object_printMarkerMsgSingleLine(&gMarkerMsgs[i]);
+    
+    printDistances();
   }
 
   // Convert gMarkerMsgs to pointer
@@ -306,6 +334,4 @@ void videocallback( IplImage *_img ) {
 
   /* Publish markers poses to ACH channel */
   ach_put( &gChan_output, gMarkerMsgsPtr, sizeof( gMarkerMsgsPtr ) );
-
-  if (*gQuit_signal_ptr) exit(0); // exit cleanly on interrupt
 }

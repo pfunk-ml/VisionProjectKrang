@@ -91,9 +91,9 @@ bool basicFilter::set_default_weights( int _type ) {
 /**
  * @function getEstimate
  */
-void basicFilter::getEstimate( const double &_x_measured,
-			       const double &_y_measured,
-			       const double &_ang_measured,
+void basicFilter::getEstimate(double _x_measured,
+			        double _y_measured,
+			        double _ang_measured,
 			       double &_x_est,
 			       double &_y_est,
 			       double &_ang_est ) {
@@ -112,7 +112,7 @@ void basicFilter::getEstimate( const double &_x_measured,
 
   }
   if( x_est.size() > mNumSteps ) {
-    std::cout << " ESTIMATE VALUES STORED ARE TOO MANY!!!" << std::endl;
+    std::cout << "Error: ESTIMATE VALUES STORED ARE TOO MANY!!!" << std::endl;
   }
 
   // If the values are 0,0,0 (non visible), we just set the estimate to the last value seen
@@ -153,8 +153,6 @@ void basicFilter::getEstimate( const double &_x_measured,
     
     // Get angle 
     _ang_est = atan2(ang_sum_y, ang_sum_x);
-    
-
   }
     // Update the deque. Get rid of oldest and put newest at the end
     x_est.pop_front();

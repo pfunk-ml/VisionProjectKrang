@@ -56,11 +56,14 @@ add_subdirectory( worldModel )
 # Add helpers (to retrieve info we need)
 add_subdirectory( helpers )
 
-# Create Object libary
+# Create Object library
 add_library(object Object.cpp Object.h)
 
-# Create utils libary
+# Create utils library
 add_library(utils utils.cpp utils.h)
+
+# Create BasicFilter2 library
+add_library(BasicFilter2 BasicFilter2.cpp BasicFilter2.h)
 
 # Add cleanup 
 add_executable( cleanup cleanup.cpp )
@@ -70,11 +73,11 @@ ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 
 # Add Marker detector process
 # Returns markers detected per each camera (local transforms)
-add_library( camProcess camProcess.cpp camProcess.h)
-target_link_libraries( camProcess globalStuff cvViewer glutViewer object utils ${ACH_LIBS} ${alvar_LIBRARIES} ${OpenCV_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
+add_library( CamProcess CamProcess.cpp CamProcess.h)
+target_link_libraries( CamProcess globalStuff cvViewer glutViewer object utils BasicFilter2 ${ACH_LIBS} ${alvar_LIBRARIES} ${OpenCV_LIBRARIES} ${GLUT_LIBRARIES} ${OPENGL_LIBRARIES} )
 
 add_executable(camProcessMain camProcessMain.cpp)
-target_link_libraries( camProcessMain camProcess)
+target_link_libraries( camProcessMain CamProcess)
 set_target_properties( camProcessMain PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
   ${CMAKE_SOURCE_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin )
 

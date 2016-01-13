@@ -181,5 +181,4 @@ if __name__ == '__main__':
 
     logging.info("Extrinsic Calibration Started.")
     
-    #calibrate_all([2,3,4,5], [0,1,2,3], global_id=4, aux_id=6)
-    calibrate_all([2,3,4,5], [0,1,2,3], global_id=6, aux_id=4)
+    calibrate_all([2,3,4,5], [0,1,2,3], global_id=6, aux_id=2)

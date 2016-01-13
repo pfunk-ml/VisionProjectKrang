@@ -20,7 +20,8 @@ ach -C debug_channel -o 666  -m 10 -n 64
 # Camera 3 is on /dev/video3
 
 # For some reason, we have to go from up to down
-for i in 5 4 3 2 1 0
+#for i in 5 4 3 2 1 0
+for i in 3 1
 do
     echo "************************************"
     echo "[START] Firing up camera $i [START]"

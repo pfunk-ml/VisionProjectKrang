@@ -20,8 +20,8 @@ ach -C debug_channel -o 666  -m 10 -n 64
 # Camera 3 is on /dev/video3
 
 # For some reason, we have to go from up to down
-#for i in 5 4 3 2 1 0
-for i in 3 1
+for i in 5 4 3 2 1 0
+#for i in 3 2 1 0
 do
     echo "************************************"
     echo "[START] Firing up camera $i [START]"
@@ -36,13 +36,13 @@ done
 # Sleep for a bit to give the cameras time to run a bit
 echo "************************************"
 echo "Sleep for 2 seconds before starting the central main."
-#sleep 2s
+sleep 2s
 
 echo "Starting the main camera process ..."
 echo "************************************"
 
 # Run the camCentralProcessMain. This retrieve the info from the cameras 
-#"${BIN_DIR}/camCentralProcessMain" &
+"${BIN_DIR}/camCentralProcessMain"
 
 # Sleep just for the heck of it
-sleep 3s
+#sleep 3s

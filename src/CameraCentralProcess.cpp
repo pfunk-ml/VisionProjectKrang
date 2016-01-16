@@ -399,15 +399,7 @@ void CameraCentralProcess::printMessage() {
   printf("MARKER Poses (in world frame)\n");
   for( int i = 0; i < gConfParams.numObjects; ++i )
     utils_printPose(mMarkerPoses[i], gConfParams.markerIDs[i], mMarkerMsgs[i].size() != 0);
-
-  /* Print the distances between markers. Useful to test calibration */
-  printf("Distances between markers\n");
   
-  int index2 = GlobalData_getIndex(2);
-  int index3 = GlobalData_getIndex(3);
-  int index4 = GlobalData_getIndex(4);
-  int index6 = GlobalData_getIndex(6);
-
   printDistances();
   
   std::cout<<"--\n";

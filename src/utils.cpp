@@ -68,16 +68,14 @@ void utils_getXYZAng(const double T[3][4], double pose[4]) {
  * @function utils_getDOubleArrAsMat
  * @brief Gets Eigen::Matrix4d from T double array
  */
-Eigen::Matrix4d utils_getDoubleArrAsMat( const double T[3][4] ) {
+Eigen::Matrix4d utils_getDoubleArrAsMat(const double T[3][4]) {
 
     // Now put in matrix 4d stuff
     Eigen::Matrix4d martrix4d;
 
-    for( int i = 0; i < 3; ++i ) {
-    for( int j = 0; j < 4; ++j ) {
-        martrix4d(i,j) = T[i][j];
-    }
-    }
+    for(int i = 0; i < 3; ++i)
+        for(int j = 0; j < 4; ++j) 
+            martrix4d(i,j) = T[i][j];
 
     martrix4d.row(3) << 0,0,0,1;
 

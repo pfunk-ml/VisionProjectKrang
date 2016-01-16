@@ -30,13 +30,11 @@ TABLE OF CONTENTS
     . Reference Frames
     . Transforms
 
-
 REQUIREMENTS
 
    * ach for inter-process communication
    * yaml-cpp version 0.5.1 (not the one in Ubuntu 12.04, that is as old as 0.2 and we need the newest version)
    * jsoncpp (http://jsoncpp.sourceforge.net/)
-
 
 DEPENDENCIES
 
@@ -83,6 +81,8 @@ PARAMETERS
 CALIBRATION
 
     Calibration step calculates various intrinsic and extrinsic parameters.
+
+    
 
     Intrinsic Parameters
     --------------------
@@ -197,6 +197,13 @@ AR MARKERS
     There are 9 Markers in total with ID 0 to 8. That means maximum 9 objects can be tracked by the vision system.
 
     Markers are located in .../alvarCode/Data/markers_big/
+
+    Creating the markers
+    --------------------
+        Markers can be created using program samplemarkercreator available in alvar-2.0.0-bin-linux64-gcc44 .
+
+        $ cd to bin folder
+        $ ./samplemarkercreator -s 40.0 2 # to print marker ID 2
 
     Printing the markers
     --------------------

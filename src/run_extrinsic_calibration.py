@@ -105,117 +105,91 @@ def get_marker_transform(cam_id, marker_id, timeout=3):
 
 	return T_cam_marker
 
-def calibrate_all(rect1_ids, rect2_ids, global_id, aux_id):
-	'''
-	Prints the (inverse) extrinsics of all cameras with respect 
-	to a single "global" marker, i.e. the pose of the global 
-	marker in each camera frame. This should be plugged into 
-	config.json, which allows camCentralProcess to obtain the
-	global-pose, and through one more hop, the world-pose of
-	any marker seen by any camera.  
+def print_transforms(T_cam_global_dict):
+    ''' Prints the transforms which can be copy-pasted into config.json`
+    Arg(s)
+     T_cam_global_dict: (dict) key is camera id and value is numpy 4x4 matrix 
+        representing T_cam_global
 
-	This process is configured for a setup in which it is not
-	possible to put the global marker in view of all cameras.  
-	Rather than measuring the world pose or offset of multiple
-	tags, we place multiple tags simultaneously, and do the 
-	math here to obtain all camera poses with respect to the
-	global marker.
+    Returns None '''
+    print "\"T_global2cam\" : // i.e T_cam_global]\n" \
+        + "["
+    
+    for idx, cam_id in enumerate(T_cam_global_dict.keys()):
+        T = T_cam_global_dict[cam_id]
+        print "   [   // camera %d" % cam_id
+        for i in range(4):
+            # print "      ", ','.join([str(T[i][j]) for j in range(4)]), 
+            print "       [%4.6f, %4.6f, %4.6f, %4.6f]" % (T[i,0], T[i,1], T[i,2], T[i,3]),
+            print "," if i < 3 else ""
+        print "   ]," if idx < len(T_cam_global_dict.keys())-1 else "   ]" 
+    print "],"
 
-	:param rect1_ids: The camera ids in the first rectangle, in which 
-		global_id is always visible, and aux_id is visible in at least one 
-	:param rect2_ids: The camera ids in the second rectangle, in which 
-		aux_id is always visible.  At least one camera must be in both
-		rect1_ids and rect2_ids.  
-	:param global_id: The "global" marker which all cameras are calibrated
-		with respect to.  
-	:param aux_id: The "auxilliary" marker which is used to calibrate 
-		cameras which are not in view of the global marker. Set to None, if no 
-		auxillary marker is present.
+def calibrate_all(marker_ids, cam_ids_list):
+    ''' Prints the (inverse) extrinsics of all cameras with respect to
+    a single "global" marker, i.e. the pose of the global marker in each
+    camera frame. This should be plugged into config.json
 
-	Returns True, if calibration was successful. False, otherwise.
-	'''
+    Args:
+     marker_ids: (list of ints) IDs of markers in-order starting with global 
+        marker id
+     cam_ids_list: (list of lists) ith element is list of camera ids which can
+        see ith marker in |marker_ids|.
 
-	# obtain transform of "global" marker in each camera frame from 
-	# the first rectangle.
-	T_rect1_globals = []
-	T_rect1_auxs = []
-	for r1id in rect1_ids:
-		T_cam_marker = get_marker_transform(r1id, global_id)
-		if T_cam_marker is None:
-			logging.error("Global marker not visible under camera ID: " 
-				+ str(r1id))
-			return False;
-		T_rect1_globals.append(T_cam_marker)
-		T_rect1_auxs.append(get_marker_transform(r1id, aux_id))
+    Returns True, if calibration was successful. False, otherwise. '''
 
-	# obtain transform of "aux" marker in each camera frame from 
-	# the second rectangle.
-	T_rect2_auxs = []
-	for r2id in rect2_ids:
-		T_cam_marker = get_marker_transform(r2id, aux_id)
-		if T_cam_marker is None:
-			logging.error("Aux marker not visible under camera ID: " 
-				+ str(r2id))
-		T_rect2_auxs.append(T_cam_marker)
+    assert(len(marker_ids) == len(cam_ids_list))
 
-	# use the common camera (defaults to first in intersection between
-	# rect1_ids and rect2_ids) to obtain global pose in the far rect
-	common_cams = set(rect1_ids).intersection(set(rect2_ids))
-	far_cams = set(rect2_ids).difference(set(rect1_ids))
+    # Dictionary of global marker to cameras transforms keyed by camera id
+    T_cam_global = {}
 
-	# obtain a common camera in which we found an aux transform:
-	cc = None
-	for cam in common_cams:
-		if T_rect1_auxs[rect1_ids.index(cam)] is not None:
-			cc = cam
-	
-	T_fc_globals = []
-	for fc in far_cams:
-		T_cc_global = T_rect1_globals[rect1_ids.index(cc)]
-		T_cc_aux = T_rect1_auxs[rect1_ids.index(cc)]
-		T_fc_aux = T_rect2_auxs[rect2_ids.index(fc)]
-		T_aux_cc = np.linalg.inv(T_cc_aux)
-		T_fc_global = T_fc_aux.dot(T_aux_cc).dot(T_cc_global)
-		print "Hey hey!", T_aux_cc.dot(T_cc_global)
-		T_fc_globals.append(T_fc_global)
-	
-	# pack up results
-	all_ids = rect1_ids + list(far_cams)
-	all_transforms = T_rect1_globals + T_fc_globals
-	
-	## print output in a pastable form:
-	np.set_printoptions(suppress=True, precision=7)
-	print "// Global to camera transformation matrices\n" \
-		+ "// x, y, z in last columns are in cms.\n" \
-		+ "\"T_global2cam\" : // i.e T_cam_global]\n" \
-		+ "["
-	sorted_ids = sorted(all_ids)
-	for idx, cid in enumerate(sorted_ids):
-		T = all_transforms[all_ids.index(cid)]
-		print "   [   // camera %d" % cid
-		for i in range(4):
-			# print "      ", ','.join([str(T[i][j]) for j in range(4)]), 
-			print "       [%4.6f, %4.6f, %4.6f, %4.6f]" % (T[i,0], T[i,1], T[i,2], T[i,3]),
-			print "," if i < 3 else ""
-		print "   ]," if idx < len(all_ids)-1 else "   ]" 
-	print "],"
+    for ind, marker_id in enumerate(marker_ids):
+        cam_ids = cam_ids_list[ind]
 
-	return True
-	# import ipdb;ipdb.set_trace()
+        # Get T_marker_global (Transform from global marker frame to marker_id
+        # frame)
+        if ind == 0:
+            prev_cam_ids = []
+            T_marker_global = np.identity(4)
+        else:
+            # Find common cam (ccam). Get T_ccam_marker
+            prev_cam_ids = cam_ids_list[ind-1]
+            common_cams = set(cam_ids).intersection(set(prev_cam_ids))
+
+            # Get any element of common_cams
+            ccam = next(iter(common_cams))
+
+            T_ccam_marker = get_marker_transform(ccam, marker_id)
+            assert(T_ccam_marker is not None)
+
+            T_ccam_global = T_cam_global[ccam]
+            T_marker_global = np.linalg.inv(T_ccam_marker).dot(T_ccam_global)
+
+        # For all cams not common. Get T_cam_marker
+        # Multiply it by T_marker_global to get T_cam_global
+        diff_cams = set(cam_ids).difference(set(prev_cam_ids))
+
+        for cam_id in diff_cams:
+            T_cam_marker = get_marker_transform(cam_id, marker_id)
+            assert(T_cam_marker is not None)
+
+            T_cam_global[cam_id] = T_cam_marker.dot(T_marker_global)
+
+    print_transforms(T_cam_global)
+
+    return True
 
 if __name__ == '__main__':
 
-	    # setup up the python logging module
+	# setup up the python logging module
     # levels of logging are: DEBUG, INFO, WARNING, ERROR, CRITICAL
     logging.basicConfig(level = logging.DEBUG,
                         format = "%(filename)s %(lineno)s: [%(levelname)s] %(message)s" )
 
     logging.info("Extrinsic Calibration Started.")
     
-    res = calibrate_all([2,3,4,5], [0,1,2,3], global_id=6, aux_id=2)
-    #res = calibrate_all([0,1,2,3], [2,3,4, 5], global_id=2, aux_id=6)
-    #res = calibrate_all([1, 3], [], global_id=3, aux_id=None)
-    #res = calibrate_all([0, 1, 2, 3], [], global_id=2, aux_id=None)
+    res = calibrate_all([6, 2, 4],[[5,4,3,2], [3,2,1,0], [1, 6]] )
+
     if res:
     	logging.info("Extrinsic calibration successfully completed.")
     else:

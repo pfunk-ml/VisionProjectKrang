@@ -111,6 +111,7 @@ void setGlobalData(Json::Value config)
     }
 
     gConfParams.markerSize = config["marker_size"].asDouble();
+    gConfParams.calibrationMarkerSize = config["calibration_marker_size"].asDouble();
     gConfParams.width = config["width"].asInt();
     gConfParams.height = config["height"].asInt();
 

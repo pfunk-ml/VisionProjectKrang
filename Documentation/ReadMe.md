@@ -77,12 +77,9 @@ PARAMETERS
     * Adding new parameters
         // TODO: Here goes the content
     
- 
 CALIBRATION
 
     Calibration step calculates various intrinsic and extrinsic parameters.
-
-    
 
     Intrinsic Parameters
     --------------------
@@ -97,6 +94,7 @@ CALIBRATION
         Data/camCalib3.xml
         Data/camCalib4.xml
         Data/camCalib5.xml
+        Data/camCalib6.xml
 
     Each calibration file contains:
         Intrinsic Matrix (3 x 3 Matrix)

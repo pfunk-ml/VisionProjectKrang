@@ -135,7 +135,7 @@ void videocallback( IplImage *_img ) {
   
   // Setup the marker detector
   static alvar::MarkerDetector<alvar::MarkerData> marker_detector;
-  marker_detector.SetMarkerSize(gConfParams.markerSize); 
+  marker_detector.SetMarkerSize(gConfParams.calibrationMarkerSize); 
 
   // Perform detection
   marker_detector.Detect(_img, &gCam, true, true);
@@ -231,7 +231,7 @@ bool init( int _devIndex,
   
   GlutViewer::SetGlProjectionMatrix(p);
   for (int i=0; i<32; i++) {
-    d[i].SetScale(gConfParams.markerSize);
+    d[i].SetScale(gConfParams.calibrationMarkerSize);
   }
   std::cout << "\t * Set Viewer with camera matrix"<<std::endl;
   

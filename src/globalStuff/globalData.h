@@ -24,6 +24,8 @@ extern std::string DEBUG_CHANNEL;
 // structure for configuration parameters 
 typedef struct {
     float markerSize;   // length of marker edge in cms
+    float calibrationMarkerSize; // length of calibration marker size in cms
+    
     std::vector<int> markerIDs;  // ID of AR markers
 
     // Camera resolution parameters

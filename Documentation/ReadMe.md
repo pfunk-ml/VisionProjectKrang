@@ -163,9 +163,11 @@ CALIBRATION
 
 RUNNING ONE CAMERA
 
-    Details Here
+    TODO: Add Details Here
 
-RUNNING MULTIPLCE CAMERAS
+RUNNING MULTIPLE CAMERAS
+
+    TODO: Add Details Here
 
 DESCRIPTION OF CAMERA RIG
 
@@ -201,14 +203,24 @@ AR MARKERS
     Creating the markers
     --------------------
         Markers can be created using program samplemarkercreator available in alvar-2.0.0-bin-linux64-gcc44 .
+         $ cd to bin folder
+         $ ./samplemarkercreator -s 40.0 2 # to print marker ID 2
 
-        $ cd to bin folder
-        $ ./samplemarkercreator -s 40.0 2 # to print marker ID 2
+        A PNG file will be created.
 
     Printing the markers
     --------------------
-        1. Convert to PDF using 'print to file option'
-        2. Print the PDF on the printer.
+        1. Open PNG in Image Viewer and convert to PDF using 'print to file option'. Use following printing options:
+            Pages per side: 1
+            Paper size: US Letter
+            Orientation: Portrait
+            Scale: 100%
+
+          US Letter paper can be found in Mopier printer in RIM lab.
+
+          If markers are to be used for calibration, then use Paper size: A3
+
+        2. Print the PDF on the printer
 
     Make sure that length of edge of printed marker is 20.3 cm. 
 
@@ -313,7 +325,6 @@ REFERENCE FRAMES
     Transformation from Camera to Global frame is calculated during extrinsic calibration.
 
     Transformation from Global frame to world frame is calculated manually.
-
 
 TRANSFORMS
     
